@@ -151,7 +151,7 @@ chain must be added in PEM format.
 ```shell
 helm repo add i4trust https://i4trust.github.io/helm-charts
 helm repo update
-helm install -f -f ./values/values-activation-service.yml --namespace provider activation-service i4trust/activation-service
+helm install -f ./values/values-activation-service.yml --namespace provider activation-service i4trust/activation-service
 ```
 
 
