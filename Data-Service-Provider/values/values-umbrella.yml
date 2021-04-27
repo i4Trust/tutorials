@@ -1,0 +1,124 @@
+## Values for API-Umbrella
+##
+## 
+
+## Service account (might be required on OpenShift)
+#serviceAccount:
+#  create: false
+#  name: <account-name>
+
+## deployment specific configuration
+deployment:
+  # -- configuration of the image to be used
+  image:
+    ## api-umbrella image name
+    repository: fiware/api-umbrella
+    # -- tag of the image to be used
+    tag: i4trust-rc3
+    
+## ingress configuration
+ingress:
+  # -- should there be an ingress to connect orion with the public internet
+  enabled: true
+  # -- annotations to be added to the ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  # -- all hosts to be provided
+  hosts:
+    - host: umbrella.domain.org
+      paths:
+        - /
+  ## configure the ingress' tls
+  tls:
+    - secretName: api-umbrella-prod-tls
+      hosts: 
+        - umbrella.domain.org
+
+# configuration of api umbrella
+umbrella:
+  # -- list services that should be run by api-umbrella. See https://github.com/Profirator/api-umbrella/tree/master/config and
+  # https://api-umbrella.readthedocs.io/en/latest/ for more
+  services:
+    - router
+    - web
+
+  # -- configure the host of the frontend here
+  webHost: umbrella.domain.org
+
+  router: 
+    web_app_host: "umbrella.domain.org"
+
+  # database connection
+  mongodb:
+    # -- username to authenticate with. If the user does not exist, admin config is required and a user will be created
+    username: api_umbrella
+    # -- password to authenticate with, if not set, we will create it
+    password: <api-umbrella-password>
+    # -- host of the mongodb
+    host: mongo-mongodb-0.mongo-mongodb-headless.provider.svc.cluster.local
+    # -- port of the mongodb
+    port: 27017
+    # -- name of the database, needs to exist on startup
+    name: api_umbrella
+
+  # -- configuration of the umbrella. See https://github.com/Profirator/api-umbrella/tree/master/config and
+  # https://api-umbrella.readthedocs.io/en/latest/ for more or use the out-commented part as a sane default
+  config:
+    elasticsearch:
+      hosts:
+        - http://elasticsearch-master.i4trust-marketplace.svc.cluster.local:9200
+    hosts:
+      - hostname: umbrella.domain.org
+        default: true
+    # This is required for nginx bein able to handle the large JWTs exchanged
+    nginx:
+      large_client_header_buffers: 8 64k
+    gatekeeper:
+      api_key_methods:
+        - fiware-oauth2
+        - header
+        - getParam
+      api_key_cache: true
+
+  # Configuration of authorisation registry
+  authorisation_registry:
+    host: https://ar.isharetest.net
+    token_endpoint: https://ar.isharetest.net/connect/token
+    delegation_endpoint: https://ar.isharetest.net/delegation
+    identifier: EU.EORI.NL000000004
+
+  # Configuration for creating JWS
+  jws:
+    identifier: EU.EORI.NLPACKETDEL
+    # X5C certificate chain as array of PEM certificates
+    x5c:
+      - <put first certificate here>
+      - <put intermediate certificate here>
+      - <put root certificate here>
+    # ROOT CA config chain with root and intermediate certificate
+    root_ca: |
+      Bag Attributes
+      friendlyName: xxx
+      subject=CN = xxx, OU = Test, O = iSHARE, C = NL
+
+      issuer=CN = xxx, OU = Test, O = iSHARE, C = NL
+
+      -----BEGIN CERTIFICATE-----
+      <put certificate here>
+      -----END CERTIFICATE-----
+      Bag Attributes
+      friendlyName: yyy
+      subject=CN = yyy, OU = Test, O = iSHARE, C = NL
+      
+      issuer=CN = yyy, OU = Test, O = iSHARE, C = NL
+
+      -----BEGIN CERTIFICATE-----
+      <put certificate here>
+      -----END CERTIFICATE-----
+    # Private key in PEM format
+    private_key: |
+          -----BEGIN PRIVATE KEY-----
+          <put private key here>
+          -----END PRIVATE KEY-----
+          

@@ -1,0 +1,87 @@
+# Default values for pdc-portal.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## deployment specific configuration
+deployment:
+  ## configuration of the image to be used
+  image:
+    # -- image name
+    # ref: https://hub.docker.com/r/i4trust/pdc-portal
+    repository: i4trust/pdc-portal
+    # -- tag of the image to be used
+    tag: v0.1.0
+  
+## ingress configuration
+ingress:
+  # -- should there be an ingress to connect the activation service with the public internet
+  enabled: true
+  # -- annotations to be added to the ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  # -- all hosts to be provided
+  hosts:
+    - host: pdc-portal.domain.org
+      paths:
+        - /
+  # -- configure the ingress' tls
+  tls:
+    - secretName: pdc-portal-prod-tls
+      hosts: 
+        - pdc-portal.domain.org
+
+## Debug output
+debug:
+  enabled: false
+      
+## PDC Portal configuration
+config:
+  # Title of application
+  title: "Packet Delivery Portal"
+  # Client configuration
+  client:
+    # Client ID
+    id: "EU.EORI.NLPACKETDEL"
+    # Client key (PEM private key)
+    key: |
+      -----BEGIN PRIVATE KEY-----
+      <Put private key here>
+      -----END PRIVATE KEY-----
+    # Client certificate (PEM certificate chain)
+    crt: |
+      -----BEGIN CERTIFICATE-----
+      <Put certificate chain here>
+      -----END CERTIFICATE-----
+  # Configuration for external access
+  external:
+    # Host (Hostname for external access)
+    host: https://pdc-portal.domain.org
+  # OIDC configuration
+  oidc:
+    # Path for OIDC redirect callback
+    redirect_path: "/openid_connect1.0/return"
+    # ACR values
+    acr: "urn:http://eidas.europa.eu/LoA/NotNotified/high"
+  # Context Broker configuration
+  cb:
+    # Endpoint of (API-Umbrella protected) NGSI-LD API
+    endpoint: "https://umbrella.domain.org/packetdelivery/ngsi-ld/v1"
+  # Configuration of express web server
+  express:
+    # Port (Internal port of the express web server)
+    port: 7000
+  # IDP configuration for login
+  # This demo application requires to configure the two IDPs of HappyPets and NoCheaper.
+  idp:
+    "EU.EORI.NLHAPPYPETS":
+      id: "EU.EORI.NLHAPPYPETS"
+      url: "https://idp-happypets-shop.i4trust.fiware.io"
+      authorize_endpoint: "https://idp-happypets-shop.i4trust.fiware.io/oauth2/authorize"
+      token_endpoint: "https://idp-happypets-shop.i4trust.fiware.io/oauth2/token"
+    "EU.EORI.NLNOCHEAPER":
+      id: "EU.EORI.NLNOCHEAPER"
+      url: "https://idp-nocheaper-shop.i4trust.fiware.io"
+      authorize_endpoint: "https://idp-nocheaper-shop.i4trust.fiware.io/oauth2/authorize"
+      token_endpoint: "https://idp-nocheaper-shop.i4trust.fiware.io/oauth2/token"
+      
