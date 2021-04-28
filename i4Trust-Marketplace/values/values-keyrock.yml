@@ -30,7 +30,7 @@ ingress:
 ## database configuration for keyrock
 db:
   ## host of the database to be used (K8s internal service hostname)
-  host: mysql.provider.svc.cluster.local
+  host: mysql.marketplace.svc.cluster.local
   ## user for connecting the database
   user: root
   ## password for connecting the database (MySQL root password)
@@ -45,39 +45,12 @@ admin:
   ## email address of the admin user
   email: my@mail.org
 
-## Theme configuration for Keyrock
-# This is optional and showcases how to add a theme for the Keyrock UI. This setup is
-# using the Packet Delivery Co. theme of the demo setup.
-theme:
-  ## -- Enable theme
-    enabled: true
-    ## -- Name of the theme
-    name: i4trust-pdc
-    ## -- Size of PVCs to be created
-    size: 1Gi
-    ## Image which holds the theme files
-    image: i4trust/keyrock-theme-pdc:0.0.1
-    ## -- specification of the image pull policy
-    imagePullPolicy: Always
-    ## Path to the source theme files inside the container
-    sourceTheme: /themes/i4trust-pdc
-    ## Path to the source image files inside the container
-    sourceImg: /img/i4trust-pdc
-    ## Optional: Path to the source favicon directory inside the container
-    sourceFavicon: /favicon
-    ## Mount path for the source theme files
-    mountTheme: /opt/fiware-idm/themes/i4trust-pdc
-    ## Mount path for the source image files
-    mountImg: /opt/fiware-idm/public/img/i4trust-pdc
-    ## Mount path for the source favicon
-    mountFavicon: /opt/fiware-idm/public/favicon.ico
-
 ## a list of additional env vars to be set, check the keyrock docu for all available options
 ## ref: https://fiware-idm.readthedocs.io/en/latest/installation_and_administration_guide/environment_variables/index.html
 additionalEnvVars:
   # Title to be displayed on default theme UI
   - name: IDM_TITLE
-    value: My Company IDP
+    value: i4Trust Marketplace IDP
   # Name of the database to be created within the MySQL
   - name: IDM_DB_NAME
     value: idm

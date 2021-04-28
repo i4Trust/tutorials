@@ -73,7 +73,7 @@ Marketplace and create offerings on behalf of their company.
 Modify the Keyrock [values file](./values/values-keyrock.yml) according to your needs and deploy the Keyrock Identity Provider. 
 Make sure to setup an Ingress or OpenShift route in the values file for external 
 access of the UI (e.g. https://keyrock.domain.org). Also note that for the moment a dedicated Keyrock build needs to be used until 
-the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc2`. The issued private key and certificate 
+the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc3`. The issued private key and certificate 
 chain must be added in PEM format. 
 Make sure to use the chart from this [branch](https://github.com/FIWARE/helm-charts/tree/i4trust/charts/keyrock) until 
 the chart has been officially released.
