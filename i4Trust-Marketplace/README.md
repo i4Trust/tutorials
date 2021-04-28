@@ -73,7 +73,7 @@ the chart has been officially released.
 #helm repo add fiware https://fiware.github.io/helm-charts/
 #helm repo update
 # Use https://github.com/FIWARE/helm-charts/tree/i4trust/charts/keyrock instead
-helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.0.3
+helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.0.3
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
