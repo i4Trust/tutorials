@@ -73,7 +73,7 @@ the chart has been officially released.
 #helm repo add fiware https://fiware.github.io/helm-charts/
 #helm repo update
 # Use https://github.com/FIWARE/helm-charts/tree/i4trust/charts/keyrock instead
-helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.0.3
+helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.1.0
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
@@ -102,7 +102,7 @@ Make sure to use the chart from this [branch](https://github.com/FIWARE/helm-cha
 until the chart has been officially released.
 ```shell
 # Deploy BAE
-helm install -f ./values/values-marketplace.yml --namespace marketplace business-api-ecosystem fiware/business-api-ecosystem --version 0.0.7
+helm install -f ./values/values-marketplace.yml --namespace marketplace business-api-ecosystem fiware/business-api-ecosystem --version 0.2.0
 ```
 
 The deployment of all components will take some time. When the logic proxy component has been deployed and changed to the running state, 
