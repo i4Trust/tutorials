@@ -14,7 +14,7 @@ deployment:
     ## api-umbrella image name
     repository: fiware/api-umbrella
     # -- tag of the image to be used
-    tag: i4trust-rc3
+    tag: i4trust-rc4
     
 ## ingress configuration
 ingress:
