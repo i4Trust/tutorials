@@ -110,8 +110,7 @@ mongo -u root     # (provide MongoDB root PW)
 
 Now modify the [API Umbrella values file](./values/values-umbrella.yml) according to your setup and perform 
 the deployment using Helm. Make sure to setup an Ingress or OpenShift route in the values file for external 
-access of the UI (e.g. https://umbrella.domain.org). Also note that for the moment a dedicated API-Umbrella build needs to be used until 
-the i4Trust related changes have been officially released: `fiware/api-umbrella:i4trust-rc4`. The issued private key and certificate 
+access of the UI (e.g. https://umbrella.domain.org). The issued private key and certificate 
 chain must be added in PEM format. 
 Make sure to use the chart from this [branch](https://github.com/FIWARE/helm-charts/tree/i4trust/charts/api-umbrella) until 
 the chart has been officially released.
