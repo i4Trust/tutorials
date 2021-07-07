@@ -99,16 +99,16 @@ additionalEnvVars:
   # EORI of data service provider company
   - name: IDM_PR_CLIENT_ID
     value: EU.EORI.NLPACKETDEL
-  # URL of Authorisation Registry
+  # URL of external Authorisation Registry
   - name: IDM_AR_URL
     value: https://ar.isharetest.net
-  # EORI of Authorisation Registry
+  # EORI of external Authorisation Registry
   - name: IDM_AR_ID
     value: EU.EORI.NL000000004
-  # Token endpoint of Authorisation Registry
+  # Token endpoint of external Authorisation Registry
   - name: IDM_AR_TOKEN_ENDPOINT
     value: https://ar.isharetest.net/connect/token
-  # Delegation endpoint of Authorisation Registry
+  # Delegation endpoint of external Authorisation Registry
   - name: IDM_AR_DELEGATION_ENDPOINT
     value: https://ar.isharetest.net/delegation
   # Private key of data service provider company

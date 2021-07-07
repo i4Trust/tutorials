@@ -54,6 +54,8 @@ data service. In the experimentation framework example, it is needed in order th
 Company portal and access their delivery orders.
 
 Modify the Keyrock [values file](./values/values-keyrock.yml) according to your needs and deploy the Keyrock Identity Provider. 
+When there is no external authorisation registry configured for Keyrock, it will use it's internal authorisation registry and 
+policies need to be stored there.
 Make sure to setup an Ingress or OpenShift route in the values file for external 
 access of the UI (e.g. https://keyrock.domain.org). Also note that for the moment a dedicated Keyrock build needs to be used until 
 the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc4`. The issued private key and certificate 

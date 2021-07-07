@@ -136,6 +136,8 @@ company. In the experimentation framework example, it is needed in order that em
 Marketplace and create offerings on behalf of their company.
 
 Modify the Keyrock [values file](./values/values-keyrock.yml) according to your needs and deploy the Keyrock Identity Provider. 
+When there is no external authorisation registry configured for Keyrock, it will use it's internal authorisation registry and 
+policies need to be stored there.
 Make sure to setup an Ingress or OpenShift route in the values file for external 
 access of the UI (e.g. https://keyrock.domain.org). Also note that for the moment a dedicated Keyrock build needs to be used until 
 the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc3`. The issued private key and certificate 
@@ -179,6 +181,8 @@ Now modify the [API Umbrella values file](./values/values-umbrella.yml) accordin
 the deployment using Helm. 
 Check that in the database configuration, you provide the same password for the database user as has been used when creating 
 the MongoDB database and user.
+Depending on whether you use an external or the Keyrock built-in authorisation registry, it's endpoints and configuration 
+parameters need to be configured accordingly.
 Make sure to setup an Ingress or OpenShift route in the values file for external 
 access of the UI (e.g. https://umbrella.domain.org). The issued private key and certificate 
 chain must be added in PEM format. 
@@ -392,3 +396,12 @@ the service as described in the previous section, access policies need to be del
 should be allowed to access the service of the provider.
 
 For this, check the instructions about the [Data Service Consumer](../Data-Service-Consumer).
+
+When logging in at the portal application via the consuming organisation's (e.g. Happy Pets) Keyrock IDP, 
+the user receives an iSHARE-compliant JWT which will be sent along all requests to the provider's packet delivery service 
+endpoint, namely the API Umbrella instance performing the access management for the service provider's 
+context broker.
+
+Depending on whether the consuming organisation's Keyrock instance was configured using it's own authorisation registry 
+or an external one, the JWT will contain either the user's policies directly or access information about the external 
+authorisation registry, which will allow API Umbrella to check for the necessary access rights of the user.
