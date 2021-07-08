@@ -311,7 +311,7 @@ and allows the organisation to delegate the access to it's users. This builds a 
 service provider does only need to know it has granted access to the specific organisation, but does not 
 need to know anything about the user which finally accesses the service.
 
-As an example, for an organisation Happy Pets with EORI `EU.` being granted read access (the portal performs GET requests 
+As an example, for an organisation Happy Pets with EORI `EU.EORI.NLHAPPYPETS` being granted read access (the portal performs GET requests 
 when accessing a certain entity) to all entities of type 
 `DELIVERYORDER` for all attributes, and write access (the portal performs PATCH requests when updating certain 
 attributes) for the attributes of `pta` and `pta`, such policy would look like the following:
