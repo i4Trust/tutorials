@@ -59,20 +59,14 @@ described in the linked repository.
 An instance of the Keyrock Identity Provider dedicated to the BAE is required in order to have 
 administrative access to the BAE. Note that the login via this Keyrock instance is performed based 
 on the OAuth2 protocol, whereas the Identity Providers deployed at the environments of service providers and 
-service consumers follow the OpenID Connect protocol.
+service consumers follow the OpenID Connect protocol based on iSHARE specifications.
 
 Modify the Keyrock [values file](./values/values-keyrock.yml) according to your needs and deploy the Keyrock Identity Provider. 
 Make sure to setup an Ingress or OpenShift route in the values file for external 
 access of the UI (e.g. https://keyrock.domain.org). Also note that for the moment a dedicated Keyrock build needs to be used until 
-the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc3`. The issued private key and certificate 
+the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc4`. The issued private key and certificate 
 chain must be added in PEM format. 
-Make sure to use the chart from this [branch](https://github.com/FIWARE/helm-charts/tree/i4trust/charts/keyrock) until 
-the chart has been officially released.
 ```shell
-# Chart not officially released yet
-#helm repo add fiware https://fiware.github.io/helm-charts/
-#helm repo update
-# Use https://github.com/FIWARE/helm-charts/tree/i4trust/charts/keyrock instead
 helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.1.0
 ```
 
@@ -81,7 +75,8 @@ the values file. Then follow the steps described for the Keyrock instance in
 [production-on-k8s](https://github.com/FIWARE/production-on-k8s/tree/main/business-api-ecosystem).
 
 Users can be created by the Admin user, or users sign up on their own, and need to be assigned the roles 
-described in [production-on-k8s](https://github.com/FIWARE/production-on-k8s/tree/main/business-api-ecosystem). 
+described in [production-on-k8s](https://github.com/FIWARE/production-on-k8s/tree/main/business-api-ecosystem). Since this 
+Keyrock instance is dedicated for having administrative access to the BAE, users basically only need to the `admin` role.
 
 
 
@@ -94,15 +89,14 @@ the databases, elasticsearch and Keyrock instances which have been setup before.
 
 This values file incorporates the usage of the [i4Trust theme](https://github.com/i4Trust/bae-i4trust-theme) for the marketplace UI. 
 External IDPs of service providers and service consumers, which are supposed to login to the marketplace via their own IDPs, 
-need to be added within the values file, in order to be selectable on the login dialog of the marketplace UI.
+need to be added via the Administration UI of the BAE after logging in with the `admin` role, in order to be selectable on the 
+login dialog of the marketplace UI. In order to login using the dedicated Keyrock instance setup above, one needs to open 
+this link: [https://marketplace.domain.org/login](https://marketplace.domain.org/login).
 
-Note that for some of the components, dedicated builds have to be used until the i4Trust related changes have been officially 
-released. The private key and certificate chain issued for the marketplace must be added in PEM format. 
-Make sure to use the chart from this [branch](https://github.com/FIWARE/helm-charts/tree/i4trust/charts/business-api-ecosystem) 
-until the chart has been officially released.
+The private key and certificate chain issued for the marketplace must be added in PEM format. 
 ```shell
 # Deploy BAE
-helm install -f ./values/values-marketplace.yml --namespace marketplace business-api-ecosystem fiware/business-api-ecosystem --version 0.2.0
+helm install -f ./values/values-marketplace.yml --namespace marketplace bae fiware/business-api-ecosystem --version 0.2.0
 ```
 
 The deployment of all components will take some time. When the logic proxy component has been deployed and changed to the running state, 
