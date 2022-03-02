@@ -51,6 +51,16 @@ needs.
 kubectl create ns provider
 ```
 
+Due to the iSHARE specification, requests can contain very large headers with the signed JWTs. 
+When using Kubernetes, note that the ingress controller must be capable of handling large request headers. When using 
+nginx as ingress controller, these are the proposed parameters to be set:
+```yaml
+large-client-header-buffers: "8 32k"
+http2-max-field-size: "32k"
+http2-max-header-size: "32k"
+```
+
+
 
 ## Databases and Orion Context Broker
 
@@ -145,7 +155,7 @@ chain must be added in PEM format.
 ```shell
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
-helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.1.0
+helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.2.1
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
@@ -185,7 +195,7 @@ chain must be added in PEM format.
 ```shell
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
-helm install -f ./values/values-umbrella.yml --namespace provider api-umbrella fiware/api-umbrella --version 0.0.4
+helm install -f ./values/values-umbrella.yml --namespace provider api-umbrella fiware/api-umbrella --version 0.0.7
 ```
 
 When first opening the page (https://umbrella.domain.org/admin), the credentials of the admin user can be set.
@@ -199,6 +209,7 @@ Within the Admin UI, create a new API Backend for the Orion Context Broker and c
 
 API-Umbrella is now configured to receive requests at the `/packetdelivery` endpoint, check the access rights from the 
 policies at the authorisation registries and, if access is granted, to forward the requests to the Orion Context Broker.
+
 
 
 

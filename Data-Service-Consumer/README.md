@@ -39,6 +39,14 @@ needs.
 kubectl create ns consumer
 ```
 
+Due to the iSHARE specification, requests can contain very large headers with the signed JWTs. 
+When using Kubernetes, note that the ingress controller must be capable of handling large request headers. When using 
+nginx as ingress controller, these are the proposed parameters to be set:
+```yaml
+large-client-header-buffers: "8 32k"
+http2-max-field-size: "32k"
+http2-max-header-size: "32k"
+```
 
 ## MySQL Database
 
@@ -63,7 +71,7 @@ chain must be added in PEM format.
 ```shell
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
-helm install -f ./values/values-keyrock.yml --namespace consumer keyrock fiware/keyrock --version 0.1.0
+helm install -f ./values/values-keyrock.yml --namespace consumer keyrock fiware/keyrock --version 0.2.1
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 

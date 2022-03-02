@@ -12,7 +12,7 @@ deployment:
     ## ref: https://hub.docker.com/r/fiware/idm
     repository: fiware/idm
     ## tag of the image to be used
-    tag: i4trust-rc4
+    tag: i4trust-rc6
     ## specification of the image pull policy
     pullPolicy: IfNotPresent
     
