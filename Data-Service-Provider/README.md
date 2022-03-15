@@ -155,7 +155,7 @@ chain must be added in PEM format.
 ```shell
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
-helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.2.1
+helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.2.3
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
@@ -184,9 +184,11 @@ mongo -u root     # (provide MongoDB root PW)
 ```
 
 Now modify the [API Umbrella values file](./values/values-umbrella.yml) according to your setup and perform 
-the deployment using Helm. 
+the deployment using Helm.  
+Note, for the verification of signed JWTs according to iSHARE specifications, you either need to configure the iSHARE Satellite 
+endpoint or provide the root CA.  
 Check that in the database configuration, you provide the same password for the database user as has been used when creating 
-the MongoDB database and user.
+the MongoDB database and user.  
 Depending on whether you use an external or the Keyrock built-in authorisation registry, it's endpoints and configuration 
 parameters need to be configured accordingly.
 Make sure to setup an Ingress or OpenShift route in the values file for external 
@@ -195,7 +197,7 @@ chain must be added in PEM format.
 ```shell
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
-helm install -f ./values/values-umbrella.yml --namespace provider api-umbrella fiware/api-umbrella --version 0.0.7
+helm install -f ./values/values-umbrella.yml --namespace provider api-umbrella fiware/api-umbrella --version 0.0.8
 ```
 
 When first opening the page (https://umbrella.domain.org/admin), the credentials of the admin user can be set.

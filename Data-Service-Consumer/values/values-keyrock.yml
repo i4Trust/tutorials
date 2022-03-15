@@ -99,7 +99,7 @@ additionalEnvVars:
   # EORI of data service consuming company
   - name: IDM_PR_CLIENT_ID
     value: EU.EORI.NLHAPPYPETS
-  # URL of external Authorisation Registry
+  # URL of external Authorisation Registry (put 'internal' if internal AR should be used)
   - name: IDM_AR_URL
     value: https://ar.isharetest.net
   # EORI of external Authorisation Registry

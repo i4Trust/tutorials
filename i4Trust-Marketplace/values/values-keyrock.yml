@@ -72,7 +72,7 @@ additionalEnvVars:
   # EORI of data service provider company
   - name: IDM_PR_CLIENT_ID
     value: EU.EORI.NLPACKETDEL
-  # URL of Authorisation Registry
+  # URL of Authorisation Registry (put 'internal' if internal AR should be used)
   - name: IDM_AR_URL
     value: https://ar.isharetest.net
   # EORI of Authorisation Registry

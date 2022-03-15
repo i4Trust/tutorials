@@ -76,7 +76,7 @@ access of the UI (e.g. https://keyrock.domain.org). Also note that for the momen
 the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc4`. The issued private key and certificate 
 chain must be added in PEM format. 
 ```shell
-helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.2.1
+helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.2.3
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
