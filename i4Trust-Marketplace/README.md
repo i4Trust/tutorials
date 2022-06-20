@@ -76,7 +76,7 @@ access of the UI (e.g. https://keyrock.domain.org). Also note that for the momen
 the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc4`. The issued private key and certificate 
 chain must be added in PEM format. 
 ```shell
-helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.2.3
+helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.4.1
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
@@ -105,7 +105,7 @@ this link: [https://marketplace.domain.org/login](https://marketplace.domain.org
 The private key and certificate chain issued for the marketplace must be added in PEM format. 
 ```shell
 # Deploy BAE
-helm install -f ./values/values-marketplace.yml --namespace marketplace bae fiware/business-api-ecosystem --version 0.2.6
+helm install -f ./values/values-marketplace.yml --namespace marketplace bae fiware/business-api-ecosystem --version 0.4.6
 ```
 
 The deployment of all components will take some time. When the logic proxy component has been deployed and changed to the running state, 
