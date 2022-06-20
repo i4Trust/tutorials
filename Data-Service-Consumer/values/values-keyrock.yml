@@ -12,7 +12,7 @@ deployment:
     ## ref: https://hub.docker.com/r/fiware/idm
     repository: fiware/idm
     ## tag of the image to be used
-    tag: i4trust-rc6
+    tag: i4trust-rc7
     ## specification of the image pull policy
     pullPolicy: IfNotPresent
     
@@ -84,6 +84,9 @@ additionalEnvVars:
   # Initialize and seed database on startup
   - name: IDM_DB_SEED
     value: "true"
+  # Maximum header size of internal web server
+  - name: IDM_SERVER_MAX_HEADER_SIZE
+    value: "32768"
   # URL of iSHARE Satellite
   - name: IDM_PR_URL
     value: https://scheme.isharetest.net

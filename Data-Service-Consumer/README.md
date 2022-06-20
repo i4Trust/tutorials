@@ -33,7 +33,7 @@ parameters to be set. Adapt these for your setup before proceeding with the inst
 The helm chart of Keyrock with all possible configuration values can be found here:
 * [Keyrock](https://github.com/FIWARE/helm-charts/tree/main/charts/keyrock)
 
-Is is assumed that all components will be deployed within the namespace `consumer`. Change this name according to your 
+It is assumed that all components will be deployed within the namespace `consumer`. Change this name according to your 
 needs.
 ```shell
 kubectl create ns consumer
@@ -57,7 +57,7 @@ described about MySQL in the linked repository.
 
 ## Keyrock
 
-The Keyrock Identity Provider is required for storing the accounts of the users accessing the of the Packet Delivery Company 
+The Keyrock Identity Provider is required for storing the accounts of the users accessing the Packet Delivery Company 
 data service. In the experimentation framework example, it is needed in order that shop users can login at the Packet Delivery 
 Company portal and access their delivery orders.
 
@@ -76,6 +76,13 @@ helm install -f ./values/values-keyrock.yml --namespace consumer keyrock fiware/
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
 the values file. Then users can be created by the Admin user, or users sign up on their own.
+
+When using the internal authorisation registry of Keyrock, one might need to increase the maximum header size of the 
+internal web server by setting the ENV, e.g. to
+```shell
+IDM_SERVER_MAX_HEADER_SIZE=32786
+```
+See the [values file](./values/values-keyrock.yml) for an example.
 
 
 

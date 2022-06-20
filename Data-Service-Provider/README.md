@@ -161,6 +161,12 @@ helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
 the values file. Then users can be created by the Admin user, or users sign up on their own.
 
+When using the internal authorisation registry of Keyrock, one might need to increase the maximum header size of the 
+internal web server by setting the ENV, e.g. to
+```shell
+IDM_SERVER_MAX_HEADER_SIZE=32786
+```
+See the [values file](./values/values-keyrock.yml) for an example.
 
 
 ## API-Umbrella
