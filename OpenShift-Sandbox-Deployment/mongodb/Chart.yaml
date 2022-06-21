@@ -1,0 +1,11 @@
+apiVersion: v2
+name: mongo-db
+
+type: application
+version: 10.30.12
+appVersion: "3.6.21"
+
+dependencies:
+- name: mongodb
+  version: 10.30.12
+  repository: https://charts.bitnami.com/bitnami

@@ -1,0 +1,11 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata: 
+  name: kong-route
+spec:
+  port: 
+    targetPort: kong-proxy
+  path: "/"
+  to:
+    kind: Service
+    name: {{ include "kong.fullname" . }}-proxy
