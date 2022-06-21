@@ -75,7 +75,7 @@ Verify:
 
 9. Install keyrock:
 
-> :warning: replace cert and key in the values.yaml with your data.
+> :warning: replace cert and key in the [secrets.yaml](./keyrock/templates/secrets.yaml) with your data. They need to be base64 encoded.
 
 ```shell
     helm dependency build ./keyrock/
@@ -150,9 +150,50 @@ Verify:
 The system now can be reached at: 
 
 ```shell
-   kubectl get routes kong-route -n <YOUR_ACCOUNT>-dev -o json | jq -r '.items[0].spec.host'
+   kubectl get routes kong-route -n <YOUR_ACCOUNT>-dev -o json | jq -r '.spec.host'
 ```
-
 
 ## Try out the setup
 
+Put your client key and certificate into the folder to mount(the files in  [example-secrets](./doc/example-secrets/)) are only generated examples) and use the correct IDs.
+
+1. Generate a [JWT](https://dev.ishareworks.org/introduction/jwt.html) for your client:
+```shell
+    docker run -v $(pwd)/doc/example-secrets:/certificates -e I_SHARE_CLIENT_ID="EU.EORI.NLHAPPYPETS" -e I_SHARE_IDP_ID="EU.EORI.NLPACKETDEL"  quay.io/wi_stefan/ishare-token
+```
+
+The token will be print out on the command-line. Be aware that it is(as defined by iShare) only valid for 30s.
+
+2. Request a token: 
+```shell 
+    curl --location --request POST 'https://ar.isharetest.net/connect/token' \
+        --header 'Content-Type: application/x-www-form-urlencoded' \
+        --data-urlencode 'grant_type=client_credentials' \
+        --data-urlencode 'scope=iSHARE' \
+        --data-urlencode 'client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer' \
+        --data-urlencode 'client_assertion=<GENERATED_TOKEN>' \
+        --data-urlencode 'client_id=EU.EORI.NLHAPPYPETS'
+```
+
+The response will look  like:
+
+```json
+{
+    "access_token": "<TOKEN>",
+    "expires_in": 3600,
+    "token_type": "Bearer"
+}```
+
+3. Request at kong:
+
+```shell
+curl --location --request GET '<KONG-ADDRESS>/orion/ngsi-ld/v1/entities/urn:ngsi-ld:TEST:ENTITY' \
+--header 'Authorization: Bearer <ACCESS_TOKEN' 
+```
+This should lead to the response:
+```json
+  {
+      "message": "Local AR policy not authorized: Policy has expired or is not yet valid"
+  }
+```
+No policies are configured yet, but Kong accepted the requests and checked the token. Create policies as you need now.

@@ -1,15 +1,11 @@
 keyrock:
-  ## deployment specific configuration
-  deployment:
-    ## configuration of the image to be used
+  existingCertSecret: cert-secret
+
+  statefulset:
     image:
-      ## keyrock image name
-      ## ref: https://hub.docker.com/r/fiware/idm
       repository: fiware/idm
-      ## tag of the image to be used
-      tag: i4trust-rc7
-      ## specification of the image pull policy
-      pullPolicy: IfNotPresent
+      tag: i4trust-rc7-header-size
+      pullPolicy: Always
       
   ## Set either an ingress or openshift route for making Keyrock externally available
   ##
@@ -17,6 +13,10 @@ keyrock:
   route:
     ## -- should the deployment create openshift routes
     enabled: true   
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+
   ## ingress configuration
   ingress:
     ## should there be an ingress to connect keyrock with the public internet
@@ -67,60 +67,48 @@ keyrock:
       ## Mount path for the source favicon
       mountFavicon: /opt/fiware-idm/public/favicon.ico
 
-  ## a list of additional env vars to be set, check the keyrock docu for all available options
-  ## ref: https://fiware-idm.readthedocs.io/en/latest/installation_and_administration_guide/environment_variables/index.html
+  ## Configuration of Authorisation Registry (AR)
+  authorisationRegistry:
+    # -- Enable usage of authorisation registry
+    enabled: true
+    # -- Identifier (EORI) of AR
+    identifier: "EU.EORI.NL000000004"
+    # -- URL of AR
+    #url: "https://ar.isharetest.net"
+    url: "internal"
+    # -- Token endpoint of AR
+    tokenEndpoint: "https://ar.isharetest.net/connect/token"
+    # -- Delegation endpoint of AR
+    delegationEndpoint: "https://ar.isharetest.net/delegation"
+
+  ## Configuration of iSHARE Satellite
+  satellite:
+    # -- Enable usage of satellite
+    enabled: true
+    # -- Identifier (EORI) of satellite
+    identifier: "EU.EORI.NL000000000"
+    # -- URL of satellite
+    url: "https://scheme.isharetest.net"
+    # -- Token endpoint of satellite
+    tokenEndpoint: "https://scheme.isharetest.net/connect/token"
+    # -- Parties endpoint of satellite
+    partiesEndpoint: "https://scheme.isharetest.net/parties"
+
+  ## -- Configuration of local key and certificate for validation and generation of tokens
+  token:
+    # -- Enable storage of local key and certificate
+    enabled: true
+    # -- Identifier (EORI) of local organisation
+    identifier: "EU.EORI.NLPACKETDEL"
+  
   additionalEnvVars:
-    # Title to be displayed on default theme UI
     - name: IDM_TITLE
-      value: My Company IDP
-    # Name of the database to be created within the MySQL
-    - name: IDM_DB_NAME
-      value: idm
-    # Initialize and seed database on startup
+      value: "Packet Delivery Co. - Company Portal"
+    - name: IDM_DEBUG
+      value: "true"
+    - name: DEBUG
+      value: "*"
     - name: IDM_DB_SEED
       value: "true"
-    # Maximum header size of internal web server
     - name: IDM_SERVER_MAX_HEADER_SIZE
       value: "32768"
-    # URL of iSHARE Satellite
-    - name: IDM_PR_URL
-      value: https://scheme.isharetest.net
-    # Token endpoint of iSHARE Satellite
-    - name: IDM_PR_TOKEN_ENDPOINT
-      value: https://scheme.isharetest.net/connect/token
-    # Parties endpoint of iSHARE Satellite
-    - name: IDM_PR_PARTIES_ENDPOINT
-      value: https://scheme.isharetest.net/parties
-    # EORI of iSHARE Satellite
-    - name: IDM_PR_ID
-      value: EU.EORI.NL000000000
-    # EORI of data service provider company
-    - name: IDM_PR_CLIENT_ID
-      value: EU.EORI.NLPACKETDEL
-    # URL of external Authorisation Registry (put 'internal' if internal AR should be used)
-    - name: IDM_AR_URL
-      value: https://ar.isharetest.net
-    # EORI of external Authorisation Registry
-    - name: IDM_AR_ID
-      value: EU.EORI.NL000000004
-    # Token endpoint of external Authorisation Registry
-    - name: IDM_AR_TOKEN_ENDPOINT
-      value: https://ar.isharetest.net/connect/token
-    # Delegation endpoint of external Authorisation Registry
-    - name: IDM_AR_DELEGATION_ENDPOINT
-      value: https://ar.isharetest.net/delegation
-    # Private key of data service provider company
-    - name: IDM_PR_CLIENT_KEY
-      value: |
-        <INSERT KEY IN FORMAT: >
-        -----BEGIN PRIVATE KEY-----
-        ...
-        -----END PRIVATE KEY-----
-    # Certificate chain of data service provider company
-    - name: IDM_PR_CLIENT_CRT
-      value: |
-        <INSERT CERT CHAIN IN FORMAT: >
-        Bag Attributes
-            friendlyName: HappyPets
-        
-        -----END CERTIFICATE-----
