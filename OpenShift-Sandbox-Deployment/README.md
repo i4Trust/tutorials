@@ -183,7 +183,7 @@ The response will look  like:
     "expires_in": 3600,
     "token_type": "Bearer"
 }
-    ```
+```
 
 3. Request at kong:
 
