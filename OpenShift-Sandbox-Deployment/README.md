@@ -182,7 +182,8 @@ The response will look  like:
     "access_token": "<TOKEN>",
     "expires_in": 3600,
     "token_type": "Bearer"
-}```
+}
+    ```
 
 3. Request at kong:
 
@@ -190,7 +191,9 @@ The response will look  like:
 curl --location --request GET '<KONG-ADDRESS>/orion/ngsi-ld/v1/entities/urn:ngsi-ld:TEST:ENTITY' \
 --header 'Authorization: Bearer <ACCESS_TOKEN' 
 ```
+    
 This should lead to the response:
+    
 ```json
   {
       "message": "Local AR policy not authorized: Policy has expired or is not yet valid"
