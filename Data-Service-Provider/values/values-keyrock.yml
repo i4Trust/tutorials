@@ -4,8 +4,8 @@
 # ref: https://github.com/FIWARE/helm-charts/blob/main/charts/keyrock/values.yaml
 #
 
-## deployment specific configuration
-deployment:
+## statefulset specific configuration
+statefulset:
   ## configuration of the image to be used
   image:
     ## keyrock image name
