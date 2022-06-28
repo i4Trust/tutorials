@@ -5,7 +5,7 @@
 #
 
 ## deployment specific configuration
-deployment:
+statefulset:
   ## configuration of the image to be used
   image:
     ## keyrock image name
@@ -45,6 +45,40 @@ admin:
   ## email address of the admin user
   email: my@mail.org
 
+## Configuration of Authorisation Registry (AR)
+authorisationRegistry:
+  # -- Enable usage of authorisation registry
+  enabled: true
+  # -- Identifier (EORI) of AR
+  identifier: "EU.EORI.NL000000004"
+  # -- URL of AR
+  #url: "https://ar.isharetest.net"
+  url: "internal"
+  # -- Token endpoint of AR
+  tokenEndpoint: "https://ar.isharetest.net/connect/token"
+  # -- Delegation endpoint of AR
+  delegationEndpoint: "https://ar.isharetest.net/delegation"
+
+## Configuration of iSHARE Satellite
+satellite:
+  # -- Enable usage of satellite
+  enabled: true
+  # -- Identifier (EORI) of satellite
+  identifier: "EU.EORI.NL000000000"
+  # -- URL of satellite
+  url: "https://scheme.isharetest.net"
+  # -- Token endpoint of satellite
+  tokenEndpoint: "https://scheme.isharetest.net/connect/token"
+  # -- Parties endpoint of satellite
+  partiesEndpoint: "https://scheme.isharetest.net/parties"
+
+## -- Configuration of local key and certificate for validation and generation of tokens
+token:
+  # -- Enable storage of local key and certificate
+  enabled: true
+  # -- Identifier (EORI) of local organisation
+  identifier: "EU.EORI.NLPACKETDEL"
+
 ## a list of additional env vars to be set, check the keyrock docu for all available options
 ## ref: https://fiware-idm.readthedocs.io/en/latest/installation_and_administration_guide/environment_variables/index.html
 additionalEnvVars:
@@ -57,33 +91,6 @@ additionalEnvVars:
   # Initialize and seed database on startup
   - name: IDM_DB_SEED
     value: "true"
-  # URL of iSHARE Satellite
-  - name: IDM_PR_URL
-    value: https://scheme.isharetest.net
-  # Token endpoint of iSHARE Satellite
-  - name: IDM_PR_TOKEN_ENDPOINT
-    value: https://scheme.isharetest.net/connect/token
-  # Parties endpoint of iSHARE Satellite
-  - name: IDM_PR_PARTIES_ENDPOINT
-    value: https://scheme.isharetest.net/parties
-  # EORI of iSHARE Satellite
-  - name: IDM_PR_ID
-    value: EU.EORI.NL000000000
-  # EORI of data service provider company
-  - name: IDM_PR_CLIENT_ID
-    value: EU.EORI.NLPACKETDEL
-  # URL of Authorisation Registry (put 'internal' if internal AR should be used)
-  - name: IDM_AR_URL
-    value: https://ar.isharetest.net
-  # EORI of Authorisation Registry
-  - name: IDM_AR_ID
-    value: EU.EORI.NL000000004
-  # Token endpoint of Authorisation Registry
-  - name: IDM_AR_TOKEN_ENDPOINT
-    value: https://ar.isharetest.net/connect/token
-  # Delegation endpoint of Authorisation Registry
-  - name: IDM_AR_DELEGATION_ENDPOINT
-    value: https://ar.isharetest.net/delegation
   # Private key of data service provider company
   - name: IDM_PR_CLIENT_KEY
     value: |
