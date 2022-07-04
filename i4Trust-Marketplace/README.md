@@ -35,6 +35,15 @@ We will assume that all components will be deployed within the namespace `market
 kubectl create ns marketplace
 ```
 
+Due to the iSHARE specification, requests can contain very large headers with the signed JWTs. 
+When using Kubernetes, note that the ingress controller must be capable of handling large request headers. When using 
+nginx as ingress controller, these are the proposed parameters to be set:
+```yaml
+large-client-header-buffers: "8 32k"
+http2-max-field-size: "32k"
+http2-max-header-size: "32k"
+```
+
 In the following we assume that you have control of the domain `domain.org` and that the EORI issued to the marketplace 
 is `EU.EORI.NLMARKETPLA`. Furthermore we assume 
 that the externally available components will be accessible on the following subdomains:
@@ -67,7 +76,7 @@ access of the UI (e.g. https://keyrock.domain.org). Also note that for the momen
 the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc4`. The issued private key and certificate 
 chain must be added in PEM format. 
 ```shell
-helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.1.0
+helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.4.1
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
@@ -96,7 +105,7 @@ this link: [https://marketplace.domain.org/login](https://marketplace.domain.org
 The private key and certificate chain issued for the marketplace must be added in PEM format. 
 ```shell
 # Deploy BAE
-helm install -f ./values/values-marketplace.yml --namespace marketplace bae fiware/business-api-ecosystem --version 0.2.0
+helm install -f ./values/values-marketplace.yml --namespace marketplace bae fiware/business-api-ecosystem --version 0.4.6
 ```
 
 The deployment of all components will take some time. When the logic proxy component has been deployed and changed to the running state, 
