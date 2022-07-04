@@ -155,7 +155,9 @@ chain must be added in PEM format.
 ```shell
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
+
 helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.4.1
+
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
