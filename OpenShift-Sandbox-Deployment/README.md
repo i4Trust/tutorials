@@ -189,14 +189,14 @@ The response will look  like:
 
 ```shell
 curl --location --request GET '<KONG-ADDRESS>/orion/ngsi-ld/v1/entities/urn:ngsi-ld:TEST:ENTITY' \
---header 'Authorization: Bearer <ACCESS_TOKEN' 
+--header 'Authorization: Bearer <ACCESS_TOKEN>' 
 ```
     
-This should lead to the response:
+This should lead to a response like:
     
 ```json
   {
       "message": "Local AR policy not authorized: Policy has expired or is not yet valid"
   }
 ```
-No policies are configured yet, but Kong accepted the requests and checked the token. Create policies as you need now.
+The concrete output depends on the policies created for your participants(e.g. I_SHARE_CLIENT_ID and I_SHARE_IDP_ID). In our example, a policy is found but currently not active.
