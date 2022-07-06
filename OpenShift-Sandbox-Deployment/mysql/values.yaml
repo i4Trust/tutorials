@@ -1,0 +1,7 @@
+mysql:
+  image: "mysql"
+  imageTag: "5.7"
+
+  mysqlRootPassword: root-password
+  persistence:
+    size: 1Gi

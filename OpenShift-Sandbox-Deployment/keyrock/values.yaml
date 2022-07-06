@@ -1,0 +1,114 @@
+keyrock:
+  existingCertSecret: cert-secret
+
+  statefulset:
+    image:
+      repository: fiware/idm
+      tag: i4trust-rc7-header-size
+      pullPolicy: Always
+      
+  ## Set either an ingress or openshift route for making Keyrock externally available
+  ##
+  ## openshift specific route definition. Will not work on plain k8s
+  route:
+    ## -- should the deployment create openshift routes
+    enabled: true   
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+
+  ## ingress configuration
+  ingress:
+    ## should there be an ingress to connect keyrock with the public internet
+    enabled: false
+
+  ## database configuration for keyrock
+  db:
+    ## host of the database to be used (K8s internal service hostname)
+    host: mysql
+    ## user for connecting the database
+    user: root
+    ## password for connecting the database (MySQL root password)
+    password: root-password
+
+  ## admin configuration for accessing keyrock
+  admin:
+    ## username of the initial keyrock admin
+    user: admin
+    ## password of the initial admin
+    password: admin
+    ## email address of the admin user
+    email: my-admin@mail.org
+
+  ## Theme configuration for Keyrock
+  # This is optional and showcases how to add a theme for the Keyrock UI. This setup is
+  # using the Packet Delivery Co. theme of the demo setup.
+  theme:
+    ## -- Enable theme
+      enabled: true
+      ## -- Name of the theme
+      name: i4trust-pdc
+      ## -- Size of PVCs to be created
+      size: 500Mi
+      ## Image which holds the theme files
+      image: i4trust/keyrock-theme-pdc:0.0.1
+      ## -- specification of the image pull policy
+      imagePullPolicy: Always
+      ## Path to the source theme files inside the container
+      sourceTheme: /themes/i4trust-pdc
+      ## Path to the source image files inside the container
+      sourceImg: /img/i4trust-pdc
+      ## Optional: Path to the source favicon directory inside the container
+      sourceFavicon: /favicon
+      ## Mount path for the source theme files
+      mountTheme: /opt/fiware-idm/themes/i4trust-pdc
+      ## Mount path for the source image files
+      mountImg: /opt/fiware-idm/public/img/i4trust-pdc
+      ## Mount path for the source favicon
+      mountFavicon: /opt/fiware-idm/public/favicon.ico
+
+  ## Configuration of Authorisation Registry (AR)
+  authorisationRegistry:
+    # -- Enable usage of authorisation registry
+    enabled: true
+    # -- Identifier (EORI) of AR
+    identifier: "EU.EORI.NL000000004"
+    # -- URL of AR
+    #url: "https://ar.isharetest.net"
+    url: "internal"
+    # -- Token endpoint of AR
+    tokenEndpoint: "https://ar.isharetest.net/connect/token"
+    # -- Delegation endpoint of AR
+    delegationEndpoint: "https://ar.isharetest.net/delegation"
+
+  ## Configuration of iSHARE Satellite
+  satellite:
+    # -- Enable usage of satellite
+    enabled: true
+    # -- Identifier (EORI) of satellite
+    identifier: "EU.EORI.NL000000000"
+    # -- URL of satellite
+    url: "https://scheme.isharetest.net"
+    # -- Token endpoint of satellite
+    tokenEndpoint: "https://scheme.isharetest.net/connect/token"
+    # -- Parties endpoint of satellite
+    partiesEndpoint: "https://scheme.isharetest.net/parties"
+
+  ## -- Configuration of local key and certificate for validation and generation of tokens
+  token:
+    # -- Enable storage of local key and certificate
+    enabled: true
+    # -- Identifier (EORI) of local organisation
+    identifier: "EU.EORI.NLPACKETDEL"
+  
+  additionalEnvVars:
+    - name: IDM_TITLE
+      value: "Packet Delivery Co. - Company Portal"
+    - name: IDM_DEBUG
+      value: "true"
+    - name: DEBUG
+      value: "*"
+    - name: IDM_DB_SEED
+      value: "true"
+    - name: IDM_SERVER_MAX_HEADER_SIZE
+      value: "32768"

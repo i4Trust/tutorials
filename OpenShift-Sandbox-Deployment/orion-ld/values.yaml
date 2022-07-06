@@ -1,0 +1,8 @@
+orion:
+  broker:
+    envPrefix: ORIONLD_
+    db:
+      hosts:
+        - mongodb
+  mongo: 
+    enabled: false

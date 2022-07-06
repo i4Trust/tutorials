@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kong-configmap
+data:
+  kong.yml: |
+    _format_version: "2.1"
+    _transform: true
+    services:
+      - host: "orion-ld"
+        name: "orion-ld"
+        port: 1026
+        protocol: http
+        routes:
+          - name: orion-ld
+            paths:
+              - /orion
+            strip_path: true
+        plugins:
+          - name: ngsi-ishare-policies
+            config:
+              access_token:
+                header_names:
+                  - "authorization"
+                  - "Authorization"
+              ar:
+                identifier: "EU.EORI.NL000000004"
+                host: "https://ar.isharetest.net"
+                token_endpoint: "https://ar.isharetest.net/connect/token"
+                delegation_endpoint: "https://ar.isharetest.net/delegation"
+              satellite:
+                identifier: "EU.EORI.NL000000000"
+                host: "https://scheme.isharetest.net"
+                token_endpoint: "https://scheme.isharetest.net/connect/token"
+                trusted_list_endpoint: "https://scheme.isharetest.net/trusted_list"
+              jws:
+                identifier: "EU.EORI.NLPACKETDEL"
+              
+          - name: request-transformer
+            config:
+              remove:
+                headers:
+                  - Authorization
+                  - authorization

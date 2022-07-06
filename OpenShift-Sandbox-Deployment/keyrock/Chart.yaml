@@ -1,0 +1,11 @@
+apiVersion: v2
+name: keyrock
+
+type: application
+version: 0.4.1
+appVersion: "i4trust-rc7"
+
+dependencies:
+  - name: keyrock
+    version: 0.4.1
+    repository: https://fiware.github.io/helm-charts
