@@ -42,6 +42,9 @@ Helm charts of the i4Trust related components with all possible configuration va
 * [Activation Service](https://github.com/i4Trust/helm-charts/tree/main/charts/activation-service)
 * [Packet Delivery Portal - Demo Application](https://github.com/i4Trust/helm-charts/tree/main/charts/pdc-portal)
 
+The Kong helm chart with all possible configuration values can be found here:
+* [Kong](https://github.com/Kong/charts)
+
 Is is assumed that all components will be deployed within the namespace `provider`. Change this name according to your 
 needs.
 ```shell
