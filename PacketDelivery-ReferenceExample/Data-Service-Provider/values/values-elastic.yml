@@ -1,0 +1,13 @@
+# Values for elastic/elasticsearch Helm Chart
+#
+# Chart values file:
+# ref: https://github.com/elastic/helm-charts/blob/master/elasticsearch/values.yaml
+#
+
+image: "docker.elastic.co/elasticsearch/elasticsearch"
+imageTag: "7.5.1"
+imagePullPolicy: "IfNotPresent"
+
+# When running on OpenShift, a service account with root access is required
+#rbac:
+#  serviceAccountName: <account-name>

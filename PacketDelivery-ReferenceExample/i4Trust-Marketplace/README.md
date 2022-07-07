@@ -13,10 +13,6 @@ The helm chart with all possible configuration values can be found here:
 * [Artifact HUB](https://artifacthub.io/packages/helm/fiware/business-api-ecosystem)
 
 
-The setup within an i4Trust data space is based on the description 
-in the [production-on-k8s](https://github.com/FIWARE/production-on-k8s/tree/main/business-api-ecosystem) repository 
-of the [FIWARE Foundation](https://www.fiware.org). In the following only the differences to the linked setup will 
-be presented.
 
 
 ## Preparation
@@ -53,14 +49,24 @@ that the externally available components will be accessible on the following sub
 
 ## Databases
 
-For the components of 
+The following databases are required:
 * MongoDB
 * MySQL
 * elasticsearch
 
-there is no changed configuration compared to the instructions of the repository 
-[production-on-k8s](https://github.com/FIWARE/production-on-k8s/tree/main/business-api-ecosystem). Just follow the steps 
-described in the linked repository.
+First modify the corresponding values files according to your needs and then deploy the required databases MongoDB, MySQL and elasticsearch using `helm`. 
+```shell
+# Deploy elasticsearch
+helm install -f ./values/values-elastic.yml --namespace marketplace elasticsearch elastic/elasticsearch --version 7.5.1
+
+# Deploy MySQL:
+helm install -f ./values/values-mysql.yml --namespace marketplace mysql t3n/mysql --version 0.1.0
+
+# Deploy MongoDB
+helm install -f ./values/values-mongodb.yml --namespace marketplace mongodb bitnami/mongodb --version 10.30.12
+```
+
+
 
 
 ## Identity Provider (Keyrock)
@@ -76,7 +82,7 @@ access of the UI (e.g. https://keyrock.domain.org). Also note that for the momen
 the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc4`. The issued private key and certificate 
 chain must be added in PEM format. 
 ```shell
-helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.4.1
+helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.4.6
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
@@ -105,7 +111,7 @@ this link: [https://marketplace.domain.org/login](https://marketplace.domain.org
 The private key and certificate chain issued for the marketplace must be added in PEM format. 
 ```shell
 # Deploy BAE
-helm install -f ./values/values-marketplace.yml --namespace marketplace bae fiware/business-api-ecosystem --version 0.4.6
+helm install -f ./values/values-marketplace.yml --namespace marketplace bae fiware/business-api-ecosystem --version 0.4.13
 ```
 
 The deployment of all components will take some time. When the logic proxy component has been deployed and changed to the running state, 
@@ -127,6 +133,12 @@ configuration, in order that plugins remain installed after the pod restarts.
 
 ### Auth scheme of MongoDB
 
-Follow the instructions at 
-[production-on-k8s](https://github.com/FIWARE/production-on-k8s/tree/main/business-api-ecosystem).
+The Charging Backend of the BAE includes an older MongoDB client which uses an 
+outdated auth schema.
+
+Per default, the MongoDB 3.6 installed with this instructions is not using this 
+older auth schema. In order to change the auth schema after the databases and users 
+have been created, perform the steps in [ChangeMongoDBAuth.md](./ChangeMongoDBAuth.md).
+
+This is required to properly process product orders in the BAE.
 

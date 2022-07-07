@@ -1,0 +1,60 @@
+# a very minimal declarative config file
+_format_version: "2.1"
+_transform: true
+
+# Services
+services:
+  - url: "http://orion.provider.svc.cluster.local"
+    name: "pdc-orion-packetdelivery"
+    port: 1026
+    protocol: http
+
+    # Routes
+    routes:
+      - name: pdc
+        paths:
+          - /packetdelivery
+        strip_path: true
+
+    # Plugins
+    plugins:
+
+      # NGSI iSHARE plugin
+      - name: ngsi-ishare-policies
+        config:
+          access_token:
+            header_names:
+              - "authorization"
+              - "Authorization"
+          ar:
+            identifier: "EU.EORI.NL000000004"
+            host: "https://ar.isharetest.net"
+            token_endpoint: "https://ar.isharetest.net/connect/token"
+            delegation_endpoint: "https://ar.isharetest.net/delegation"
+          satellite:
+            identifier: "EU.EORI.NL000000000"
+            host: "https://scheme.isharetest.net"
+            token_endpoint: "https://scheme.isharetest.net/connect/token"
+            trusted_list_endpoint: "https://scheme.isharetest.net/trusted_list"
+          jws:
+            identifier: "EU.EORI.NLPACKETDEL"
+            private_key: |
+              -----BEGIN PRIVATE KEY-----
+              <put private key here>
+              -----END PRIVATE KEY-----
+            x5c: |
+              -----BEGIN CERTIFICATE-----
+              <SERVICE_PROVIDER_CERT>
+              -----END CERTIFICATE-----
+              ...<INTERMEDIATES>...
+              -----BEGIN CERTIFICATE-----
+              <ROOT_CA_CERT>
+              -----END CERTIFICATE-----
+
+      # Removes Authorization header before forwarding request to orion
+      - name: request-transformer
+        config:
+          remove:
+            headers:
+              - Authorization
+              - authorization
