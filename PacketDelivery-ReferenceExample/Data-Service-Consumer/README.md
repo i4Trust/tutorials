@@ -50,9 +50,13 @@ http2-max-header-size: "32k"
 
 ## MySQL Database
 
-For the MySQL database there is no changed configuration compared to the instructions of the repository 
-[production-on-k8s](https://github.com/FIWARE/production-on-k8s/tree/main/NGSI-LD_Data-Provider). Just follow the steps 
-described about MySQL in the linked repository.
+First modify the [values file](./values/values-mysql.yml) according to your needs and then deploy the MySQL database using `helm`. 
+```shell
+helm repo add t3n https://storage.googleapis.com/t3n-helm-charts
+helm repo update
+helm install -f ./values/values-mysql.yml --namespace consumer mysql t3n/mysql --version 0.1.0
+```
+
 
 
 ## Keyrock
@@ -71,7 +75,7 @@ chain must be added in PEM format.
 ```shell
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
-helm install -f ./values/values-keyrock.yml --namespace consumer keyrock fiware/keyrock --version 0.4.1
+helm install -f ./values/values-keyrock.yml --namespace consumer keyrock fiware/keyrock --version 0.4.6
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 

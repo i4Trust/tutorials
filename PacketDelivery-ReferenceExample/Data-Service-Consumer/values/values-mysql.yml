@@ -1,0 +1,20 @@
+# Values for t3n/mysql Helm Chart
+#
+# Chart values file:
+# ref: https://github.com/t3n/helm-charts/blob/master/mysql/values.yaml
+#
+
+image: "mysql"
+imageTag: "5.7"
+
+## Specify password for root user
+##
+## Default: random 10 character string
+##
+## Make sure to set this password in the component configurations
+## using the MySQL database.
+mysqlRootPassword: <mysql-root-password>
+
+## Security context (might be necessary on OpenShift)
+#securityContext:
+#  enabled: false

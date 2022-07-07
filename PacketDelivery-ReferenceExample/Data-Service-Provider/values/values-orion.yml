@@ -1,0 +1,31 @@
+broker:
+  envPrefix: ORIONLD_
+  mutexPolicy: none
+  maxConnections: 20000
+  logging:
+    level: FATAL
+  reqPoolSize: 8
+  # use this config for EntityUpdateWithTypeSubscriptionSimulation
+  notificationMode: persistent
+  # use this config for EntityUpdateWithSubscriptionSimulation
+  # second number should be around the expected clients at one instance, first is a multiple of second
+  # notificationMode: threadpool:10000:1000
+  db:
+    hosts:
+      - mongodb.provider.svc.cluster.local
+    auth:
+      # --user for connecting mongo
+      user: root
+      # -- password to be used on mongo
+      password: <root-password>
+deployment:
+  replicaCount: 1
+  image:
+    repository: fiware/orion-ld
+  resources:
+    limits:
+      cpu: 1
+      memory: 10240Mi
+    requests:
+      cpu: 1
+      memory: 10240Mi
