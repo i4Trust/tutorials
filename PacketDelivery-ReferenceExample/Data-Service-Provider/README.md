@@ -1,7 +1,7 @@
 # Data Service Provider
 
 This describes how to setup an NGSI-LD based data service provider within the i4Trust trusted data space with the 
-example of a fictitious Packet Delivery Company.
+example of a fictitious Packet Delivery Company, which will provide digital packet delivery services.
 
 The actual NGSI-LD data service is provided by an instance of the Orion-LD Context Broker. The following instructions 
 describe how to deploy all required components on Kubernetes using Helm charts.
