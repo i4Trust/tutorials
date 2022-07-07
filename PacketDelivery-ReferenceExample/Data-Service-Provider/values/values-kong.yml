@@ -1,0 +1,57 @@
+image:
+  repository: quay.io/fiware/kong
+  tag: "0.3.0-PRE-10"
+  pullPolicy: Always
+
+#deployment:
+  ## Specify the service account to create and to be assigned to the deployment / daemonset and for th migrations
+  #serviceAccount:
+    #create: false
+    #name: <account-name>
+
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+
+env:
+  database: "off"
+  nginx_worker_processes: "2"
+  proxy_access_log: /dev/stdout
+  admin_access_log: /dev/stdout
+  admin_gui_access_log: /dev/stdout
+  portal_api_access_log: /dev/stdout
+  proxy_error_log: /dev/stderr
+  admin_error_log: /dev/stderr
+  admin_gui_error_log: /dev/stderr
+  portal_api_error_log: /dev/stderr
+  prefix: /kong_prefix/
+  log_level: debug
+  nginx_proxy_large_client_header_buffers: "16 128k"
+  nginx_proxy_http2_max_field_size: "32k"
+  nginx_proxy_http2_max_header_size: "32k"
+
+ingressController:
+  enabled: false
+  installCRDs: false
+
+proxy:
+  enabled: true
+  tls:
+    enabled: false
+  ingress:
+    # Enable/disable exposure using ingress.
+    enabled: true
+    # TLS secret name.
+    tls: kong-prod-tls
+    # Ingress hostname
+    hostname: kong.domain.org
+    # Map of ingress annotations.
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    # Ingress path.
+    path: /
+    # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    pathType: ImplementationSpecific
+    

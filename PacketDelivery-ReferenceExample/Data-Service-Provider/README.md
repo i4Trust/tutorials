@@ -6,16 +6,13 @@ example of a fictitious Packet Delivery Company.
 The actual NGSI-LD data service is provided by an instance of the Orion-LD Context Broker. The following instructions 
 describe how to deploy all required components on Kubernetes using Helm charts.
 
-The setup within an i4Trust data space is based on the environment of an NGSI-LD data service provider, as described 
-in the [production-on-k8s](https://github.com/FIWARE/production-on-k8s/tree/main/NGSI-LD_Data-Provider) repository 
-of the [FIWARE Foundation](https://www.fiware.org). In the following only the differences to the linked setup will 
-be presented.
-
 The whole environment will consist of the following components:
 * MongoDB
 * Orion Context Broker
 * Elasticsearch
-* API-Umbrella (PEP Proxy/PDP)
+* PEP Proxy/PDP
+  - Kong
+  - Deprecated: API-Umbrella
 * Keyrock (Identity Provider)
 * MySQL
 * Activation Service
@@ -60,19 +57,42 @@ http2-max-field-size: "32k"
 http2-max-header-size: "32k"
 ```
 
+## MongoDB
+
+First modify the [Helm values file](./values/values-mongodb.yml) according to your environment and 
+then deploy `mongodb`:
+```shell
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+helm install -f ./values/values-mongodb.yml --namespace provider mongodb bitnami/mongodb --version 10.0.5
+```
 
 
-## Databases and Orion Context Broker
+## MySQL
 
-For the components of
-* Orion Context Broker
-* MongoDB
-* MySQL
-* Elasticsearch
+First modify the [values file](./values/values-mysql.yml) according to your needs and then deploy the MySQL database using `helm`. 
+```shell
+helm repo add t3n https://storage.googleapis.com/t3n-helm-charts
+helm repo update
+helm install -f ./values/values-mysql.yml --namespace provider mysql t3n/mysql --version 0.1.0
+```
 
-there is no changed configuration compared to the instructions of the repository 
-[production-on-k8s](https://github.com/FIWARE/production-on-k8s/tree/main/NGSI-LD_Data-Provider). Just follow the steps 
-described in the linked repository.
+
+
+
+
+## Context Broker orion
+
+First modify the [Helm values file](./values/values-orion.yml) according to your environment and 
+then deploy `orion`:
+```shell
+helm repo add fiware https://fiware.github.io/helm-charts/
+helm repo update
+helm install -f ./values/values-orion.yml --namespace provider orion fiware/orion
+```
+
+
+
 
 
 ### Creating entites for delivery orders
@@ -156,7 +176,7 @@ chain must be added in PEM format.
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
 
-helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.4.1
+helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.4.6
 
 ```
 
@@ -171,9 +191,53 @@ IDM_SERVER_MAX_HEADER_SIZE=32786
 See the [values file](./values/values-keyrock.yml) for an example.
 
 
-## API-Umbrella
+
+
+
+
+## PEP Proxy / PDP
+
+
+### Kong
+
+Kong is an API Gateway. With the usage of the 
+[ngsi-ishare-policies](https://github.com/FIWARE/kong-plugins-fiware/tree/main/kong-plugin-ngsi-ishare-policies) 
+plugin, it can be used as Policy Enforcement Point (PEP) and Policy Decision Point (PDP).
+
+Modify the [Kong values file](./values/values-kong.yml) and 
+[Kong declarative setup configuration file](./kong/kong.yml). Then perform the deployment using 
+Helm.  
+Depending on whether you use an external or the Keyrock built-in authorisation registry, it's endpoints and configuration 
+parameters need to be configured accordingly.
+Make sure to setup an Ingress or OpenShift route in the values file for external 
+access of the UI (e.g. https://umbrella.domain.org). The issued private key and certificate 
+chain must be added in PEM format. 
+
+```shell
+helm repo add kong https://charts.konghq.com
+helm repo update
+helm install -f ./values/values-kong.yml --namespace provider kong kong/kong --set ingressController.installCRDs=false --set-file dblessConfig.config=./kong/kong.yml --version 2.8.0
+```
+
+Kong is now configured to receive requests at the `/packetdelivery` endpoint, check the access rights from the 
+policies at the authorisation registries and, if access is granted, to forward the requests to the Orion Context Broker.
+
+
+
+
+
+### Deprecated: API-Umbrella
 
 API-Umbrella is used as Policy Enforcement Point (PEP) and Policy Decision Point (PDP).
+
+It requires an instance of elasticsearch:  
+First modify the [Helm values file](./values/values-elastic.yml) according to your environment and 
+then deploy `elasticsearch`:
+```shell
+helm repo add elastic https://helm.elastic.co
+helm repo update
+helm install -f ./values/values-elastic.yml --namespace provider elasticsearch elastic/elasticsearch --version 7.5.1
+```
 
 During deployment of the MongoDB using the provided values file, a database should have been created for API Umbrella. 
 In case this was removed from the values file, it is needed to create the necessary database and user within the MongoDB 
