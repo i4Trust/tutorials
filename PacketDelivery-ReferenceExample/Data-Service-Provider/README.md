@@ -7,16 +7,15 @@ The actual NGSI-LD data service is provided by an instance of the Orion-LD Conte
 describe how to deploy all required components on Kubernetes using Helm charts.
 
 The whole environment will consist of the following components:
-* MongoDB
-* Orion Context Broker
-* Elasticsearch
-* PEP Proxy/PDP
-  - Kong
-  - Deprecated: API-Umbrella
-* Keyrock (Identity Provider)
-* MySQL
-* Activation Service
-* Portal demo application
+* [MongoDB](#mongodb)
+* [MySQL](#mysql)
+* [Orion Context Broker](#context-broker-orion)
+* [Keyrock (Identity Provider)](#keyrock)
+* [PEP Proxy/PDP](#pep-proxy--pdp)
+  - [Kong](#kong)
+  - [Deprecated: API-Umbrella + elasticsearch](#deprecated-api-umbrella)
+* [Activation Service](#activation-service)
+* [Portal demo application](#packet-delivery-portal-demo-application)
 
 as depicted in the following diagram:
 
