@@ -1,6 +1,6 @@
 image:
   repository: quay.io/fiware/kong
-  tag: "0.3.0-PRE-10"
+  tag: "0.2.0"
   pullPolicy: Always
 
 #deployment:

@@ -12,25 +12,16 @@ broker:
   # notificationMode: threadpool:10000:1000
   db:
     hosts:
-      - mongo-mongodb-0.mongo-mongodb-headless.provider.svc.cluster.local
-      - mongo-mongodb-1.mongo-mongodb-headless.provider.svc.cluster.local
-      - mongo-mongodb-2.mongo-mongodb-headless.provider.svc.cluster.local
-      - mongo-mongodb-3.mongo-mongodb-headless.provider.svc.cluster.local
+      - mongodb.provider.svc.cluster.local
     auth:
       # --user for connecting mongo
       user: root
       # -- password to be used on mongo
       password: <root-password>
-      # -- the MongoDB authentication mechanism to use in the case user and password is set
-      mech: SCRAM-SHA-1
-    replicaSet: rs0
-    writeConcern: 0
-    poolSize: 128
 deployment:
   replicaCount: 1
   image:
     repository: fiware/orion-ld
-    #tag: 0.6.0
   resources:
     limits:
       cpu: 1

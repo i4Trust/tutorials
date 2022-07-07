@@ -1,14 +1,11 @@
-## Global Docker image parameters
-## Please, note that this will override the image parameters, including dependencies, configured to use the global value
-## Current available global Docker image parameters: imageRegistry and imagePullSecrets
-##
-# global:
-#   imageRegistry: myRegistryName
-#   imagePullSecrets:
-#     - myRegistryKeySecretName
-#   storageClass: myStorageClass
-## Override the namespace for resource deployed by the chart, but can itself be overridden by the local namespaceOverride
-#   namespaceOverride: my-global-namespace
+# Values for bitnami/mongodb Helm Chart
+#
+# Chart values file:
+# ref: https://github.com/bitnami/charts/blob/master/bitnami/mongodb/values.yaml
+#
+# Deployment on FIWARE OpenShift Cluster
+#   *.apps.fiware.fiware.dev
+#
 
 image:
   ## Bitnami MongoDB registry
@@ -20,7 +17,7 @@ image:
   ## Bitnami MongoDB image tag
   ## ref: https://hub.docker.com/r/bitnami/mongodb/tags/
   ##
-  tag: 4.4.2-debian-10-r0
+  tag: 3.6.21
   ## Specify a imagePullPolicy
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
@@ -28,7 +25,7 @@ image:
 
 ## MongoDB architecture. Allowed values: standalone or replicaset
 ##
-architecture: replicaset
+architecture: standalone
 
 ## Use StatefulSet instead of Deployment when deploying standalone
 ##
@@ -44,7 +41,7 @@ auth:
   ## MongoDB root password
   ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#setting-the-root-password-on-first-run
   ##
-  rootPassword: "<root-password>"
+  rootPassword: <root-password>
 
 ## initdb scripts
 ## Specify dictionary of scripts to be run at first boot
@@ -73,145 +70,15 @@ initdbScripts:
         }
       ]
     });
-tls:
-  ## Enable or disable MongoDB TLS Support
-  enabled: false
-  ##
-  ## Bitnami Nginx image
-  ##
-  image:
-    registry: docker.io
-    repository: bitnami/nginx
-    tag: 1.19.4-debian-10-r19
-    pullPolicy: IfNotPresent
 
-## Name of the replica set
-## Ignored when mongodb.architecture=standalone
+## MongoDB pods' Security Context.
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ##
-replicaSetName: rs0
-
-## Enable DNS hostnames in the replica set config
-## Ignored when mongodb.architecture=standalone
-## Ignored when externalAccess.enabled=true
-##
-replicaSetHostnames: true
-
-## MongoDB containers' resource requests and limits.
-## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-##
-resources:
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  limits:
-    cpu: 2000m
-    memory: 4096Mi
-  requests:
-    cpu: 2000m
-    memory: 4096Mi
-
-## MongoDB pods' liveness and readiness probes. Evaluated as a template.
-## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-##
-livenessProbe:
-  enabled: true
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
-readinessProbe:
-  enabled: true
-  initialDelaySeconds: 5
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
-
-## Enable persistence using Persistent Volume Claims
-## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-##
-persistence:
-  enabled: true
-  ## A manually managed Persistent Volume and Claim
-  ## Requires persistence.enabled: true
-  ## If defined, PVC must be created manually before volume will be bound
-  ## Ignored when mongodb.architecture=replicaset
-  ##
-  # existingClaim:
-  ## PV Storage Class
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ## set, choosing the default provisioner.
-  ##
-  storageClass: "fast-b"
-  ## PV Access Mode
-  ##
-  accessModes:
-    - ReadWriteOnce
-  ## PVC size
-  ##
-  size: 8Gi
-  ## PVC annotations
-  ##
-  annotations: {}
-  ## The path the volume will be mounted at, useful when using different
-  ## MongoDB images.
-  ##
-  mountPath: /bitnami/mongodb
-  ## The subdirectory of the volume to mount to, useful in dev environments
-  ## and one PV for multiple services.
-  ##
-  subPath: ""
-
-## External Access to MongoDB nodes configuration
-##
-externalAccess:
-  ## Enable Kubernetes external cluster access to MongoDB nodes
-  ##
+podSecurityContext:
   enabled: false
 
+## MongoDB containers' Security Context (main and metrics container).
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
 ##
-## MongoDB Arbiter parameters.
-##
-arbiter:
-  ## Enable deploying the MongoDB Arbiter
-  ##   https://docs.mongodb.com/manual/tutorial/add-replica-set-arbiter/
-  enabled: true
-
-  ## MongoDB configuration file for the Arbiter. For documentation of all options, see:
-  ##   http://docs.mongodb.org/manual/reference/configuration-options/
-  ##
-  configuration: ""
-
-## ServiceAccount
-## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
-##
-serviceAccount:
-  ## Specifies whether a ServiceAccount should be created
-  ##
-  create: true
-
-## Role Based Access
-## ref: https://kubernetes.io/docs/admin/authorization/rbac/
-##
-rbac:
-  ## Specifies whether RBAC rules should be created
-  ## binding MongoDB ServiceAccount to a role
-  ## that allows MongoDB pods querying the K8s API
-  ##
-  create: false
-
-## Init Container paramaters
-## Change the owner and group of the persistent volume(s) mountpoint(s) to 'runAsUser:fsGroup' on each component
-## values from the securityContext section of the component
-##
-volumePermissions:
-  enabled: false
-
-## Prometheus Exporter / Metrics
-##
-metrics:
+containerSecurityContext:
   enabled: false
