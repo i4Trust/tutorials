@@ -96,7 +96,7 @@ See the [values file](./values/values-keyrock.yml) for an example.
 Keyrock also allows to serve as Authorization Registry (AR) in order to store access policies in its own database. 
 
 For activating the AR functionality, refer to the instructions of 
-the [data service provider](../Data-Service-Provider#keyrock-authorization-registry-functionality).
+the [data service provider](../Data-Service-Provider/README.md#keyrock-authorization-registry-functionality).
 
 
 
