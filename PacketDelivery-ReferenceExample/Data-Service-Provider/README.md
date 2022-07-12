@@ -172,7 +172,7 @@ When there is no external authorisation registry configured for Keyrock, it will
 policies need to be stored there.
 Make sure to setup an Ingress or OpenShift route in the values file for external 
 access of the UI (e.g. https://keyrock.domain.org). Also note that for the moment a dedicated Keyrock build needs to be used until 
-the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc4`. The issued private key and certificate 
+the i4Trust related changes have been officially released. The issued private key and certificate 
 chain must be added in PEM format. 
 ```shell
 helm repo add fiware https://fiware.github.io/helm-charts/
@@ -191,6 +191,33 @@ internal web server by setting the ENV, e.g. to
 IDM_SERVER_MAX_HEADER_SIZE=32786
 ```
 See the [values file](./values/values-keyrock.yml) for an example.
+
+
+
+### Keyrock Authorization Registry functionality
+
+Keyrock also allows to serve as Authorization Registry (AR) in order to store access policies in its own database. 
+Keyrock then implements the [iSHARE /delegation endpoint](https://dev.ishareworks.org/delegation/endpoint.html) 
+which allow to query for delegation evidences. 
+
+In order to activate the AR functionality, the following parameter needs to be set in 
+the [values file](./values/values-keyrock.yml):
+```yaml
+authorisationRegistry:
+	url: "internal"
+```
+In this case, the parameters for `tokenEndpoint` and `delegationEndpoint` are ignored. 
+The parameter for the AR `identifier` needs to be changed to the EORI of the organisation 
+that operates this Keyrock/AR instance.
+
+When activated, Keyrock provides the following endpoints:
+* `/ar/delegation`: Query/obtain delegation evidences
+* `/ar/policy`: Create delegation evidences
+
+Access tokens for the AR need to be retrieved from the `/oauth2/token` endpoint, as described 
+in the [iSHARE Access Token specification](https://dev.ishareworks.org/common/token.html).
+
+
 
 
 
@@ -230,7 +257,7 @@ policies at the authorisation registries and, if access is granted, to forward t
 
 ### Deprecated: API-Umbrella
 
-API-Umbrella is used as Policy Enforcement Point (PEP) and Policy Decision Point (PDP).
+API-Umbrella can be used as Policy Enforcement Point (PEP) and Policy Decision Point (PDP) as well.
 
 It requires an instance of elasticsearch:  
 First modify the [Helm values file](./values/values-elastic.yml) according to your environment and 
