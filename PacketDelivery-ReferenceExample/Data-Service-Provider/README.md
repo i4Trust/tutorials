@@ -240,7 +240,7 @@ Helm.
 Depending on whether you use an external or the Keyrock built-in authorisation registry, it's endpoints and configuration 
 parameters need to be configured accordingly.
 Make sure to setup an Ingress or OpenShift route in the values file for external 
-access of the UI (e.g. https://umbrella.domain.org). The issued private key and certificate 
+access to the provided Kong endpoints/routes. The issued private key and certificate 
 chain must be added in PEM format. 
 
 ```shell
