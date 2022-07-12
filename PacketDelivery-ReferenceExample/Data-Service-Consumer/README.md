@@ -90,6 +90,16 @@ See the [values file](./values/values-keyrock.yml) for an example.
 
 
 
+
+### Keyrock Authorization Registry functionality
+
+Keyrock also allows to serve as Authorization Registry (AR) in order to store access policies in its own database. 
+
+For activating the AR functionality, refer to the instructions of 
+the [data service provider](../Data-Service-Provider/README.md).
+
+
+
 ## User policies
 
 It is assumed that the consuming organisation was already granted access to the service of the data provider. 

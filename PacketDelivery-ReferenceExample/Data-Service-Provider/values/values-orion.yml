@@ -29,3 +29,7 @@ deployment:
     requests:
       cpu: 1
       memory: 10240Mi
+
+mongo:
+  # we want to use the individually deployed mongodb
+  enabled: false
