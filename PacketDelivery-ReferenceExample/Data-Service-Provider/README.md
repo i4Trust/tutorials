@@ -11,6 +11,7 @@ The whole environment will consist of the following components:
 * [MySQL](#mysql)
 * [Orion Context Broker](#context-broker-orion)
 * [Keyrock (Identity Provider)](#keyrock)
+  - [Keyrock AR functionality](#keyrock-authorization-registry-functionality)
 * [PEP Proxy/PDP](#pep-proxy--pdp)
   - [Kong](#kong)
   - [Deprecated: API-Umbrella + elasticsearch](#deprecated-api-umbrella)
@@ -204,7 +205,7 @@ In order to activate the AR functionality, the following parameter needs to be s
 the [values file](./values/values-keyrock.yml):
 ```yaml
 authorisationRegistry:
-	url: "internal"
+  url: "internal"
 ```
 In this case, the parameters for `tokenEndpoint` and `delegationEndpoint` are ignored. 
 The parameter for the AR `identifier` needs to be changed to the EORI of the organisation 
