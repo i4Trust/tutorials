@@ -79,8 +79,7 @@ authorisationRegistry:
   # -- Identifier (EORI) of AR
   identifier: "EU.EORI.NL000000004"
   # -- URL of AR
-  #url: "https://ar.isharetest.net"
-  url: "internal"
+  url: "https://ar.isharetest.net"
   # -- Token endpoint of AR
   tokenEndpoint: "https://ar.isharetest.net/connect/token"
   # -- Delegation endpoint of AR
