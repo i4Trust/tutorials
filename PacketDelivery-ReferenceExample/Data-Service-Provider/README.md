@@ -67,7 +67,7 @@ then deploy `mongodb`:
 ```shell
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
-helm install -f ./values/values-mongodb.yml --namespace provider mongodb bitnami/mongodb --version 10.0.5
+helm install -f ./values/values-mongodb.yml --namespace provider mongodb bitnami/mongodb --version 10.30.12
 ```
 
 
