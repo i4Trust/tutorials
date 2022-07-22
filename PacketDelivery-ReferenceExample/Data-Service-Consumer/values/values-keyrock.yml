@@ -104,6 +104,22 @@ token:
   enabled: true
   # -- Identifier (EORI) of local organisation
   identifier: "EU.EORI.NLHAPPYPETS"
+  # -- String with private key in PEM format
+  key: |
+      -----BEGIN PRIVATE KEY-----
+      <Put key here>
+      -----END PRIVATE KEY-----
+  # -- String with certificate (chain) in PEM format
+  cert: |
+      -----BEGIN CERTIFICATE-----
+      <Put certificates here>
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      <Put intermediate certificates here>
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      <Put Root certificate here>
+      -----END CERTIFICATE-----
 
 ## a list of additional env vars to be set, check the keyrock docu for all available options
 ## ref: https://fiware-idm.readthedocs.io/en/latest/installation_and_administration_guide/environment_variables/index.html
@@ -120,16 +136,4 @@ additionalEnvVars:
   # Maximum header size of internal web server
   - name: IDM_SERVER_MAX_HEADER_SIZE
     value: "32768"
-  # Private key of data service consuming company
-  - name: IDM_PR_CLIENT_KEY
-    value: |
-      -----BEGIN PRIVATE KEY-----
-      <Put key here>
-      -----END PRIVATE KEY-----
-  # Certificate chain of data service consuming company
-  - name: IDM_PR_CLIENT_CRT
-    value: |
-      -----BEGIN CERTIFICATE-----
-      <Put certificates here>
-      -----END CERTIFICATE-----
-      
+    
