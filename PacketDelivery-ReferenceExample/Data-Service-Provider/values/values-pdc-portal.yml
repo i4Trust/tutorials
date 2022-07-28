@@ -10,7 +10,7 @@ deployment:
     # ref: https://hub.docker.com/r/i4trust/pdc-portal
     repository: i4trust/pdc-portal
     # -- tag of the image to be used
-    tag: v0.1.0
+    tag: 1.0.1
   
 ## ingress configuration
 ingress:

@@ -211,7 +211,7 @@ bizEcosystemLogicProxy:
     ## -- Size of PVC to be created
     size: 4Gi
     ## Image which holds the theme files
-    image: i4trust/bae-i4trust-theme:v0.0.5
+    image: i4trust/bae-i4trust-theme:1.0.1
     # -- specification of the image pull policy
     imagePullPolicy: Always
     ## Path to the source theme files inside the container
