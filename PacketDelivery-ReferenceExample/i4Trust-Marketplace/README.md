@@ -121,7 +121,8 @@ For logging in into the marketplace for administrative access via the Keyrock in
 URL: [http://marketplace.domain.org/login](http://marketplace.domain.org/login). 
 
 In order to support the asset type of an i4Trust-compliant NGSI-LD data service, a dedicated plugin needs to be added to the 
-charging backend component. The plugin itself can be found [here](https://github.com/i4Trust/bae-i4trust-service), installation 
+charging backend component. The plugin itself can be found [here](https://github.com/i4Trust/bae-i4trust-service) 
+(latest zipped releases can be found on the [releases page](https://github.com/i4Trust/bae-i4trust-service/releases)), installation 
 instructions can be found [here](https://business-api-ecosystem.readthedocs.io/en/latest/plugins-guide.html#installing-asset-plugins). 
 On Kubernetes, basically one first needs to copy the zipped plugin to the `/plugins` directory of the charging backend pod and then 
 perform the step from above instructions. Note that one needs to enable the plugins PVC for the charging backend in the Helm 
