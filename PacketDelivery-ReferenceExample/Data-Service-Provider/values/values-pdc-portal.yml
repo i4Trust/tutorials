@@ -10,7 +10,7 @@ deployment:
     # ref: https://hub.docker.com/r/i4trust/pdc-portal
     repository: i4trust/pdc-portal
     # -- tag of the image to be used
-    tag: 1.0.1
+    tag: 2.0.0
   
 ## ingress configuration
 ingress:
@@ -74,12 +74,12 @@ config:
   # IDP configuration for login
   # This demo application requires to configure the two IDPs of HappyPets and NoCheaper.
   idp:
-    "EU.EORI.NLHAPPYPETS":
+    - name: "Happy Pets Inc."
       id: "EU.EORI.NLHAPPYPETS"
       url: "https://idp-happypets-shop.i4trust.fiware.io"
       authorize_endpoint: "https://idp-happypets-shop.i4trust.fiware.io/oauth2/authorize"
       token_endpoint: "https://idp-happypets-shop.i4trust.fiware.io/oauth2/token"
-    "EU.EORI.NLNOCHEAPER":
+    - name: "No Cheaper Inc."
       id: "EU.EORI.NLNOCHEAPER"
       url: "https://idp-nocheaper-shop.i4trust.fiware.io"
       authorize_endpoint: "https://idp-nocheaper-shop.i4trust.fiware.io/oauth2/authorize"
