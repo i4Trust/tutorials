@@ -331,7 +331,7 @@ chain must be added in PEM format.
 ```shell
 helm repo add i4trust https://i4trust.github.io/helm-charts
 helm repo update
-helm install -f ./values/values-activation-service.yml --namespace provider activation-service i4trust/activation-service
+helm install -f ./values/values-activation-service.yml --namespace provider activation-service i4trust/activation-service --version 1.0.0
 ```
 
 In order to allow external parties to create policies on behalf of the Packet Delivery Company, a policy needs to be created 
@@ -406,7 +406,7 @@ The portal application can then be deployed using:
 ```shell
 helm repo add i4trust https://i4trust.github.io/helm-charts
 helm repo update
-helm install -f ./values/values-pdc-portal.yml --namespace provider pdc-portal i4trust/pdc-portal
+helm install -f ./values/values-pdc-portal.yml --namespace provider pdc-portal i4trust/pdc-portal --version 2.0.0
 ```
 
 
