@@ -72,7 +72,7 @@ config:
     # Port (Internal port of the express web server)
     port: 7000
   # IDP configuration for login
-  # This demo application requires to configure the two IDPs of HappyPets and NoCheaper.
+  # In this demo application it is configured for the two IDPs of HappyPets and NoCheaper.
   idp:
     - name: "Happy Pets Inc."
       id: "EU.EORI.NLHAPPYPETS"
