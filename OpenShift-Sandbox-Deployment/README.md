@@ -4,7 +4,7 @@ This is an installation guide, targeting audience without (much) kuberentes expi
 
 >:warning: Do NOT use this as a production environment. It contains plain-text passwords and other anti-patterns(f.e. no resource limits, no availability settings, no backups) that will harm you in production. Its a development setup, that should be treated as such.
 
-## Scenario description. 
+## Scenario description
 
 > :warning: The consumer "EU.EORI.NLHAPPYPETS" and the provider "EU.EORI.NLPACKETDEL" are placeholder and should be replaced with your valid participants certificates. 
 
