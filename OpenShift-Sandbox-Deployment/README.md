@@ -4,6 +4,15 @@ This is an installation guide, targeting audience without (much) kuberentes expi
 
 >:warning: Do NOT use this as a production environment. It contains plain-text passwords and other anti-patterns(f.e. no resource limits, no availability settings, no backups) that will harm you in production. Its a development setup, that should be treated as such.
 
+## Scenario description. 
+
+> :warning: The consumer "EU.EORI.NLHAPPYPETS" and the provider "EU.EORI.NLPACKETDEL" are placeholder and should be replaced with your valid participants certificates. 
+
+The step-by-step guide will examplify an M2M-scenario, where consumer "EU.EORI.NLHAPPYPETS" requests the IDM(e.g. Keyrock) of provider "EU.EORI.NLPACKETDEL" for an access-token. This token is then used by "EU.EORI.NLHAPPYPETS" to request the orion-ld on "EU.EORI.NLPACKETDEL" through kong. Kong will verify the identity provided in the token, using the iShare-testinstances for satellite(e.g. https://scheme.isharetest.net) and authorization-registry(e.g. https://ar.isharetest.net). 
+
+> :warning: If you don't have identities for the iShare-testinstances, either request them at the [i4Trust-helpdesk](https://spaces.fundingbox.com/c/i4trust/categories/i4TrustHelpDesk) or use a dedicated AR and Satellite(for example Keyrock and [FIWARE/ishare-satellite](https://github.com/FIWARE/ishare-satellite)).
+
+
 ## Step-by-step guide
 
 1. Create account and sandbox on the [offical page from RedHat](https://developers.redhat.com/developer-sandbox/get-started)
@@ -37,7 +46,7 @@ launch
 
 6. Move to sandbox folder:
 ```shell
-    cd tutorials/OpenShift-Sandbox/
+    cd tutorials/OpenShift-Sandbox-Deployment/
 ```
 
 7. Install mongoDB:
@@ -155,20 +164,20 @@ The system now can be reached at:
 
 ## Try out the setup
 
-Put your client key and certificate into the folder to mount(the files in  [example-secrets](./doc/example-secrets/)) are only generated examples) and use the correct IDs.
+Put your client key and certificate into the folder to mount(the files in [example-secrets](./doc/example-secrets/)) are only generated examples) and use the correct IDs.
 
 1. Generate a [JWT](https://dev.ishareworks.org/introduction/jwt.html) for your client:
 ```shell
-    docker run -v $(pwd)/doc/example-secrets:/certificates -e I_SHARE_CLIENT_ID="EU.EORI.NLHAPPYPETS" -e I_SHARE_IDP_ID="EU.EORI.NLPACKETDEL"  quay.io/wi_stefan/ishare-token
+    docker run -v $(pwd)/doc/example-secrets:/certificates -e I_SHARE_CLIENT_ID="EU.EORI.NLHAPPYPETS" -e I_SHARE_IDP_ID="EU.EORI.NLPACKETDEL"  quay.io/wi_stefan/ishare-jwt-helper:0.1.0
 ```
 
 The token will be print out on the command-line. Be aware that it is(as defined by iShare) only valid for 30s.
 
 2. Request a token: 
 ```shell 
-    curl --location --request POST 'https://ar.isharetest.net/connect/token' \
+    curl --location --request POST 'https://<KEYROCK_URL/oauth2/token' \
         --header 'Content-Type: application/x-www-form-urlencoded' \
-        --data-urlencode 'grant_type=client_credentials' \
+        --data-urlencode 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer' \
         --data-urlencode 'scope=iSHARE' \
         --data-urlencode 'client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer' \
         --data-urlencode 'client_assertion=<GENERATED_TOKEN>' \
@@ -188,7 +197,7 @@ The response will look  like:
 3. Request at kong:
 
 ```shell
-curl --location --request GET '<KONG-ADDRESS>/orion/ngsi-ld/v1/entities/urn:ngsi-ld:TEST:ENTITY' \
+curl --location --request GET 'http://<KONG-ADDRESS>/orion/ngsi-ld/v1/entities/urn:ngsi-ld:TEST:ENTITY' \
 --header 'Authorization: Bearer <ACCESS_TOKEN>' 
 ```
     
