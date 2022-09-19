@@ -4,8 +4,7 @@ This is an installation guide, targeting audience without (much) kuberentes expi
 
 >:warning: Do NOT use this as a production environment. It contains plain-text passwords and other anti-patterns(f.e. no resource limits, no availability settings, no backups) that will harm you in production. Its a development setup, that should be treated as such.
 
-## Scenario description. 
-> The resulting setup in the sandbox will be a "provider" in an i4Trust-setup. The examples uses the provider-id "EU.EORI.NLPACKETDEL", wich should be replaced according to the used certificates.
+## Scenario description
 
 > :warning: The consumer "EU.EORI.NLHAPPYPETS" and the provider "EU.EORI.NLPACKETDEL" are placeholder and should be replaced with your valid participants certificates. Beside that, the ID of the provider("EU.EORI.NLPACKETDEL") also needs to be changed according to the used certificates in [kong-configuration](./kong/templates/configmap.yaml#l37) and [keyrock-configuration](./keyrock/values.yaml#l102).
 
