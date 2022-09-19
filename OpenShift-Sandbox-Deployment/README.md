@@ -6,7 +6,7 @@ This is an installation guide, targeting audience without (much) kuberentes expi
 
 ## Scenario description
 
-> :warning: The consumer "EU.EORI.NLHAPPYPETS" and the provider "EU.EORI.NLPACKETDEL" are placeholder and should be replaced with your valid participants certificates. 
+> :warning: The consumer "EU.EORI.NLHAPPYPETS" and the provider "EU.EORI.NLPACKETDEL" are placeholder and should be replaced with your valid participants certificates. Beside that, the ID of the provider("EU.EORI.NLPACKETDEL") also needs to be changed according to the used certificates in [kong-configuration](./kong/templates/configmap.yaml#l37) and [keyrock-configuration](./keyrock/values.yaml#l102).
 
 The step-by-step guide will examplify an M2M-scenario, where consumer "EU.EORI.NLHAPPYPETS" requests the IDM(e.g. Keyrock) of provider "EU.EORI.NLPACKETDEL" for an access-token. This token is then used by "EU.EORI.NLHAPPYPETS" to request the orion-ld on "EU.EORI.NLPACKETDEL" through kong. Kong will verify the identity provided in the token, using the iShare-testinstances for satellite(e.g. https://scheme.isharetest.net) and authorization-registry(e.g. https://ar.isharetest.net). 
 
