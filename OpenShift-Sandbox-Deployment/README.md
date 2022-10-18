@@ -168,7 +168,7 @@ Put your client key and certificate into the folder to mount(the files in [examp
 
 1. Generate a [JWT](https://dev.ishareworks.org/introduction/jwt.html) for your client:
 ```shell
-    docker run -v $(pwd)/doc/example-secrets:/certificates -e I_SHARE_CLIENT_ID="EU.EORI.NLHAPPYPETS" -e I_SHARE_IDP_ID="EU.EORI.NLPACKETDEL"  quay.io/wi_stefan/ishare-jwt-helper:0.1.1
+    docker run -v $(pwd)/doc/example-secrets:/certificates -e I_SHARE_CLIENT_ID="EU.EORI.NLHAPPYPETS" -e I_SHARE_IDP_ID="EU.EORI.NLPACKETDEL"  quay.io/wi_stefan/ishare-jwt-helper:0.1.2
 ```
 
 The token will be print out on the command-line. Be aware that it is(as defined by iShare) only valid for 30s.
