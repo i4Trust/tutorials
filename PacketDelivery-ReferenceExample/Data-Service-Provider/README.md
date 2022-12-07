@@ -219,8 +219,8 @@ The [DSBA-PDP](https://github.com/wistefan/dsba-pdp) can be installed, using its
 When the secrets are properly prepared, install them via:
 
 ```shell
-	kubectl apply -f ./secret/pdp-db-secret.yml -n provider
-	kubectl apply -f ./secret/pdp-ishare-secret.yml -n provider
+kubectl apply -f ./secret/pdp-db-secret.yml -n provider
+kubectl apply -f ./secret/pdp-ishare-secret.yml -n provider
 ```
 
 In order to provide persistence for the trustedissuers-list, a database is required. It can be installed via:
