@@ -1,0 +1,16 @@
+fullnameOverride: mysql-pdp
+auth:
+  existingSecret: mysql-pdp-secret
+  createDatabase: true
+  database: dsba
+rbac: 
+  create: true
+  rules:
+    - apiGroups:
+      - security.openshift.io
+      resourceNames:
+      - anyuid
+      resources:
+      - securitycontextconstraints
+      verbs:
+        - use

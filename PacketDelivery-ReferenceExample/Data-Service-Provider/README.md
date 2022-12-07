@@ -13,6 +13,7 @@ The whole environment will consist of the following components:
 * [Keyrock (Identity Provider)](#keyrock)
   - [Keyrock AR functionality](#keyrock-authorization-registry-functionality)
 * [PEP Proxy/PDP](#pep-proxy--pdp)
+  - [DSBA-PDP](#dsba-pdp)
   - [Kong](#kong)
   - [Deprecated: API-Umbrella + elasticsearch](#deprecated-api-umbrella)
 * [Activation Service](#activation-service)
@@ -70,7 +71,6 @@ helm repo update
 helm install -f ./values/values-mongodb.yml --namespace provider mongodb bitnami/mongodb --version 10.30.12
 ```
 
-
 ## MySQL
 
 First modify the [values file](./values/values-mysql.yml) according to your needs and then deploy the MySQL database using `helm`. 
@@ -79,10 +79,6 @@ helm repo add t3n https://storage.googleapis.com/t3n-helm-charts
 helm repo update
 helm install -f ./values/values-mysql.yml --namespace provider mysql t3n/mysql --version 0.1.0
 ```
-
-
-
-
 
 ## Context Broker orion
 
@@ -93,10 +89,6 @@ helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
 helm install -f ./values/values-orion.yml --namespace provider orion fiware/orion
 ```
-
-
-
-
 
 ### Creating entites for delivery orders
 
@@ -160,8 +152,6 @@ before. Below is an example of the body for the request when creating such an en
 Feel free to create several entities with different properties and entity IDs. Later on these will be accessible 
 by the user via the portal application.
 
-
-
 ## Keyrock
 
 The Keyrock Identity Provider is required for storing the user accounts of the employees of the data service provider's 
@@ -178,9 +168,7 @@ chain must be added in PEM format.
 ```shell
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
-
 helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.4.6
-
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
@@ -192,8 +180,6 @@ internal web server by setting the ENV, e.g. to
 IDM_SERVER_MAX_HEADER_SIZE=32786
 ```
 See the [values file](./values/values-keyrock.yml) for an example.
-
-
 
 ### Keyrock Authorization Registry functionality
 
@@ -218,15 +204,43 @@ When activated, Keyrock provides the following endpoints:
 Access tokens for the AR need to be retrieved from the `/oauth2/token` endpoint, as described 
 in the [iSHARE Access Token specification](https://dev.ishareworks.org/common/token.html).
 
-
-
-
-
-
-
-
 ## PEP Proxy / PDP
 
+### DSBA-PDP
+
+In order to allow authorization with VerifiableCredentials, using the SIOP2 flow, a PDP evaluating the VC and the corresponding policies is required. The PDP will provide an `/authz` endpoint to receive a JWT containing the (already verified) VerifiableCredential. Beside the token, it expects the original request address(`X-Original-URI`), method (`X-Original-Action`) and request body as body. 
+
+The [DSBA-PDP](https://github.com/wistefan/dsba-pdp) can be installed, using its [HELM-Chart](https://github.com/FIWARE/helm-charts/tree/main/charts/dsba-pdp) and the provided [values-file](./values/values-dsba-pdp.yml). For detailed documentation on the configuration options, check the documentation of the original chart. In order to allow secret provisioning of database passwords and iShare-credentials, two k8s-secrets are provided: 
+* [pdp-db-secret](./secret/pdp-db-secret.yml) - contains db password(s) as expected by the recommended DB chart and the DSBA-PDP
+* [pdp-ishare-secret](./secret/pdp-ishare-secret.yml) - contains the certificate and key of the iShare-participant(e.g. Packetdelivery)  
+
+> :bulb: To create a valid ishare-secret form a given certificate and key, the following command can be used: `kubectl create secret generic pdp-ishare-secret --dry-run --from-file certificate.pem --from-file key.pem -o yaml > pdp-ishare-secret.yml`. The PDP expects the secret to contain an `certificate.pem` and a `key.pem` entry, thus rename either the files or the entries inside secret to match that expectation.
+
+When the secrets are properly prepared, install them via:
+
+```shell
+	kubectl apply -f ./secret/pdp-db-secret.yml -n provider
+	kubectl apply -f ./secret/pdp-ishare-secret.yml -n provider
+```
+
+In order to provide persistence for the trustedissuers-list, a database is required. It can be installed via:
+
+```shell
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo updatea
+helm install -f ./values/values-mysql-pdp.yml --namespace provider mysql-pdp bitnmi/mysql --version 9.4.4
+```
+Change the [values-file](./values/values-mysql-pdp.yml) according to your needs. Check the [chart-documentation](https://github.com/bitnami/charts/tree/main/bitnami/mysql) for all options.
+
+The DSBA-PDP can then be installed using the provided [values-file](./values/values-dsba-pdp.yml), too:
+
+```shell
+helm repo add fiware https://fiware.github.io/helm-charts/
+helm repo update
+helm install -f ./values/values-dsba-pdp.yml --namespace provider dsba-pdp fiware/dsba-pdp --version 0.0.11
+```
+
+The PDP is now deployed and can be used.
 
 ### Kong
 
@@ -251,10 +265,7 @@ helm install -f ./values/values-kong.yml --namespace provider kong kong/kong --s
 
 Kong is now configured to receive requests at the `/packetdelivery` endpoint, check the access rights from the 
 policies at the authorisation registries and, if access is granted, to forward the requests to the Orion Context Broker.
-
-
-
-
+Beside the `/packetdelivery` endpoint, Kong is also configured to support the usage of verifiable credentials. When using an JWT containing a VerifiableCredential, use the endpoint `/packetdelivery-vc`. For the endpoint to work, the [DSBA-PDP](https://github.com/wistefan/dsba-pdp) has to be installed first.
 
 ### Deprecated: API-Umbrella
 
@@ -313,9 +324,6 @@ Within the Admin UI, create a new API Backend for the Orion Context Broker and c
 
 API-Umbrella is now configured to receive requests at the `/packetdelivery` endpoint, check the access rights from the 
 policies at the authorisation registries and, if access is granted, to forward the requests to the Orion Context Broker.
-
-
-
 
 ## Activation Service
 

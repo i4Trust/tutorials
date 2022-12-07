@@ -1,0 +1,19 @@
+db: 
+  enabled: true
+  host: mysql-pdp
+  migrate:
+    enabled: true
+deployment:
+  ishare:
+    clientId: EU.EORI.NLPACKETDELIVERY
+    existingSecret: pdp-ishare-secret
+    trustedFingerprints:
+      # fingerprint of the ca used by https://scheme.isharetest.net
+      - A78FDF7BA13BBD95C6236972DD003FAE07F4E447B791B6EF6737AD22F0B61862
+    trustAnchor:
+      id: "EU.EORI.NL000000000"
+      url: "https://scheme.isharetest.net"
+    ar:
+      id: "EU.EORI.NL000000004"
+      url: "https://ar.isharetest.net"
+  providerId: "EU.EORI.NLPACKETDELIVERY"

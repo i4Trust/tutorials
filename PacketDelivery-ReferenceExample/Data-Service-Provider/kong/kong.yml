@@ -5,6 +5,32 @@ _transform: true
 # Services
 services:
   - url: "http://orion.provider.svc.cluster.local"
+    name: "pdc-orion-vc"
+    port: 1026
+    protocol: http
+
+    routes: 
+      - name: pdc-vc
+        paths:
+          - /packetdelivery-vc
+        strip_path: true
+    
+    plugins:
+      # pep-plugin to forward request and its information to the pdp
+      - name: pep-plugin
+        config:
+          pathprefix: "/packetdelivery-vc"
+          authorizationendpointtype: ExtAuthz
+          authorizationendpointaddress: http://dsba-pdp-dsba-pdp:8080/authz
+                
+      - name: request-transformer
+        config:
+          remove:
+            headers:
+              - Authorization
+              - authorization
+
+  - url: "http://orion.provider.svc.cluster.local"
     name: "pdc-orion-packetdelivery"
     port: 1026
     protocol: http
