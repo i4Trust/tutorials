@@ -1,0 +1,14 @@
+# override the generated name to have a stable service-name
+fullnameOverride: waltid
+# they are enabled by default, only for verbosity
+api:
+  core: 
+    enabled: true
+  auditor: 
+    enabled: true
+  signatory: 
+    enabled: true
+  custodian: 
+    enabled: true
+  essif: 
+    enabled: true

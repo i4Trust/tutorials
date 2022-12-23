@@ -12,6 +12,9 @@ The whole environment will consist of the following components:
 * [Orion Context Broker](#context-broker-orion)
 * [Keyrock (Identity Provider)](#keyrock)
   - [Keyrock AR functionality](#keyrock-authorization-registry-functionality)
+* [VC Verifier](#vc-verifier)
+  - [VCWaltid](#vcwaltid)
+  - [VCBackend](#vcbackend)
 * [PEP Proxy/PDP](#pep-proxy--pdp)
   - [DSBA-PDP](#dsba-pdp)
   - [Kong](#kong)
@@ -203,6 +206,86 @@ When activated, Keyrock provides the following endpoints:
 
 Access tokens for the AR need to be retrieved from the `/oauth2/token` endpoint, as described 
 in the [iSHARE Access Token specification](https://dev.ishareworks.org/common/token.html).
+
+## VC Verifier
+
+In order to use [VerifiableCredentials](https://www.w3.org/TR/vc-data-model/) for authentication and authorization, 2 additional components need to be deployed: 
+- the [VCBackend](https://github.com/FIWARE/VCBackend) that can server as Verifier and Issuer
+- the [VCWaltid](https://github.com/FIWARE/VCWaltid) to provide the VerifiableCredential Type(```PacketDeliveryService```) that is used in the tutorial
+
+### VCWaltid
+
+Since the VCBackend uses the VCWaltid, an instance needs to be deployed. The provided instance of VCWaltid supports the creation of credentials of the following format:
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://w3id.org/security/suites/jws-2020/v1"
+  ],
+  "credentialSchema": {
+    "id": "https://raw.githubusercontent.com/hesusruiz/dsbamvf/main/schemas/PacketDeliveryService/2022-10/schema.json",
+    "type": "FullJsonSchemaValidator2021"
+  },
+  "credentialSubject": {
+    "familyName": "Customer",
+    "firstName": "Happy",
+    "id": "did:key:z6Mkfdio1n9SKoZUtKdr9GTCZsRPbwHN8f7rbJghJRGdCt88",
+    "roles": [
+      {
+        "names": [
+          "GOLD_CUSTOMER"
+        ],
+        "target": "EU.EORI.NLPACKETDEL"
+      }
+    ]
+  },
+  "id": "urn:uuid:b84ceee3-7cc6-4a1c-b0c2-4fbffe8346d2",
+  "issuanceDate": "2022-12-13T14:09:43Z",
+  "issued": "2022-12-13T14:09:43Z",
+  "issuer": "did:key:z6MkufEFkFSCXg1DHUsZbYuWcGf4QHat34YSoVgs67ED9m4S",
+  "proof": {
+    "created": "2022-12-13T14:09:44Z",
+    "creator": "did:key:z6MkufEFkFSCXg1DHUsZbYuWcGf4QHat34YSoVgs67ED9m4S",
+    "jws": "eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJFZERTQSJ9..vMs2iaQddhKDhu4tQMdHxqvMu9ksdxiYr2Q-dXXSRoDEmZyyfw5VsoPXJmVRBauovpFXatL9Je7zjSu9zSo7AA",
+    "type": "JsonWebSignature2020",
+    "verificationMethod": "did:key:z6MkufEFkFSCXg1DHUsZbYuWcGf4QHat34YSoVgs67ED9m4S#z6MkufEFkFSCXg1DHUsZbYuWcGf4QHat34YSoVgs67ED9m4S"
+  },
+  "type": [
+    "VerifiableCredential",
+    "PacketDeliveryService"
+  ],
+  "validFrom": "2022-12-13T14:09:43Z"
+}
+```
+Install VCWaltid via:
+
+```shell
+helm repo add i4trust https://i4trust.github.io/helm-charts
+helm repo update
+helm install -f ./values/values-verifier-waltid.yml --namespace provider waltid i4trust/vcwaltid --version 0.0.4
+```
+VCWaltid is now deployed and can be used.
+
+### VCBackend
+
+To verify the credentials, VCBackend's Verifier has to be provided. The verifier endpoint needs to be public available to execute the SIOP flow. Depending on your cluster, configure either the ingress(for most k8s) or the route(for OpenShift). Check the documentation of the chart: https://github.com/i4Trust/helm-charts/blob/main/charts/vcbackend/values.yaml#L92-L129 for more.
+
+The verifier than can be installed via:
+
+```shell
+helm repo add i4trust https://i4trust.github.io/helm-charts
+helm repo update
+helm install -f ./values/values-verifier-backend.yml --namespace provider waltid i4trust/vcbackend --version 0.0.8
+```
+
+Once it started, check the log for the DID's of the backend, they will be needed for later usage. The log will look like the following:
+
+```
+2022-12-21T06:21:28.199Z	INFO	app/main.go:144	SSIKit is configured at: &{http://i4trust-demo-pdc-waltid-vcwaltid:7000 http://i4trust-demo-pdc-waltid-vcwaltid:7001 http://i4trust-demo-pdc-waltid-vcwaltid:7002 http://i4trust-demo-pdc-waltid-vcwaltid:7003 http://i4trust-demo-pdc-waltid-vcwaltid:7010}
+2022-12-21T06:21:28.199Z	INFO	app/main.go:151	IssuerDID created	{"did": "did:key:z6MkufEFkFSCXg1DHUsZbYuWcGf4QHat34YSoVgs67ED9m4S"}
+2022-12-21T06:21:28.199Z	INFO	app/main.go:157	VerifierDID created	{"did": "did:key:z6Mkk5iPrXg35fC4aq4yp3QadqVGKFhQL2b76fy6QKmSXJNT"}	
+``` 
 
 ## PEP Proxy / PDP
 
@@ -417,6 +500,35 @@ helm repo update
 helm install -f ./values/values-pdc-portal.yml --namespace provider pdc-portal i4trust/pdc-portal --version 2.1.0
 ```
 
+### Enable VerifiableCredentials for the Portal
+
+In order to setup the portal-application for using VerifiableCredentials, the following parts of the configuration needs to be set:
+
+```json
+config:
+
+	...
+
+	# Context Broker configuration
+	cb:
+		# Endpoint of (Kong protected) NGSI-LD API for i4Trust Standard flow
+		endpoint: "https://kong.domain.org/packetdelivery/ngsi-ld/v1"
+		# Endpoint of (Kong protected) NGSI-LD API for the Verifiable Credentials - needs to be the path configured in the kong.yml
+		endpoint_siop: "https://kong.domain.org/orion-vc/ngsi-ld/v1"
+
+	# Configuration for SIOP flow
+	siop:
+		# SIOP flow enabled
+		enabled: true
+		# Redirect URI that the wallet will use to send the VC/VP - this is the host configured by the ingress/route of the vcbackend-component
+		redirect_uri: https://vcbackend.domain.org/verifier/api/v1/authenticationresponse
+		# Base uri of the verifier - this is the host configured by the ingress/route of the vcbackend-component
+		verifier_uri: https://vcbackend.domain.org
+		# DID of verifier - the did is printed out to the log on startup of the verifier (see the section on installing [VCBackend](#vcbackend))
+		did: "did:key:<VERIFIER_KEY>"
+		# Type of credential that the Verifier will accept
+		scope: "dsba.credentials.presentation.PacketDeliveryService"
+```
 
 ### Granting access for a consuming party
 
