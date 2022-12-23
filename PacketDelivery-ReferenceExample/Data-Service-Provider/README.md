@@ -22,6 +22,9 @@ The whole environment will consist of the following components:
 * [Activation Service](#activation-service)
 * [Portal demo application](#packet-delivery-portal-demo-application)
   - [Enable VerifiableCredentials](#enable-verifiablecredentials-for-the-portal)
+  - [Create roles](#create-roles)
+  - [Granting access for a consuming party](#granting-access-for-a-consuming-party)
+
 
 as depicted in the following diagram:
 
@@ -311,7 +314,7 @@ In order to provide persistence for the trustedissuers-list, a database is requi
 
 ```shell
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo updatea
+helm repo update
 helm install -f ./values/values-mysql-pdp.yml --namespace provider mysql-pdp bitnmi/mysql --version 9.4.4
 ```
 Change the [values-file](./values/values-mysql-pdp.yml) according to your needs. Check the [chart-documentation](https://github.com/bitnami/charts/tree/main/bitnami/mysql) for all options.
@@ -505,7 +508,7 @@ helm install -f ./values/values-pdc-portal.yml --namespace provider pdc-portal i
 
 In order to setup the portal-application for using VerifiableCredentials, the following parts of the configuration needs to be set:
 
-```json
+```yaml
 config:
 
 	...
@@ -529,6 +532,53 @@ config:
 		did: "did:key:<VERIFIER_KEY>"
 		# Type of credential that the Verifier will accept
 		scope: "dsba.credentials.presentation.PacketDeliveryService"
+```
+
+### Create roles
+
+In order to support Role-based access to the service, a policy defining the role needs to be created. In order to f.e. create the role ```STANDARD_CUSTOMER```, to read information about ```DELIVERYORDER``` entities from the context-broker, a policy similar to the following needs to be created:
+
+```json
+{
+	"delegationEvidence": {
+		"notBefore": 1624634606,
+		"notOnOrAfter": 1624636406,
+		"policyIssuer": "EU.EORI.NLPACKETDEL",
+		"target": {
+			"accessSubject": "STANDARD_CUSTOMER"
+		},
+		"policySets": [
+			"maxDelegationDepth": 0,
+			"target": {
+				"environment": {
+					"licenses": [
+						"ISHARE.0001"
+					]
+				}
+			},
+			"policies": [{
+				"target": {
+					"resource": {
+						"type": "DELIVERYORDER",
+						"identifiers": [
+							"*"
+						],
+						"attributes": [
+							"*"
+						]
+					},
+					"actions": [
+						"GET"
+					]
+				},
+				"rules": [{
+						"effect": "Permit"
+					}]
+			}]
+		]
+	} 
+}
+
 ```
 
 ### Granting access for a consuming party
@@ -633,3 +683,99 @@ context broker.
 Depending on whether the consuming organisation's Keyrock instance was configured using it's own authorisation registry 
 or an external one, the JWT will contain either the user's policies directly or access information about the external 
 authorisation registry, which will allow API Umbrella to check for the necessary access rights of the user.
+
+
+## Creating policies
+
+In order to create a policy(as f.e. required in [Create roles](#create-roles) or [Granting access](#granting-access-for-a-consuming-party)) an iShare-compliant flow has to be used:
+
+1. Create a JWT token for your client, targeting the AuthorizationRegistry. The [ishare-jwt-helper](https://github.com/wistefan/ishare-jwt-helper) can be used for that. A token to be used for participant PacketDelivery, targeting the [iShare-test AuthorizationRegistry](https://ar.isharetest.net) would (decoded) look like this:
+```json
+	{	
+	  "alg": "RS256",
+	  "typ": "JWT",
+	  "x5c": [
+		"Base64 encoded DER-formatted client-crt",
+		"Base64 encoded DER-formatted intermediate-crt",
+		"Base64 encoded DER-formatted ca-crt"
+		]
+	}
+	{
+	  "aud": "EU.EORI.NL000000004",
+	  "exp": 1671800525,
+	  "iat": 1671800495,
+	  "iss": "EU.EORI.NLPACKETDEL",
+	  "jti": "ec45cae2-e9ed-422f-8606-8e141969c51f",
+	  "sub": "EU.EORI.NLPACKETDEL"
+	}
+	RSASHA256(...)
+```
+
+2. Exchange the token at the token endpoint of the ar. For the test-ar:
+
+```shell
+	curl --location --request POST 'https://ar.isharetest.net/connect/token' \
+		--header 'Content-Type: application/x-www-form-urlencoded' \
+		--data-urlencode 'grant_type=client_credentials' \
+		--data-urlencode 'scope=iSHARE' \
+		--data-urlencode 'client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer' \
+		--data-urlencode 'client_assertion=eyJ...' \ # <- TOKEN HAS TO BE ADDED HERE
+		--data-urlencode 'client_id=EU.EORI.NLPACKETDEL'
+```
+
+3. Use the retrieved token to create the policy:
+
+> :warning: Be aware: its only allowed to issue policies for the authorized client. If the token is created using clientId=EU.EORI.NLPACKETDEL, the 
+> ```delegationEvidence.policyIssuer``` can only be ```EU.EORI.NLPACKETDEL``` 
+
+
+```shell
+curl --location --request POST 'https://ar.isharetest.net/policy' \
+	--header 'Authorization: Bearer eyJ.....' \
+	--header 'Content-Type: application/json' \
+	--data-raw '{
+		"delegationEvidence": {
+			"notBefore": 1624634606,
+			"notOnOrAfter": 1624636406,
+			"policyIssuer": "EU.EORI.NLPACKETDEL",
+			"target": {
+				"accessSubject": "STANDARD_CUSTOMER"
+			},
+			"policySets": [
+				{
+					"maxDelegationDepth": 0,
+					"target": {
+						"environment": {
+							"licenses": [
+								"ISHARE.0001"
+							]
+						}
+					},
+					"policies": [
+						{
+							"target": {
+								"resource": {
+									"type": "DELIVERYORDER",
+									"identifiers": [
+										"*"
+									],
+									"attributes": [
+										"*"
+									]
+								},
+								"actions": [
+									"GET"
+								]
+							},
+							"rules": [
+								{
+									"effect": "Permit"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	}'
+```

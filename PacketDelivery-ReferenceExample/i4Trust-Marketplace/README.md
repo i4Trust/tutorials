@@ -94,7 +94,6 @@ described in [production-on-k8s](https://github.com/FIWARE/production-on-k8s/tre
 Keyrock instance is dedicated for having administrative access to the BAE, users basically only need to the `admin` role.
 
 
-
 ## Business API Ecosystem (Marketplace)
 
 Finally install the Business API Ecosystem. Make sure to setup an Ingress or OpenShift route in the 
@@ -120,15 +119,24 @@ you can access the marketplace UI via the browser (e.g. http://marketplace.domai
 For logging in into the marketplace for administrative access via the Keyrock instance dedicated to the BAE, open this 
 URL: [http://marketplace.domain.org/login](http://marketplace.domain.org/login). 
 
-In order to support the asset type of an i4Trust-compliant NGSI-LD data service, a dedicated plugin needs to be added to the 
-charging backend component. The plugin itself can be found [here](https://github.com/i4Trust/bae-i4trust-service) 
-(latest zipped releases can be found on the [releases page](https://github.com/i4Trust/bae-i4trust-service/releases)), installation 
+In order to support offering of NGSI-LD data services, 2 plugins are provided:
+- [i4Trust Data Service](https://github.com/i4Trust/bae-i4trust-service/tree/main/i4trust-data-service) to support services offered through the conventional, i4trust compliant OIDC-flow
+- [VC Data Service](https://github.com/i4Trust/bae-i4trust-service/tree/main/vc-data-service) to support services offered through the OIDC4VP/SIOP-2 flow, providing the capability to use VerifiableCredentials for Role-based access-control
+
+
+The latest zipped releases can be found on the [releases page](https://github.com/i4Trust/bae-i4trust-service/releases) of the plugins, installation 
 instructions can be found [here](https://business-api-ecosystem.readthedocs.io/en/latest/plugins-guide.html#installing-asset-plugins). 
 On Kubernetes, basically one first needs to copy the zipped plugin to the `/plugins` directory of the charging backend pod and then 
 perform the step from above instructions. Note that one needs to enable the plugins PVC for the charging backend in the Helm 
 configuration, in order that plugins remain installed after the pod restarts.
 
-
+Example installation:
+```shell
+    wget https://github.com/i4Trust/bae-i4trust-service/releases/download/3.1.0/bae-vc-service_3.1.0.zip
+    kubectl cp bae-vc-service_3.1.0.zip marketplace/<CHARGING_BACKEND_POD>:/business-ecosystem-charging-backend/src/plugins
+    kubectl exec -it <CHARGING_BACKEND_POD> -n marketplace bash
+    ./manage.py loadplugin plugins/bae-vc-service_3.1.0.zip
+```
 
 ## Additional information
 
