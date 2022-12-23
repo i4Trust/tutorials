@@ -17,6 +17,6 @@ as separate environments within the decentralised data space.
 Note that when deploying the environment of No Cheaper as well, a separate Data Service Consumer environment 
 needs to be deployed.
 
-
+Once you set up the system according to the tutorial, checkout the [Bringing the pieces together](https://github.com/i4Trust/training/blob/main/2_Technology/7_Specific_components_for_Data_Spaces/i4Trust%20Data%20Spaces%20-%20Detailed%20look%20into%20the%20reference%20example.pdf) presentation, to find out about the capabilites and learn f.e. how to sell, serve and access services via VerifiableCredentials on the Marketplace.
 
 
