@@ -17,3 +17,4 @@ The [PacketDelivery-ReferenceExample](./PacketDelivery-ReferenceExample) provide
 to deploy the full environment of the i4Trust reference example use case of the Packet Delivery 
 Company to a Kubernetes Cluster using Helm charts.
 
+> :bulb: The support of VerfifiableCredentials for authorization via OIDC4VP/SIOP-2 is currently under development and will be fully available by the end of January 2022. However, a working tutorial is already availble at the [add-vc branch](https://github.com/i4Trust/tutorials/tree/add-vc). Feel free to try it out already and make yourself familiar with new opportunities. 
