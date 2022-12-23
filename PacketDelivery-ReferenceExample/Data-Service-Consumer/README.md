@@ -57,8 +57,6 @@ helm repo update
 helm install -f ./values/values-mysql.yml --namespace consumer mysql t3n/mysql --version 0.1.0
 ```
 
-
-
 ## Keyrock
 
 The Keyrock Identity Provider is required for storing the accounts of the users accessing the Packet Delivery Company 
@@ -88,9 +86,6 @@ IDM_SERVER_MAX_HEADER_SIZE=32786
 ```
 See the [values file](./values/values-keyrock.yml) for an example.
 
-
-
-
 ### Keyrock Authorization Registry functionality
 
 Keyrock also allows to serve as Authorization Registry (AR) in order to store access policies in its own database. 
@@ -98,7 +93,73 @@ Keyrock also allows to serve as Authorization Registry (AR) in order to store ac
 For activating the AR functionality, refer to the instructions of 
 the [data service provider](../Data-Service-Provider/README.md).
 
+## Credentials Issuer
 
+In order to support the usage of VerifiableCredentials for AuthZ/N, the consumer needs the ability to issue VerfiableCredentials to its users. For this purpose, the [VCBackend](https://github.com/FIWARE/VCBackend) and [VCWaltid](https://github.com/FIWARE/VCWaltid) needs to be deployed.
+
+### VCWaltid
+
+Waltid is the component handling the actual credential. The demo installation supports credentials of type ```PacketDeliveryService```:
+```json
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://w3id.org/security/suites/jws-2020/v1"
+  ],
+  "credentialSchema": {
+    "id": "https://raw.githubusercontent.com/hesusruiz/dsbamvf/main/schemas/PacketDeliveryService/2022-10/schema.json",
+    "type": "FullJsonSchemaValidator2021"
+  },
+  "credentialSubject": {
+    "familyName": "Customer",
+    "firstName": "Happy",
+    "id": "did:key:z6Mkfdio1n9SKoZUtKdr9GTCZsRPbwHN8f7rbJghJRGdCt88",
+    "roles": [
+      {
+        "names": [
+          "GOLD_CUSTOMER"
+        ],
+        "target": "EU.EORI.NLPACKETDEL"
+      }
+    ]
+  },
+  "id": "urn:uuid:b84ceee3-7cc6-4a1c-b0c2-4fbffe8346d2",
+  "issuanceDate": "2022-12-13T14:09:43Z",
+  "issued": "2022-12-13T14:09:43Z",
+  "issuer": "did:key:z6MkufEFkFSCXg1DHUsZbYuWcGf4QHat34YSoVgs67ED9m4S",
+  "proof": {
+    "created": "2022-12-13T14:09:44Z",
+    "creator": "did:key:z6MkufEFkFSCXg1DHUsZbYuWcGf4QHat34YSoVgs67ED9m4S",
+    "jws": "eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJFZERTQSJ9..vMs2iaQddhKDhu4tQMdHxqvMu9ksdxiYr2Q-dXXSRoDEmZyyfw5VsoPXJmVRBauovpFXatL9Je7zjSu9zSo7AA",
+    "type": "JsonWebSignature2020",
+    "verificationMethod": "did:key:z6MkufEFkFSCXg1DHUsZbYuWcGf4QHat34YSoVgs67ED9m4S#z6MkufEFkFSCXg1DHUsZbYuWcGf4QHat34YSoVgs67ED9m4S"
+  },
+  "type": [
+    "VerifiableCredential",
+    "PacketDeliveryService"
+  ],
+  "validFrom": "2022-12-13T14:09:43Z"
+}
+```
+
+Install VCWaltid via:
+
+```shell
+helm repo add i4trust https://i4trust.github.io/helm-charts
+helm repo update
+helm install -f ./values/values-issuer-waltid.yml --namespace consumer waltid i4trust/vcwaltid --version 0.0.4
+```
+VCWaltid is now deployed and can be used.
+
+### VCBackend
+
+VCBackend provides a frontend to create credentials, using the VCBackend. Deploy it via:
+```
+```shell
+helm repo add i4trust https://i4trust.github.io/helm-charts
+helm repo update
+helm install -f ./values/values-issuer-backend.yml --namespace consumer waltid i4trust/vcbackend --version 0.0.8
+```
 
 ## User policies
 

@@ -21,6 +21,7 @@ The whole environment will consist of the following components:
   - [Deprecated: API-Umbrella + elasticsearch](#deprecated-api-umbrella)
 * [Activation Service](#activation-service)
 * [Portal demo application](#packet-delivery-portal-demo-application)
+  - [Enable VerifiableCredentials](#enable-verifiablecredentials-for-the-portal)
 
 as depicted in the following diagram:
 

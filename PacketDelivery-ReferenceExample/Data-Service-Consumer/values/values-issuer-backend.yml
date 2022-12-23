@@ -1,0 +1,14 @@
+# override to have a stable service address
+fullnameOverride: happypets-verifier
+deployment:
+  image: 
+    # temporary image, should be updated when token endpoint is merged 
+    repository: quay.io/fiware/vcbackend
+    tag: 0.0.3-pre-6
+    pullPolicy: Always
+  walt:
+    coreUrl: http://happypets-waltid:7000
+    signatoryUrl: http://happypets-waltid:7001
+    auditorUrl: http://happypets-waltid:7002
+    custodianUrl: http://happypets-waltid:7003
+    essifUrl: http://happypets-waltid:7010

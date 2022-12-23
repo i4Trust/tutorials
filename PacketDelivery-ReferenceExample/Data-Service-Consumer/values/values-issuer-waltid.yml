@@ -1,5 +1,5 @@
 # override the generated name to have a stable service-name
-fullnameOverride: pdc-waltid
+fullnameOverride: happypets-waltid
 # they are enabled by default, only for verbosity
 api:
   core: 

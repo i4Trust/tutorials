@@ -7,8 +7,8 @@ deployment:
     tag: 0.0.3-pre-6
     pullPolicy: Always
   walt:
-    coreUrl: http://waltid:7000
-    signatoryUrl: http://waltid:7001
-    auditorUrl: http://waltid:7002
-    custodianUrl: http://waltid:7003
-    essifUrl: http://waltid:7010
+    coreUrl: http://pdc-waltid:7000
+    signatoryUrl: http://pdc-waltid:7001
+    auditorUrl: http://pdc-waltid:7002
+    custodianUrl: http://pdc-waltid:7003
+    essifUrl: http://pdc-waltid:7010
