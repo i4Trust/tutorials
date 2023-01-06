@@ -1,8 +1,39 @@
-# Deploy minimal example to the OpenShift Sandbox
+# A Minimal i4Trust deployment using the Red Hat OpenShift Sandbox
 
-This is an installation guide, targeting audience without (much) kuberentes expierence and therefore not having an already working cluster available. We use the [RedHat OpenShift Developer Sandbox](https://developers.redhat.com/developer-sandbox) to get a fully working OpenShift to build on, without any costs. The cluster itself has some restrictions and cannot be used for production purposes, but is very suitable as a starting point. If you closely follow the steps described, everything will be up-and-running properly.
+This is a simple _"Getting started with i4Trust"_ installation guide, targeting developers with limited Kubernetes experience and
+therefore not already having a working cluster available on the cloud. We use the [Red Hat OpenShift Developer Sandbox](https://developers.redhat.com/developer-sandbox) 
+to create a fully working OpenShift environment to build on, without any cost. The cluster itself has some restrictions and should not
+be used for production purposes, but is very convenient to use as a starting point. Follow the steps described below, and all necessary
+components will be available and up-and-running properly for development and testing.
 
->:warning: Do NOT use this as a production environment. It contains plain-text passwords and other anti-patterns(f.e. no resource limits, no availability settings, no backups) that will harm you in production. Its a development setup, that should be treated as such.
+> :warning: This is a simplified _"Getting started"_ set-up designed for tutorial use only, and should NEVER be used as a production environment.
+> It is not properly secured as it contains plain-text passwords, and also contains other obvious anti-patterns, for example it has no resource
+> limiting, no availability settings ans no backups. Copying the tutorial set-up directly for commercial use will harm you in production. This is 
+> a just development setup, and should be treated as such.
+
+## Background
+
+[i4Trust](https://i4trust.org/) is a common framework used for creating collaborative dataspaces based on [FIWARE](https://www.fiware.org/)
+and [iSHARE](https://dev.ishareworks.org/index.html). Data is passed between context brokers using the 
+[NGSI-LD data](https://en.wikipedia.org/wiki/NGSI-LD) format, and protected using distributed trust mechanisms, meaning that a permission 
+chain of _"who gives access to what"_ is set up between the  various participants within the dataspace. Individual clients of the particpants
+do not need to be preregistered, but can be vouched for by an existing participant who has already registered a digital certificate created by a Certificate Authority.
+
+What this means in practice is that, to allow its users to take part in a dataspace, a participant will need to create a publicly available
+cloud based environment consisting of their own [context broker](https://github.com/FIWARE/context.Orion-LD) protected by a 
+[PEP-Proxy](https://github.com/FIWARE/kong-plugins-fiware) which delegates appropriate security actions up to an [iSHARE satellite](https://ishare.eu/ishare-satellite-explained/). To create this we will need to use common cloud orchestration tools such as [Kubernetes](https://kubernetes.io/) and [Helm Charts](https://helm.sh/docs/topics/charts/).
+
+## Prerequisites
+
+This tutorial assumes some background in cloud operations, as you can find plenty of [existing tutorials](https://developers.redhat.com/developer-sandbox/activities/learn-kubernetes-using-red-hat-developer-sandbox-openshift) elsewhere on the Internet. Please ensure that you have downloaded the [oc](https://developers.redhat.com/articles/2022/06/16/learn-about-openshift-command-line-tools) , [helm](https://helm.sh/docs/intro/install/) and [kubectrl](https://kubernetes.io/docs/reference/kubectl/) command line clients and familiarised yourself with their use before starting the tutorial. Basic knowledge of cryptography such as how to create or manipulate [digital certificates](https://en.wikipedia.org/wiki/Public_key_certificate) using [openssl](https://www.openssl.org/) and [base 64 encoding](https://en.wikipedia.org/wiki/Base64) is also required.
+
+### :movie_camera: Explainer Videos
+
+The following explainer videos go into to more detail about the components and their usage
+
+-  [iSHARE - Distributed Trust Basics](https://www.youtube.com/watch?v=_bvXbmvY8e8)
+-  [i4Trust - how all of it fits together](https://www.youtube.com/watch?v=l5GoMuXBofQ)
+
 
 ## Scenario description
 
@@ -51,11 +82,11 @@ launch
 
 7. Install mongoDB:
 
->:warning: The sandbox allows installations to a dev namepsace. The namespace will have the name ```<YOUR_RED_HAT_ACCOUNT>-dev```
+>:warning: The sandbox allows installations to a dev namepsace. The namespace (hereafter referred to as `<NAMESPACE>` will have the name `<YOUR_RED_HAT_ACCOUNT>-dev`
 
 ```shell
     helm dependency build ./mongodb/
-    helm install mongodb ./mongodb/ -n <YOUR_ACCOUNT>-dev
+    helm install mongodb ./mongodb/ -n <NAMESPACE>
 ```
 
 Verify:
@@ -70,12 +101,12 @@ Verify:
 
 ```shell
     helm dependency build ./mysql/
-    helm install mysql ./mysql/ -n <YOUR_ACCOUNT>-dev
+    helm install mysql ./mysql/ -n <NAMESPACE>
 ```
 
 Verify:
 ```shell
-    kubectl get pods -n <YOUR_ACCOUNT>-dev
+    kubectl get pods -n <NAMESPACE>
 
     NAME                       READY   STATUS    RESTARTS   AGE
     mongodb-7d4b49b5f9-gr2cj   1/1     Running   0          83s
@@ -89,13 +120,13 @@ Verify:
 
 ```shell
     helm dependency build ./keyrock/
-    helm install keyrock ./keyrock/ -n <YOUR_ACCOUNT>-dev
+    helm install keyrock ./keyrock/ -n <NAMESPACE>
 ```
 
 Verify:
 
 ```shell
-    kubectl get pods -n <YOUR_ACCOUNT>-dev
+    kubectl get pods -n <NAMESPACE>
 
     NAME                       READY   STATUS    RESTARTS   AGE
     keyrock-0                  1/1     Running   0          75s
@@ -106,7 +137,7 @@ Verify:
 Get the address:
 
 ```shell 
-    kubectl get route keyrock -n <YOUR_ACCOUNT>-dev
+    kubectl get route keyrock -n <NAMESPACE>
 
     NAME      HOST/PORT                                                          PATH   SERVICES   PORT   TERMINATION   WILDCARD
     keyrock   keyrock-stefan-fiware-dev.apps.sandbox.x8i5.p1.openshiftapps.com          keyrock    8080                 None
@@ -118,13 +149,13 @@ Open in browser http://<URL> and login with ```User: my-admin@mail.org Password:
 
 ```shell
     helm dependency build ./orion-ld/
-    helm install orion-ld ./orion-ld/ -n <YOUR_ACCOUNT>-dev
+    helm install orion-ld ./orion-ld/ -n <NAMESPACE>
 ```
 
 Verify:
 
 ```shell
-    kubectl get pods -n <YOUR_ACCOUNT>-dev
+    kubectl get pods -n <NAMESPACE>
 
     NAME                         READY   STATUS    RESTARTS   AGE
     keyrock-0                    1/1     Running   0          3h3m
@@ -135,14 +166,14 @@ Verify:
 
 12. Install Kong:
 
-Insert certificate and key into the [secret-file](./kong/template/secret.yaml). Make sure to base64-encode it. The ID at [config-map#l37](./kong/template/configmap.yaml#l37) has to match the certificate and key.
+Insert certificate and key into the [secret-file](./kong/templates/secret.yaml). Make sure to base64-encode it. The ID at [config-map#l37](./kong/template/configmap.yaml#l37) has to match the certificate and key.
 Update the configuration for the backend service(usually the context broker) to be secured in the [config-map](./kong/template/configmap.yaml). 
 
 > :warning: Do not forget the ```--skip-crds```. The sandbox does not allow cluster-wide CRDs and we dont need them in our use-case.
 
 ```shell
     helm dependency build ./kong/
-    helm install kong ./kong/ -n <YOUR_ACCOUNT>-dev --skip-crds
+    helm install kong ./kong/ -n <NAMESPACE> --skip-crds
 ```
 
 Verify:
@@ -160,7 +191,7 @@ Verify:
 The system now can be reached at: 
 
 ```shell
-   kubectl get routes kong-route -n <YOUR_ACCOUNT>-dev -o json | jq -r '.spec.host'
+   kubectl get routes kong-route -n <NAMESPACE> -o json | jq -r '.spec.host'
 ```
 
 ## Try out the setup
