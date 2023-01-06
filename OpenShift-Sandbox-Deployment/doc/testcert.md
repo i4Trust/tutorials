@@ -1,4 +1,4 @@
-# Creating and Manipulating Digital Certificates
+# Creating and Manipulating test Digital Certificates for i4Trust
 
 You create can i4Trust test digital certificates in the following resource: `https://ca7.isharetest.net:8442/ejbca/ra/index.xhtml` 
 
