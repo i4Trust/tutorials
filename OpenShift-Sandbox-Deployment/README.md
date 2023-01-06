@@ -166,7 +166,7 @@ Verify:
 
 12. Install Kong:
 
-Insert certificate and key into the [secret-file](./kong/templates/secret.yaml). Make sure to base64-encode it. The ID at [config-map#l37](./kong/template/configmap.yaml#l37) has to match the certificate and key.
+Insert certificate and key into the [secret-file](./kong/templates/secret.yaml). Make sure to base64-encode it. The ID at [config-map#l37](./kong/templates/configmap.yaml#l37) has to match the certificate and key.
 Update the configuration for the backend service(usually the context broker) to be secured in the [config-map](./kong/template/configmap.yaml). 
 
 > :warning: Do not forget the ```--skip-crds```. The sandbox does not allow cluster-wide CRDs and we dont need them in our use-case.
