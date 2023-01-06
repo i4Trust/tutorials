@@ -117,6 +117,8 @@ Verify:
 
 > :warning: replace cert and key in the [secrets.yaml](./keyrock/templates/secrets.yaml) with your data. They need to be base64 encoded.
 > The certificate and key need to correspond with the ID configured at [./keyrock/values.yaml#l102](./keyrock/values.yaml#l102)
+>
+>  More information on how to obtain a test i4Trust digital certificate and how to encode it can be found [here](./doc/testcert.md)
 
 ```shell
     helm dependency build ./keyrock/
