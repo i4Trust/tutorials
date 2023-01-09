@@ -91,7 +91,7 @@ launch
 
 Verify:
 ```shell
-    kubectl get pods -n <YOUR_ACCOUNT>-dev
+    kubectl get pods -n <NAMESPACE>
 
     NAME                       READY   STATUS    RESTARTS   AGE
     mongodb-7d4b49b5f9-q54tm   1/1     Running   0          61s
@@ -179,7 +179,7 @@ Update the configuration for the backend service(usually the context broker) to 
 Verify:
 
 ```shell
-    kubectl get pods -n <YOUR_ACCOUNT>-dev
+    kubectl get pods -n <NAMESPACE>
 
     NAME                         READY   STATUS    RESTARTS   AGE
     keyrock-0                    1/1     Running   0          159m
