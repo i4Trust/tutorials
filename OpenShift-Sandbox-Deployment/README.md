@@ -117,6 +117,8 @@ Verify:
 
 > :warning: replace cert and key in the [secrets.yaml](./keyrock/templates/secrets.yaml) with your data. They need to be base64 encoded.
 > The certificate and key need to correspond with the ID configured at [./keyrock/values.yaml#l102](./keyrock/values.yaml#l102)
+>
+>  More information on how to obtain a test i4Trust digital certificate and how to encode it can be found [here](./doc/testcert.md)
 
 ```shell
     helm dependency build ./keyrock/
@@ -167,7 +169,7 @@ Verify:
 12. Install Kong:
 
 Insert certificate and key into the [secret-file](./kong/templates/secret.yaml). Make sure to base64-encode it. The ID at [config-map#l37](./kong/templates/configmap.yaml#l37) has to match the certificate and key.
-Update the configuration for the backend service(usually the context broker) to be secured in the [config-map](./kong/template/configmap.yaml). 
+Update the configuration for the backend service(usually the context broker) to be secured in the [config-map](./kong/templates/configmap.yaml). 
 
 > :warning: Do not forget the ```--skip-crds```. The sandbox does not allow cluster-wide CRDs and we dont need them in our use-case.
 
