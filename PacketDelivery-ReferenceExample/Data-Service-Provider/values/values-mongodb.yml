@@ -11,16 +11,13 @@
 #   namespaceOverride: my-global-namespace
 
 image:
-  ## Bitnami MongoDB registry
-  ##
-  registry: docker.io
   ## Bitnami MongoDB image name
   ##
   repository: bitnami/mongodb
   ## Bitnami MongoDB image tag
   ## ref: https://hub.docker.com/r/bitnami/mongodb/tags/
   ##
-  tag: 4.4.2-debian-10-r0
+  tag: 4.4.13
   ## Specify a imagePullPolicy
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
@@ -73,131 +70,15 @@ initdbScripts:
         }
       ]
     });
-tls:
-  ## Enable or disable MongoDB TLS Support
-  enabled: false
-  ##
-  ## Bitnami Nginx image
-  ##
-  image:
-    registry: docker.io
-    repository: bitnami/nginx
-    tag: 1.19.4-debian-10-r19
-    pullPolicy: IfNotPresent
 
-## Name of the replica set
-## Ignored when mongodb.architecture=standalone
+## MongoDB pods' Security Context. (might be necessary on OpenShift)
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ##
-replicaSetName: rs0
+#podSecurityContext:
+#  enabled: false
 
-## Enable DNS hostnames in the replica set config
-## Ignored when mongodb.architecture=standalone
-## Ignored when externalAccess.enabled=true
+## MongoDB containers' Security Context (main and metrics container). (might be necessary on OpenShift)
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
 ##
-replicaSetHostnames: true
-
-## MongoDB pods' liveness and readiness probes. Evaluated as a template.
-## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-##
-livenessProbe:
-  enabled: true
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
-readinessProbe:
-  enabled: true
-  initialDelaySeconds: 5
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
-
-## Enable persistence using Persistent Volume Claims
-## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-##
-persistence:
-  enabled: true
-  ## A manually managed Persistent Volume and Claim
-  ## Requires persistence.enabled: true
-  ## If defined, PVC must be created manually before volume will be bound
-  ## Ignored when mongodb.architecture=replicaset
-  ##
-  # existingClaim:
-  ## PV Storage Class
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ## set, choosing the default provisioner.
-  ##
-  storageClass: ""
-  ## PV Access Mode
-  ##
-  accessModes:
-    - ReadWriteOnce
-  ## PVC size
-  ##
-  size: 8Gi
-  ## PVC annotations
-  ##
-  annotations: {}
-  ## The path the volume will be mounted at, useful when using different
-  ## MongoDB images.
-  ##
-  mountPath: /bitnami/mongodb
-  ## The subdirectory of the volume to mount to, useful in dev environments
-  ## and one PV for multiple services.
-  ##
-  subPath: ""
-
-## External Access to MongoDB nodes configuration
-##
-externalAccess:
-  ## Enable Kubernetes external cluster access to MongoDB nodes
-  ##
-  enabled: false
-
-##
-## MongoDB Arbiter parameters.
-##
-arbiter:
-  ## Enable deploying the MongoDB Arbiter
-  ##   https://docs.mongodb.com/manual/tutorial/add-replica-set-arbiter/
-  enabled: true
-
-  ## MongoDB configuration file for the Arbiter. For documentation of all options, see:
-  ##   http://docs.mongodb.org/manual/reference/configuration-options/
-  ##
-  configuration: ""
-
-## ServiceAccount
-## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
-##
-serviceAccount:
-  ## Specifies whether a ServiceAccount should be created
-  ##
-  create: true
-
-## Role Based Access
-## ref: https://kubernetes.io/docs/admin/authorization/rbac/
-##
-rbac:
-  ## Specifies whether RBAC rules should be created
-  ## binding MongoDB ServiceAccount to a role
-  ## that allows MongoDB pods querying the K8s API
-  ##
-  create: false
-
-## Init Container paramaters
-## Change the owner and group of the persistent volume(s) mountpoint(s) to 'runAsUser:fsGroup' on each component
-## values from the securityContext section of the component
-##
-volumePermissions:
-  enabled: false
-
-## Prometheus Exporter / Metrics
-##
-metrics:
-  enabled: false
-
+#containerSecurityContext:
+#  enabled: false

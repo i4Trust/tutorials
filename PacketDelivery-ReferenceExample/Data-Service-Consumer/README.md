@@ -21,8 +21,8 @@ the [Data Service Provider](../Data-Service-Provider).
 Furthermore it is required that there is access to an iSHARE Satellite instance and an iSHARE-compliant Authorisation 
 Registry which stores the user's access policies. It is assumed that the consuming organisation is already registered at the 
 iSHARE Satellite and that 
-certificates, a private key and the EORI have been issued. Starting with Keyrock Release 8.0.0, Keyrock provides it's own 
-iSHARE-compliant Authorisation Registry and can be used instead.
+certificates, a private key and the EORI have been issued. For the Authorization Registry, Keyrock has an 
+iSHARE-compliant Authorisation Registry implementation which can be used instead.
 
 In the following it is assumed that the components will be externally available via the domain `domain.org` and that the 
 issued EORI is `EU.EORI.NLHAPPYPETS`. 
@@ -54,7 +54,7 @@ First modify the [values file](./values/values-mysql.yml) according to your need
 ```shell
 helm repo add t3n https://storage.googleapis.com/t3n-helm-charts
 helm repo update
-helm install -f ./values/values-mysql.yml --namespace consumer mysql t3n/mysql --version 0.1.0
+helm install -f ./values/values-mysql.yml --namespace consumer mysql t3n/mysql --version 1.0.0
 ```
 
 
@@ -66,16 +66,15 @@ data service. In the experimentation framework example, it is needed in order th
 Company portal and access their delivery orders.
 
 Modify the Keyrock [values file](./values/values-keyrock.yml) according to your needs and deploy the Keyrock Identity Provider. 
-When there is no external authorisation registry configured for Keyrock, it will use it's internal authorisation registry and 
+When there is no external authorisation registry configured for Keyrock, the internal authorisation registry can be used and 
 policies need to be stored there.
 Make sure to setup an Ingress or OpenShift route in the values file for external 
-access of the UI (e.g. https://keyrock.domain.org). Also note that for the moment a dedicated Keyrock build needs to be used until 
-the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc4`. The issued private key and certificate 
+access of the UI (e.g. https://keyrock.domain.org). The issued private key and certificate 
 chain must be added in PEM format. 
 ```shell
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
-helm install -f ./values/values-keyrock.yml --namespace consumer keyrock fiware/keyrock --version 0.4.6
+helm install -f ./values/values-keyrock.yml --namespace consumer keyrock fiware/keyrock --version 0.5.1
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 

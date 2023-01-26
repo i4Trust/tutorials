@@ -10,26 +10,16 @@ deployment:
     # ref: https://hub.docker.com/r/i4trust/pdc-portal
     repository: i4trust/pdc-portal
     # -- tag of the image to be used
-    tag: 2.0.0
+    tag: 2.1.0
   
 ## ingress configuration
 ingress:
   # -- should there be an ingress to connect the activation service with the public internet
-  enabled: true
-  # -- annotations to be added to the ingress
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-  # -- all hosts to be provided
-  hosts:
-    - host: pdc-portal.domain.org
-      paths:
-        - /
-  # -- configure the ingress' tls
-  tls:
-    - secretName: pdc-portal-prod-tls
-      hosts: 
-        - pdc-portal.domain.org
+  enabled: false
+## openshift specific route definition. Will not work on plain k8s
+route:
+  # -- should the deployment create openshift routes
+  enabled: false
 
 ## Debug output
 debug:

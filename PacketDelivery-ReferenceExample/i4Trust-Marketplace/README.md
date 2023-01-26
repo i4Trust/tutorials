@@ -8,7 +8,7 @@ access to the BAE.
 This repository provides examples of the [Helm values files](./values) which show the minimum configuration 
 parameters to be set. Adapt these for your setup before proceeding with the instructions.
 
-The helm chart with all possible configuration values can be found here:
+The helm chart of the BAE with all possible configuration values can be found here:
 * [Sources](https://github.com/FIWARE/helm-charts/tree/main/charts/business-api-ecosystem)
 * [Artifact HUB](https://artifacthub.io/packages/helm/fiware/business-api-ecosystem)
 
@@ -60,10 +60,10 @@ First modify the corresponding values files according to your needs and then dep
 helm install -f ./values/values-elastic.yml --namespace marketplace elasticsearch elastic/elasticsearch --version 7.5.1
 
 # Deploy MySQL:
-helm install -f ./values/values-mysql.yml --namespace marketplace mysql t3n/mysql --version 0.1.0
+helm install -f ./values/values-mysql.yml --namespace marketplace mysql t3n/mysql --version 1.0.0
 
 # Deploy MongoDB
-helm install -f ./values/values-mongodb.yml --namespace marketplace mongodb bitnami/mongodb --version 10.30.12
+helm install -f ./values/values-mongodb.yml --namespace marketplace mongodb bitnami/mongodb --version 12.1.31
 ```
 
 
@@ -73,25 +73,37 @@ helm install -f ./values/values-mongodb.yml --namespace marketplace mongodb bitn
 
 An instance of the Keyrock Identity Provider dedicated to the BAE is required in order to have 
 administrative access to the BAE. Note that the login via this Keyrock instance is performed based 
-on the OAuth2 protocol, whereas the Identity Providers deployed at the environments of service providers and 
-service consumers follow the OpenID Connect protocol based on iSHARE specifications.
+on the standard OAuth2 protocol, whereas the Identity Providers deployed at the environments of service providers and 
+service consumers follow the OpenID Connect protocol based on iSHARE specifications. Therefore this Keyrock instance 
+does not require any iSHARE-specific configuration.
 
 Modify the Keyrock [values file](./values/values-keyrock.yml) according to your needs and deploy the Keyrock Identity Provider. 
 Make sure to setup an Ingress or OpenShift route in the values file for external 
-access of the UI (e.g. https://keyrock.domain.org). Also note that for the moment a dedicated Keyrock build needs to be used until 
-the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc4`. The issued private key and certificate 
-chain must be added in PEM format. 
+access of the UI (e.g. https://keyrock.domain.org).
 ```shell
-helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.4.6
+helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.5.1
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
-the values file. Then follow the steps described for the Keyrock instance in 
-[production-on-k8s](https://github.com/FIWARE/production-on-k8s/tree/main/business-api-ecosystem).
+the values file. 
 
-Users can be created by the Admin user, or users sign up on their own, and need to be assigned the roles 
-described in [production-on-k8s](https://github.com/FIWARE/production-on-k8s/tree/main/business-api-ecosystem). Since this 
-Keyrock instance is dedicated for having administrative access to the BAE, users basically only need to the `admin` role.
+Create an application for the Business API Ecosystem (Marketplace):
+* Set the URL of the Marketplace UI (e.g. https://marketplace.domain.org)
+* Set the Callback URL for the OAuth2 Authorization Code flow (e.g. https://marketplace.domain.org/auth/fiware/callback)
+* Enable the 'Authorization Code' and 'Refresh Token' grant types
+
+On the next screen, create the following roles:
+* admin
+* seller
+* customer
+* orgAdmin
+
+After finishing the creation of the application, note down the shown OAuth2 ClientID and ClientSecret.
+
+Local users at this Keyrock instance dedicated to the marketplace can be created by the Admin user, or users sign up on their own, 
+and need to be assigned the roles described above. Since this 
+Keyrock instance is dedicated for having administrative access to the BAE, only administrative users should be registered here and 
+basically only need the `admin` role. Service providers and consumers will login using their own IDPs.
 
 
 
@@ -100,7 +112,8 @@ Keyrock instance is dedicated for having administrative access to the BAE, users
 Finally install the Business API Ecosystem. Make sure to setup an Ingress or OpenShift route in the 
 [values file](./values/values-marketplace.yml) for external 
 access of the Marketplace UI (e.g. https://marketplace.domain.org). Furthermore adapt the configuration options for 
-the databases, elasticsearch and Keyrock instances which have been setup before.
+the databases, elasticsearch and Keyrock instances which have been setup before. This includes setting the 
+OAuth2 credentials noted down before.
 
 This values file incorporates the usage of the [i4Trust theme](https://github.com/i4Trust/bae-i4trust-theme) for the marketplace UI. 
 External IDPs of service providers and service consumers, which are supposed to login to the marketplace via their own IDPs, 
@@ -111,7 +124,7 @@ this link: [https://marketplace.domain.org/login](https://marketplace.domain.org
 The private key and certificate chain issued for the marketplace must be added in PEM format. 
 ```shell
 # Deploy BAE
-helm install -f ./values/values-marketplace.yml --namespace marketplace bae fiware/business-api-ecosystem --version 0.4.13
+helm install -f ./values/values-marketplace.yml --namespace marketplace bae fiware/business-api-ecosystem --version 0.5.0
 ```
 
 The deployment of all components will take some time. When the logic proxy component has been deployed and changed to the running state, 
@@ -128,18 +141,4 @@ On Kubernetes, basically one first needs to copy the zipped plugin to the `/plug
 perform the step from above instructions. Note that one needs to enable the plugins PVC for the charging backend in the Helm 
 configuration, in order that plugins remain installed after the pod restarts.
 
-
-
-## Additional information
-
-### Auth scheme of MongoDB
-
-The Charging Backend of the BAE includes an older MongoDB client which uses an 
-outdated auth schema.
-
-Per default, the MongoDB 3.6 installed with this instructions is not using this 
-older auth schema. In order to change the auth schema after the databases and users 
-have been created, perform the steps in [ChangeMongoDBAuth.md](./ChangeMongoDBAuth.md).
-
-This is required to properly process product orders in the BAE.
 
