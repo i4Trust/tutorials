@@ -498,7 +498,9 @@ attributes) for the attributes of `pta` and `pta`, such policy would look like t
 	}
 }
 ```
-Note that such policy would be created by the marketplace plugin, in the case that the offering is acquired 
+Note that such policy would be created by 
+the [marketplace plugin](https://github.com/i4Trust/tutorials/tree/update-tags/PacketDelivery-ReferenceExample/i4Trust-Marketplace#i4trust-plugin), 
+in the case that the offering is acquired 
 on the marketplace by a certain organisation like Happy Pets.
 
 

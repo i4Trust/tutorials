@@ -1,7 +1,7 @@
 # Data Service Consumer
 
 This describes how to setup the environment of a data service consuming organisation within the i4Trust trusted data space with the 
-example of fictitious 
+example of the fictitious organisations
 * Packet Delivery Company being the service provider
 * Happy Pets Inc. being the consuming organisation
 
@@ -65,6 +65,13 @@ The Keyrock Identity Provider is required for storing the accounts of the users 
 data service. In the experimentation framework example, it is needed in order that shop users can login at the Packet Delivery 
 Company portal and access their delivery orders.
 
+Furthermore an administrative user / employee of the consumer organisation (here: Happy Pets) must be able to login at the 
+marketplace for acquisition 
+of the packet delivery service using the company IDP.  
+Therefore, shop users and employees of the retailer can be either registered at the same Keyrock instance, or two separate 
+Keyrock instances can be deployed. The external IDPs in the marketplace and the Packet Delivery Portal must be 
+configured accordingly.
+
 Modify the Keyrock [values file](./values/values-keyrock.yml) according to your needs and deploy the Keyrock Identity Provider. 
 When there is no external authorisation registry configured for Keyrock, the internal authorisation registry can be used and 
 policies need to be stored there.
@@ -112,8 +119,10 @@ As an example, the consuming organisation is the company Happy Pets Inc. with th
 EORI `EU.EORI.NLHAPPYPETS`, which acquired read and write access to the data service 
 of the Packet Delivery Company, as described in the instructions of the 
 [Data Service Provider](../Data-Service-Provider). At Happy Pets, there is a customer user registered at the 
-organisation's Keyrock instance with ID `aaaa-bbbb-cccc-dddd`, which should be granted the same access rights as for the organisation, 
-**but** only for a **specific entity** with ID `urn:ngsi-ld:DELIVERYORDER:HAPPYPETS001`. The policy to be created at the 
+organisation's shop Keyrock instance with ID `aaaa-bbbb-cccc-dddd`, which should be granted the same access rights as for the organisation, 
+**but** only for a **specific entity** with ID `urn:ngsi-ld:DELIVERYORDER:HAPPYPETS001`. This means the user is delegated 
+only a subset of the policy granted to the organisation. 
+The policy to be created at the 
 consuming organisation's authorisation registry then would look like the following:
 ```json
 {

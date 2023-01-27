@@ -11,7 +11,9 @@ deployment:
     repository: i4trust/pdc-portal
     # -- tag of the image to be used
     tag: 2.1.0
-  
+
+## Set either an ingress or openshift route for making the portal externally available
+##
 ## ingress configuration
 ingress:
   # -- should there be an ingress to connect the activation service with the public internet
@@ -41,8 +43,15 @@ config:
     # Client certificate (PEM certificate chain)
     crt: |
       -----BEGIN CERTIFICATE-----
-      <Put certificate chain here>
+      <Put certificates here>
       -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      <Put intermediate certificates here>
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      <Put Root certificate here>
+      -----END CERTIFICATE-----
+      
   # Configuration for external access
   external:
     # Host (Hostname for external access)
@@ -55,14 +64,15 @@ config:
     acr: "urn:http://eidas.europa.eu/LoA/NotNotified/high"
   # Context Broker configuration
   cb:
-    # Endpoint of (API-Umbrella protected) NGSI-LD API
-    endpoint: "https://umbrella.domain.org/packetdelivery/ngsi-ld/v1"
+    # Endpoint of (PEP/PDP protected) NGSI-LD API
+    endpoint: "https://kong.domain.org/packetdelivery/ngsi-ld/v1"
   # Configuration of express web server
   express:
     # Port (Internal port of the express web server)
     port: 7000
   # IDP configuration for login
-  # In this demo application it is configured for the two IDPs of HappyPets and NoCheaper.
+  # In this demo application it is configured for the two IDPs of HappyPets and NoCheaper,
+  # but it can be any number of organisations and external IDPs.
   idp:
     - name: "Happy Pets Inc."
       id: "EU.EORI.NLHAPPYPETS"
