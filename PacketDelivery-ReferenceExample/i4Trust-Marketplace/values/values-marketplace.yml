@@ -155,7 +155,13 @@ bizEcosystemChargingBackend:
       -----END PRIVATE KEY-----
     cert: |
       -----BEGIN CERTIFICATE-----
-      <put certificate chain here>
+      <put certificate here>
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      <put 1st intermediate certificate here>
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      <put root certificate here>
       -----END CERTIFICATE-----
 
   ## Service account (might be necessary on OpenShift)
@@ -263,7 +269,13 @@ bizEcosystemLogicProxy:
       -----END PRIVATE KEY-----
     cert: |
       -----BEGIN CERTIFICATE-----
-      <put certificate chain here>
+      <put certificate here>
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      <put 1st intermediate certificate here>
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      <put root certificate here>
       -----END CERTIFICATE-----
       
   ## Service account (might be necessary on OpenShift)

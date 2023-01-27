@@ -54,7 +54,8 @@ The following databases are required:
 * MySQL
 * elasticsearch
 
-First modify the corresponding values files according to your needs and then deploy the required databases MongoDB, MySQL and elasticsearch using `helm`. 
+First modify the corresponding [values files](./values) according to your needs and then deploy the required databases 
+MongoDB, MySQL and elasticsearch using `helm`. 
 ```shell
 # Deploy elasticsearch
 helm install -f ./values/values-elastic.yml --namespace marketplace elasticsearch elastic/elasticsearch --version 7.5.1
@@ -109,17 +110,16 @@ basically only need the `admin` role. Service providers and consumers will login
 
 ## Business API Ecosystem (Marketplace)
 
-Finally install the Business API Ecosystem. Make sure to setup an Ingress or OpenShift route in the 
+Finally, install the Business API Ecosystem. Make sure to setup an Ingress or OpenShift route in the 
 [values file](./values/values-marketplace.yml) for external 
-access of the Marketplace UI (e.g. https://marketplace.domain.org). Furthermore adapt the configuration options for 
-the databases, elasticsearch and Keyrock instances which have been setup before. This includes setting the 
-OAuth2 credentials noted down before.
+access of the Marketplace UI / Logic Proxy (e.g. https://marketplace.domain.org). Furthermore adapt the configuration options for 
+the databases, elasticsearch and Keyrock instance which have been setup before. This includes setting the 
+OAuth2 credentials noted down before (parameters `oauth.clientId` and `oauth.clientSecret`).
 
-This values file incorporates the usage of the [i4Trust theme](https://github.com/i4Trust/bae-i4trust-theme) for the marketplace UI. 
+This example of the values file incorporates the usage of the [i4Trust theme](https://github.com/i4Trust/bae-i4trust-theme) for the marketplace UI. 
 External IDPs of service providers and service consumers, which are supposed to login to the marketplace via their own IDPs, 
 need to be added via the Administration UI of the BAE after logging in with the `admin` role, in order to be selectable on the 
-login dialog of the marketplace UI. In order to login using the dedicated Keyrock instance setup above, one needs to open 
-this link: [https://marketplace.domain.org/login](https://marketplace.domain.org/login).
+login dialog of the marketplace UI. 
 
 The private key and certificate chain issued for the marketplace must be added in PEM format. 
 ```shell
@@ -131,14 +131,23 @@ The deployment of all components will take some time. When the logic proxy compo
 you can access the marketplace UI via the browser (e.g. http://marketplace.domain.org).
 
 For logging in into the marketplace for administrative access via the Keyrock instance dedicated to the BAE, open this 
-URL: [http://marketplace.domain.org/login](http://marketplace.domain.org/login). 
+URL: [http://marketplace.domain.org/login](http://marketplace.domain.org/login). Another option is to set the parameter 
+`bizEcosystemLogicProxy.externalIdp.showLocalLogin = true` which will add a login option "Local IDP" referring to the Keyrock 
+instance dedicated to the marketplace.
 
-In order to support the asset type of an i4Trust-compliant NGSI-LD data service, a dedicated plugin needs to be added to the 
+### i4Trust plugin
+
+In order to support the asset type of an i4Trust-compliant NGSI-LD data service, a dedicated plugin 
+`i4trust-data-service` needs to be added to the 
 charging backend component. The plugin itself can be found [here](https://github.com/i4Trust/bae-i4trust-service) 
 (latest zipped releases can be found on the [releases page](https://github.com/i4Trust/bae-i4trust-service/releases)), installation 
 instructions can be found [here](https://business-api-ecosystem.readthedocs.io/en/latest/plugins-guide.html#installing-asset-plugins). 
 On Kubernetes, basically one first needs to copy the zipped plugin to the `/plugins` directory of the charging backend pod and then 
-perform the step from above instructions. Note that one needs to enable the plugins PVC for the charging backend in the Helm 
+perform the step from above instructions, precisely running the command: 
+```shell
+./manage.py loadplugin plugins/bae-i4trust-service_<VERSION>.zip
+```
+Note that one needs to enable the plugins PVC for the charging backend in the Helm 
 configuration, in order that plugins remain installed after the pod restarts.
 
 

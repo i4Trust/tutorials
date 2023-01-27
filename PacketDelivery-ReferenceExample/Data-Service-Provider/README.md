@@ -288,8 +288,8 @@ mongo -u root     # (provide MongoDB root PW)
 
 Now modify the [API Umbrella values file](./values/values-umbrella.yml) according to your setup and perform 
 the deployment using Helm.  
-Note, for the verification of signed JWTs according to iSHARE specifications, you either need to configure the iSHARE Satellite 
-endpoint or provide the root CA.  
+Note, for the verification of signed JWTs according to iSHARE specifications, you need to configure the iSHARE Satellite 
+endpoint.  
 Check that in the database configuration, you provide the same password for the database user as has been used when creating 
 the MongoDB database and user.  
 Depending on whether you use an external or the Keyrock built-in authorisation registry, it's endpoints and configuration 
@@ -320,7 +320,8 @@ policies at the authorisation registries and, if access is granted, to forward t
 
 ## Activation Service
 
-The activation service is required to proxy requests from the i4Trust Marketplace for creating policies when companies 
+The [Activation Service](https://github.com/i4Trust/activation-service) is required to proxy requests from the 
+i4Trust Marketplace for creating policies when companies 
 acquired access to the data service. For this it provides endpoints `/token` and `/createpolicy` according to the iSHARE
 scheme.
 
@@ -386,13 +387,15 @@ Make sure to adapt the expiration timestamp accordingly.
 
 ## Packet Delivery Portal Demo Application
 
-This is a demo application of a packet delivery portal allowing external users to view and change their 
+This is a demo application of a [Packet Delivery Portal](https://github.com/i4Trust/pdc-portal) allowing 
+external users to view and change their 
 delivery orders stored at the Orion Context Broker. For accessing the service via the PEP/PDP, the users and 
 connected retailer companies need the required policies at the authorisation registries.
 
 This demo is intended to showcase how to setup an application that accesses the provided data service via a 
 PEP/PDP following the iSHARE specification. Note that this application is dedicated only to this reference example 
-of the Packet Delivery, but it shows how to implement the different flows.
+of the Packet Delivery. However, it gives an example on how to implement the different flows in other portal 
+applications.
 
 Modify the PDC Portal [values file](./values/values-pdc-portal.yml) according to your needs. 
 
@@ -495,8 +498,8 @@ attributes) for the attributes of `pta` and `pta`, such policy would look like t
 	}
 }
 ```
-Note that such policy would be created by the marketplace, in the case that the offering is acquired by 
-a certain organisation like Happy Pets.
+Note that such policy would be created by the marketplace plugin, in the case that the offering is acquired 
+on the marketplace by a certain organisation like Happy Pets.
 
 
 
@@ -510,9 +513,9 @@ For this, check the instructions about the [Data Service Consumer](../Data-Servi
 
 When logging in at the portal application via the consuming organisation's (e.g. Happy Pets) Keyrock IDP, 
 the user receives an iSHARE-compliant JWT which will be sent along all requests to the provider's packet delivery service 
-endpoint, namely the API Umbrella instance performing the access management for the service provider's 
+endpoint, namely the PEP/PDP instance performing the access management for the service provider's 
 context broker.
 
 Depending on whether the consuming organisation's Keyrock instance was configured using it's own authorisation registry 
-or an external one, the JWT will contain either the user's policies directly or access information about the external 
-authorisation registry, which will allow API Umbrella to check for the necessary access rights of the user.
+or an external one, the JWT will contain either directly the user's policies or just access information about the external 
+authorisation registry, which will allow the PDP to check for the necessary access rights of the user.

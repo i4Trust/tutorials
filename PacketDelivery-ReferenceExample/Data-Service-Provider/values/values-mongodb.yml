@@ -1,14 +1,8 @@
-## Global Docker image parameters
-## Please, note that this will override the image parameters, including dependencies, configured to use the global value
-## Current available global Docker image parameters: imageRegistry and imagePullSecrets
-##
-# global:
-#   imageRegistry: myRegistryName
-#   imagePullSecrets:
-#     - myRegistryKeySecretName
-#   storageClass: myStorageClass
-## Override the namespace for resource deployed by the chart, but can itself be overridden by the local namespaceOverride
-#   namespaceOverride: my-global-namespace
+# Values for bitnami/mongodb Helm Chart
+#
+# Chart values file:
+# ref: https://github.com/bitnami/charts/blob/master/bitnami/mongodb/values.yaml
+#
 
 image:
   ## Bitnami MongoDB image name
