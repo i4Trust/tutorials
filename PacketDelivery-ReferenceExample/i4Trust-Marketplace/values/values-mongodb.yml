@@ -11,7 +11,7 @@ image:
   ## Bitnami MongoDB image tag
   ## ref: https://hub.docker.com/r/bitnami/mongodb/tags/
   ##
-  tag: 3.6.21
+  tag: 4.4.13
   
 ## MongoDB architecture. Allowed values: standalone or replicaset
 ##

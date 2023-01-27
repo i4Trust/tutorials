@@ -26,6 +26,15 @@ externalUrl: https://marketplace.domain.org
 ## Configuration for biz-ecosystem-apis component
 ##
 bizEcosystemApis:
+  ## -- deployment specific configuration
+  deployment:
+    ## -- configuration of the image to be used
+    image:
+      ## -- tag of the image to be used
+      tag: v8.1.0-rc1
+      ## -- specification of the image pull policy
+      pullPolicy: IfNotPresent
+  
   ## database configuration for APIs (MySQL)
   db:
     ## host of the database to be used (K8s internal service hostname)
@@ -52,6 +61,15 @@ bizEcosystemApis:
 ## Configuration for biz-ecosystem-rss component
 ##
 bizEcosystemRss:
+  ## -- deployment specific configuration
+  deployment:
+    ## -- configuration of the image to be used
+    image:
+      ## -- tag of the image to be used
+      tag: v8.0.0
+      ## -- specification of the image pull policy
+      pullPolicy: IfNotPresent
+  
   ## database configuration for RSS (MySQL)
   db:
     ## host of the database to be used (K8s internal service hostname)
@@ -88,7 +106,9 @@ bizEcosystemChargingBackend:
       ## ref: https://hub.docker.com/r/fiware/biz-ecosystem-charging-backend
       repository: fiware/biz-ecosystem-charging-backend
       ## -- tag of the image to be used
-      tag: v8.0.0
+      tag: v8.1.0-dev
+      ## -- specification of the image pull policy
+      pullPolicy: IfNotPresent
 
   ## -- PVC configuration for charging backend plugins
   ## Enable to allow loading plugins from PVC.
@@ -135,7 +155,13 @@ bizEcosystemChargingBackend:
       -----END PRIVATE KEY-----
     cert: |
       -----BEGIN CERTIFICATE-----
-      <put certificate chain here>
+      <put certificate here>
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      <put 1st intermediate certificate here>
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      <put root certificate here>
       -----END CERTIFICATE-----
 
   ## Service account (might be necessary on OpenShift)
@@ -174,7 +200,9 @@ bizEcosystemLogicProxy:
       ## ref: https://hub.docker.com/r/fiware/biz-ecosystem-logic-proxy
       repository: fiware/biz-ecosystem-logic-proxy
       ## -- tag of the image to be used
-      tag: v8.1.0-rc7
+      tag: v8.1.0-dev
+      ## -- specification of the image pull policy
+      pullPolicy: IfNotPresent
 
   ## database configuration for Logic Proxy (MongoDB)
   db:
@@ -195,6 +223,9 @@ bizEcosystemLogicProxy:
     url: elasticsearch-master.marketplace.svc.cluster.local:9200
     ## -- API version of elasticsearch
     version: 7.5
+
+  ## -- Base app path of logic proxy
+  basePath: /opt/business-ecosystem-logic-proxy
 
   ## Deployment in development or in production
   nodeEnvironment: production
@@ -222,6 +253,8 @@ bizEcosystemLogicProxy:
   externalIdp:
     # -- Enable usage of external IDPs
     enabled: true
+    # -- Show login button for local IDP
+    showLocalLogin: true
 
   # -- Sets wehther the logic proxy should propagate the user access token to the backend components
   propagateToken: false
@@ -236,7 +269,13 @@ bizEcosystemLogicProxy:
       -----END PRIVATE KEY-----
     cert: |
       -----BEGIN CERTIFICATE-----
-      <put certificate chain here>
+      <put certificate here>
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      <put 1st intermediate certificate here>
+      -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      <put root certificate here>
       -----END CERTIFICATE-----
       
   ## Service account (might be necessary on OpenShift)

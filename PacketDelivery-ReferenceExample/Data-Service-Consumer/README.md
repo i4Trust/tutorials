@@ -1,7 +1,7 @@
 # Data Service Consumer
 
 This describes how to setup the environment of a data service consuming organisation within the i4Trust trusted data space with the 
-example of fictitious 
+example of the fictitious organisations
 * Packet Delivery Company being the service provider
 * Happy Pets Inc. being the consuming organisation
 
@@ -21,8 +21,8 @@ the [Data Service Provider](../Data-Service-Provider).
 Furthermore it is required that there is access to an iSHARE Satellite instance and an iSHARE-compliant Authorisation 
 Registry which stores the user's access policies. It is assumed that the consuming organisation is already registered at the 
 iSHARE Satellite and that 
-certificates, a private key and the EORI have been issued. Starting with Keyrock Release 8.0.0, Keyrock provides it's own 
-iSHARE-compliant Authorisation Registry and can be used instead.
+certificates, a private key and the EORI have been issued. For the Authorization Registry, Keyrock has an 
+iSHARE-compliant Authorisation Registry implementation which can be used instead.
 
 In the following it is assumed that the components will be externally available via the domain `domain.org` and that the 
 issued EORI is `EU.EORI.NLHAPPYPETS`. 
@@ -54,7 +54,7 @@ First modify the [values file](./values/values-mysql.yml) according to your need
 ```shell
 helm repo add t3n https://storage.googleapis.com/t3n-helm-charts
 helm repo update
-helm install -f ./values/values-mysql.yml --namespace consumer mysql t3n/mysql --version 0.1.0
+helm install -f ./values/values-mysql.yml --namespace consumer mysql t3n/mysql --version 1.0.0
 ```
 
 
@@ -65,17 +65,23 @@ The Keyrock Identity Provider is required for storing the accounts of the users 
 data service. In the experimentation framework example, it is needed in order that shop users can login at the Packet Delivery 
 Company portal and access their delivery orders.
 
+Furthermore an administrative user / employee of the consumer organisation (here: Happy Pets) must be able to login at the 
+marketplace for acquisition 
+of the packet delivery service using the company IDP.  
+Therefore, shop users and employees of the retailer can be either registered at the same Keyrock instance, or two separate 
+Keyrock instances can be deployed. The external IDPs in the marketplace and the Packet Delivery Portal must be 
+configured accordingly.
+
 Modify the Keyrock [values file](./values/values-keyrock.yml) according to your needs and deploy the Keyrock Identity Provider. 
-When there is no external authorisation registry configured for Keyrock, it will use it's internal authorisation registry and 
+When there is no external authorisation registry configured for Keyrock, the internal authorisation registry can be used and 
 policies need to be stored there.
 Make sure to setup an Ingress or OpenShift route in the values file for external 
-access of the UI (e.g. https://keyrock.domain.org). Also note that for the moment a dedicated Keyrock build needs to be used until 
-the i4Trust related changes have been officially released: `fiware/idm:i4trust-rc4`. The issued private key and certificate 
+access of the UI (e.g. https://keyrock.domain.org). The issued private key and certificate 
 chain must be added in PEM format. 
 ```shell
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
-helm install -f ./values/values-keyrock.yml --namespace consumer keyrock fiware/keyrock --version 0.4.6
+helm install -f ./values/values-keyrock.yml --namespace consumer keyrock fiware/keyrock --version 0.5.1
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
@@ -113,8 +119,10 @@ As an example, the consuming organisation is the company Happy Pets Inc. with th
 EORI `EU.EORI.NLHAPPYPETS`, which acquired read and write access to the data service 
 of the Packet Delivery Company, as described in the instructions of the 
 [Data Service Provider](../Data-Service-Provider). At Happy Pets, there is a customer user registered at the 
-organisation's Keyrock instance with ID `aaaa-bbbb-cccc-dddd`, which should be granted the same access rights as for the organisation, 
-**but** only for a **specific entity** with ID `urn:ngsi-ld:DELIVERYORDER:HAPPYPETS001`. The policy to be created at the 
+organisation's shop Keyrock instance with ID `aaaa-bbbb-cccc-dddd`, which should be granted the same access rights as for the organisation, 
+**but** only for a **specific entity** with ID `urn:ngsi-ld:DELIVERYORDER:HAPPYPETS001`. This means the user is delegated 
+only a subset of the policy granted to the organisation. 
+The policy to be created at the 
 consuming organisation's authorisation registry then would look like the following:
 ```json
 {
