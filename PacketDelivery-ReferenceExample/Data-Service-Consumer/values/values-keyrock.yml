@@ -12,7 +12,8 @@ statefulset:
     ## ref: https://hub.docker.com/r/fiware/idm
     repository: fiware/idm
     ## tag of the image to be used
-    tag: i4trust-rc8
+    ## For i4Trust related implementation, release >= 8.3.0 is required
+    tag: 8.3.0
     ## specification of the image pull policy
     pullPolicy: IfNotPresent
     
@@ -79,6 +80,7 @@ authorisationRegistry:
   # -- Identifier (EORI) of AR
   identifier: "EU.EORI.NL000000004"
   # -- URL of AR
+  # Set to "internal" in the case that the internal AR functionality should be used
   url: "https://ar.isharetest.net"
   # -- Token endpoint of AR
   tokenEndpoint: "https://ar.isharetest.net/connect/token"

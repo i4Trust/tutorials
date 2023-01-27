@@ -24,8 +24,8 @@ as depicted in the following diagram:
 
 Furthermore it is required that there is access to an iSHARE Satellite instance and an iSHARE-compliant Authorisation 
 Registry. It is assumed that the data service provider is already registered at the iSHARE Satellite and that 
-certificates, a private key and the EORI have been issued. Starting with Keyrock Release 8.0.0, Keyrock provides it's own 
-iSHARE-compliant Authorisation Registry and can be used instead.
+certificates, a private key and the EORI have been issued. For the Authorization Registry, Keyrock has an 
+iSHARE-compliant Authorisation Registry implementation which can be used instead.
 
 In the following it is assumed that the components will be externally available via the domain `domain.org` and that the 
 issued EORI is `EU.EORI.NLPACKETDEL`. 
@@ -67,8 +67,9 @@ then deploy `mongodb`:
 ```shell
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
-helm install -f ./values/values-mongodb.yml --namespace provider mongodb bitnami/mongodb --version 10.30.12
+helm install -f ./values/values-mongodb.yml --namespace provider mongodb bitnami/mongodb --version 12.1.31
 ```
+
 
 
 ## MySQL
@@ -77,7 +78,7 @@ First modify the [values file](./values/values-mysql.yml) according to your need
 ```shell
 helm repo add t3n https://storage.googleapis.com/t3n-helm-charts
 helm repo update
-helm install -f ./values/values-mysql.yml --namespace provider mysql t3n/mysql --version 0.1.0
+helm install -f ./values/values-mysql.yml --namespace provider mysql t3n/mysql --version 1.0.0
 ```
 
 
@@ -169,17 +170,16 @@ company. In the experimentation framework example, it is needed in order that em
 Marketplace and create offerings on behalf of their company.
 
 Modify the Keyrock [values file](./values/values-keyrock.yml) according to your needs and deploy the Keyrock Identity Provider. 
-When there is no external authorisation registry configured for Keyrock, it will use it's internal authorisation registry and 
+When there is no external authorisation registry configured for Keyrock, the internal authorisation registry can be used and 
 policies need to be stored there.
 Make sure to setup an Ingress or OpenShift route in the values file for external 
-access of the UI (e.g. https://keyrock.domain.org). Also note that for the moment a dedicated Keyrock build needs to be used until 
-the i4Trust related changes have been officially released. The issued private key and certificate 
+access of the UI (e.g. https://keyrock.domain.org). The issued private key and certificate 
 chain must be added in PEM format. 
 ```shell
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
 
-helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.4.6
+helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.5.1
 
 ```
 
@@ -227,6 +227,7 @@ in the [iSHARE Access Token specification](https://dev.ishareworks.org/common/to
 
 ## PEP Proxy / PDP
 
+It is recommended to use Kong as PEP and PDP.
 
 ### Kong
 
@@ -287,8 +288,8 @@ mongo -u root     # (provide MongoDB root PW)
 
 Now modify the [API Umbrella values file](./values/values-umbrella.yml) according to your setup and perform 
 the deployment using Helm.  
-Note, for the verification of signed JWTs according to iSHARE specifications, you either need to configure the iSHARE Satellite 
-endpoint or provide the root CA.  
+Note, for the verification of signed JWTs according to iSHARE specifications, you need to configure the iSHARE Satellite 
+endpoint.  
 Check that in the database configuration, you provide the same password for the database user as has been used when creating 
 the MongoDB database and user.  
 Depending on whether you use an external or the Keyrock built-in authorisation registry, it's endpoints and configuration 
@@ -319,19 +320,21 @@ policies at the authorisation registries and, if access is granted, to forward t
 
 ## Activation Service
 
-The activation service is required to proxy requests from the i4Trust Marketplace for creating policies when companies 
+The [Activation Service](https://github.com/i4Trust/activation-service) is required to proxy requests from the 
+i4Trust Marketplace for creating policies when companies 
 acquired access to the data service. For this it provides endpoints `/token` and `/createpolicy` according to the iSHARE
 scheme.
 
 Modify the Activation Service [values file](./values/values-activation-service.yml) according to your needs and deploy 
-the Activation Service. Especially configure the authorisation Registry used.
+the Activation Service. Especially configure the Authorisation Registry used (e.g., either an external AR or the internal 
+one of Keyrock).
 Make sure to setup an Ingress in the values file for external 
 access (e.g. https://activation-service.domain.org). The issued private key and certificate 
 chain must be added in PEM format.
 ```shell
 helm repo add i4trust https://i4trust.github.io/helm-charts
 helm repo update
-helm install -f ./values/values-activation-service.yml --namespace provider activation-service i4trust/activation-service --version 1.1.0
+helm install -f ./values/values-activation-service.yml --namespace provider activation-service i4trust/activation-service --version 1.3.2
 ```
 
 In order to allow external parties to create policies on behalf of the Packet Delivery Company, a policy needs to be created 
@@ -384,21 +387,25 @@ Make sure to adapt the expiration timestamp accordingly.
 
 ## Packet Delivery Portal Demo Application
 
-This is a demo application of a packet delivery portal allowing external users to view and change their 
-delivery orders stored at the Orion Context Broker. For accessing the service via API-Umbrella, the users and 
+This is a demo application of a [Packet Delivery Portal](https://github.com/i4Trust/pdc-portal) allowing 
+external users to view and change their 
+delivery orders stored at the Orion Context Broker. For accessing the service via the PEP/PDP, the users and 
 connected retailer companies need the required policies at the authorisation registries.
 
-This demo is intended to showcase how to setup an application that access the provided data service via API-Umbrella.
+This demo is intended to showcase how to setup an application that accesses the provided data service via a 
+PEP/PDP following the iSHARE specification. Note that this application is dedicated only to this reference example 
+of the Packet Delivery. However, it gives an example on how to implement the different flows in other portal 
+applications.
 
 Modify the PDC Portal [values file](./values/values-pdc-portal.yml) according to your needs. 
 
-In the portal application, there are two static login options implemented, targeting at two different 
+In the portal application, external login options need to be added, targeting at the different 
 IDPs (Keyrock) of consuming organisations (e.g., Happy Pets and No Cheaper) that need to have access to the service 
 offering. In the values file, 
 adapt the IDP endpoints according to your setup. Also check the instructions about a 
 [Data Service Consumer](../Data-Service-Consumer). 
 
-Make sure to setup an Ingress in the values file for external 
+Make sure to setup an Ingress or OpenShift Route in the values file for external 
 access (e.g. https://pdc-portal.domain.org). The issued private key and certificate 
 chain must be added in PEM format.
 
@@ -491,8 +498,10 @@ attributes) for the attributes of `pta` and `pta`, such policy would look like t
 	}
 }
 ```
-Note that such policy would be created by the marketplace, in the case that the offering is acquired by 
-a certain organisation like Happy Pets.
+Note that such policy would be created by 
+the [marketplace plugin](https://github.com/i4Trust/tutorials/tree/update-tags/PacketDelivery-ReferenceExample/i4Trust-Marketplace#i4trust-plugin), 
+in the case that the offering is acquired 
+on the marketplace by a certain organisation like Happy Pets.
 
 
 
@@ -506,9 +515,9 @@ For this, check the instructions about the [Data Service Consumer](../Data-Servi
 
 When logging in at the portal application via the consuming organisation's (e.g. Happy Pets) Keyrock IDP, 
 the user receives an iSHARE-compliant JWT which will be sent along all requests to the provider's packet delivery service 
-endpoint, namely the API Umbrella instance performing the access management for the service provider's 
+endpoint, namely the PEP/PDP instance performing the access management for the service provider's 
 context broker.
 
 Depending on whether the consuming organisation's Keyrock instance was configured using it's own authorisation registry 
-or an external one, the JWT will contain either the user's policies directly or access information about the external 
-authorisation registry, which will allow API Umbrella to check for the necessary access rights of the user.
+or an external one, the JWT will contain either directly the user's policies or just access information about the external 
+authorisation registry, which will allow the PDP to check for the necessary access rights of the user.
