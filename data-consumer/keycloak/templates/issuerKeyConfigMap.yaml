@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "keycloak.fullname" . }}-key
+data:
+  keyfile.json: |-
+    {
+      "kty": "OKP",
+      "d": "gGqnb6ij2s-BGUpAgWVGv9odIHciuF-GuLDqyt2pLm0",
+      "use": "sig",
+      "crv": "Ed25519",
+      "kid": "z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7g",
+      "x": "Pr7-Zath5ZMyvikX93LzsJNkl6HcAAJdgrwlBTSE6gs",
+      "alg": "EdDSA"
+    }
