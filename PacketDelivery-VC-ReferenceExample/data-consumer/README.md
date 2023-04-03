@@ -25,8 +25,6 @@ Registry which stores the user's access policies.
 
 In the following it is assumed that the components will be externally available via the domain `domain.org`. 
 
-
-
 ## Installation
 
 It is recommended to at least change the "route.host" property of the keycloak chart to adjust to the own test environment.
@@ -56,10 +54,10 @@ With the predefined value files, users and DIDs for the necessary parties are im
 
 WaltId is the component that is used for initializing verifiable credentials that match a given template using a defined key. The template is provided on startup and the key is registered by the Keycloak VC Issuer Plugin.
 
-To validate that the template was successfully imported, following command can be used:
+To validate that the template was successfully imported, following command can be used in the k8s cluster:
 
 ```
-curl -X 'GET' 'waltId:7001/v1/templates/PacketDeliveryService' -H 'accept: application/json'
+curl -X 'GET' 'http://waltid-vcwaltid:7001/v1/templates/PacketDeliveryService' -H 'accept: application/json'
 ```
 with an expected output of
 ```
@@ -99,7 +97,7 @@ with an expected output of
 To validate that the signing key was successfully registered by the Keycloak VC Issuer Plugin, the following command can be used
 
 ```
-curl -X 'GET'   'localhost:7002/keys/z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7g'   -H 'accept: application/json'
+curl -X 'GET' 'http://waltid-vcwaltid:7002/keys/z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7g'   -H 'accept: application/json'
 ```
 with an expected output of
 ```
