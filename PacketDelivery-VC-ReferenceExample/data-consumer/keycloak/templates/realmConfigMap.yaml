@@ -12,7 +12,7 @@ data:
       "displayNameHtml": "<div class=\"kc-logo-text\"><span>Keycloak</span></div>",
       "enabled": true,
       "attributes": {
-        "frontendUrl": "https://kc-one.tim.apps.fiware.dev"
+        "frontendUrl": "https://{{ .Values.route.host}}"
       },
       "sslRequired": "none",
       "roles": {
@@ -27,33 +27,15 @@ data:
           }
         ],
         "client": {
-          "did:key:z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7g": [
+          "did:key:z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7h": [
             {
-              "name": "BATTERY_VIEWER",
-              "description": "Is allowed to view batteries",
+              "name": "GOLD_CUSTOMER",
+              "description": "Customer type with extended features",
               "clientRole": true
             },
             {
-              "name": "BATTERY_VIEWER_SOC",
-              "description": "Is allowed to just view the SoC of batteries",
-              "clientRole": true
-            },
-            {
-              "name": "BATTERY_ADMIN",
-              "description": "Is allowed to manage batteries",
-              "clientRole": true
-            }
-          ],
-          "orion-pep": [
-            {
-              "name": "admin",
-              "description": "A",
-              "composite": false,
-              "clientRole": true
-            },
-            {
-              "name": "consumer",
-              "composite": false,
+              "name": "STANDARD_CUSTOMER",
+              "description": "Normal user that can poll delivery information",
               "clientRole": true
             }
           ]
@@ -67,9 +49,6 @@ data:
             "user"
           ],
           "clientRoles": {
-            "orion-pep": [
-              "admin"
-            ]
           }
         },
         {
@@ -79,28 +58,24 @@ data:
             "user"
           ],
           "clientRoles": {
-            "orion-pep": [
-              "consumer"
-            ]
           }
         }
       ],
       "users": [
         {
-          "username": "admin-user",
+          "username": "premium-user",
           "enabled": true,
-          "email": "admin-user@fiware.org",
+          "email": "premium-user@fiware.org",
           "credentials": [
             {
               "type": "password",
-              "value": "admin-user"
+              "value": "premium-user"
             }
           ],
           "clientRoles": {
-            "did:key:z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7g": [
-              "BATTERY_VIEWER",
-              "BATTERY_VIEWER_SOC",
-              "BATTERY_ADMIN"
+            "did:key:z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7h": [
+              "GOLD_CUSTOMER",
+              "STANDARD_CUSTOMER"
             ],
             "account": [
               "view-profile",
@@ -113,16 +88,19 @@ data:
           ]
         },
         {
-          "username": "consumer-user",
+          "username": "normal-user",
           "enabled": true,
-          "email": "consumer-user@fiware.org",
+          "email": "normal-user@fiware.org",
           "credentials": [
             {
               "type": "password",
-              "value": "consumer-user"
+              "value": "normal-user"
             }
           ],
           "clientRoles": {
+            "did:key:z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7h": [              
+              "STANDARD_CUSTOMER"
+            ],
             "account": [
               "view-profile",
               "manage-account"
@@ -135,7 +113,7 @@ data:
       ],
       "clients": [
         {
-          "clientId": "did:key:z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7g",
+          "clientId": "did:key:z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7h",
           "enabled": true,
           "description": "Client to receive Verifiable Credentials targeted at verifier-one.batterypass.fiware.dev",
           "surrogateAuthRequired": false,
@@ -157,7 +135,7 @@ data:
           "attributes": {
               "client.secret.creation.time": "1675260539",
               "expiryInMin": "3600",
-              "vctypes_BatteryPassAuthCredential": "ldp_vc,jwt_vc_json"
+              "vctypes_PacketDeliveryService": "ldp_vc,jwt_vc_json"
 
           },
           "authenticationFlowBindingOverrides": {},
@@ -165,138 +143,9 @@ data:
           "nodeReRegistrationTimeout": -1,
           "defaultClientScopes": [],
           "optionalClientScopes": []
-        },
-        {
-          "clientId": "orion-pep",
-          "adminUrl": "{{ .Values.realm.orionPep.adminUrl }}",
-          "baseUrl": "{{ .Values.realm.orionPep.baseUrl }}",
-          "surrogateAuthRequired": false,
-          "enabled": true,
-          "clientAuthenticatorType": "client-secret",
-          "secret": "978ad148-d99b-406d-83fc-578597290a79",
-          "redirectUris": {{ .Values.realm.orionPep.redirectUris | toPrettyJson | indent 12 }},
-          "webOrigins": {{ .Values.realm.orionPep.webOrigins | toPrettyJson | indent 12}},
-          "notBefore": 0,
-          "bearerOnly": false,
-          "consentRequired": false,
-          "standardFlowEnabled": true,
-          "implicitFlowEnabled": false,
-          "directAccessGrantsEnabled": true,
-          "serviceAccountsEnabled": true,
-          "authorizationServicesEnabled": true,
-          "publicClient": false,
-          "frontchannelLogout": false,
-          "protocol": "openid-connect",
-          "authenticationFlowBindingOverrides": {},
-          "fullScopeAllowed": true,
-          "nodeReRegistrationTimeout": -1,
-          "authorizationSettings": {
-            "allowRemoteResourceManagement": true,
-            "policyEnforcementMode": "ENFORCING",
-            "resources": [
-              {
-                "name": "ngsi-ld",
-                "type": "orion:context-management",
-                "ownerManagedAccess": false,
-                "displayName": "Context management v1 API",
-                "uris": [
-                  "/keycloak/ngsi-ld/v1/*"
-                ]
-              },
-              {
-                "name": "root",
-                "type": "orion:context-management",
-                "ownerManagedAccess": false,
-                "displayName": "Context management v1 API",
-                "uris": [
-                  "/keycloak/*"
-                ]
-              }
-            ],
-            "policies": [
-              {
-                "name": "consumer-policy",
-                "description": "",
-                "type": "role",
-                "logic": "POSITIVE",
-                "decisionStrategy": "UNANIMOUS",
-                "config": {
-                  "roles": "[{\"id\":\"orion-pep/consumer\",\"required\":true}]"
-                }
-              },
-              {
-                "name": "admin-policy",
-                "description": "",
-                "type": "role",
-                "logic": "POSITIVE",
-                "decisionStrategy": "UNANIMOUS",
-                "config": {
-                  "roles": "[{\"id\":\"orion-pep/admin\",\"required\":true}]"
-                }
-              },
-              {
-                "name": "admin-permission",
-                "type": "resource",
-                "logic": "POSITIVE",
-                "decisionStrategy": "UNANIMOUS",
-                "config": {
-                  "resources": "[\"root\"]",
-                  "applyPolicies": "[\"admin-policy\"]"
-                }
-              },
-              {
-                "name": "consumer-permission",
-                "type": "resource",
-                "logic": "POSITIVE",
-                "decisionStrategy": "UNANIMOUS",
-                "config": {
-                  "resources": "[\"ngsi-ld\"]",
-                  "applyPolicies": "[\"consumer-policy\"]"
-                }
-              }
-            ],
-            "scopes": []
-          },
-          "defaultClientScopes": [
-            "web-origins",
-            "profile",
-            "roles",
-            "fiware-scope",
-            "email"
-          ],
-          "optionalClientScopes": [
-            "address",
-            "phone",
-            "offline_access",
-            "microprofile-jwt"
-          ]
         }
       ],
       "clientScopes": [
-        {
-          "name": "fiware-scope",
-          "protocol": "openid-connect",
-          "attributes": {
-            "include.in.token.scope": "true",
-            "display.on.consent.screen": "false"
-          },
-          "protocolMappers": [
-            {
-              "name": "fiware-scope-object",
-              "protocol": "openid-connect",
-              "protocolMapper": "oidc-script-based-protocol-mapper",
-              "consentRequired": false,
-              "config": {
-                "userinfo.token.claim": "true",
-                "multivalued": "true",
-                "id.token.claim": "true",
-                "access.token.claim": "true",
-                "claim.name": "fiware-scope-object",
-                "script": "/**\n * Available variables: \n * user - the current user\n * realm - the current realm\n * token - the current token\n * userSession - the current userSession\n * keycloakSession - the current userSession\n */\n\nvar ArrayList = Java.type(\"java.util.ArrayList\");\nvar fiware_scope = new ArrayList();\n\nvar forEach = Array.prototype.forEach;\n\nvar fiware_service;\nvar fiware_servicepath;\nvar fiware_entry;\nvar roles = '';\n\nvar orion_client = realm.getClientByClientId('orion-pep');\n\nfiware_service = user.getFirstAttribute('fiware-service');\nfiware_servicepath = user.getFirstAttribute('fiware-servicepath');\nif (fiware_service !== null && fiware_servicepath !== null) {\n\n    fiware_entry = {\n        \"fiware-service\": fiware_service,\n        \"fiware-servicepath\": fiware_servicepath\n    };\n\n    var roleModels = user.getClientRoleMappings(orion_client);\n    if (roleModels.size() > 0) {\n        forEach.call(\n            user.getClientRoleMappings(orion_client).toArray(),\n            function (role) {\n                roles = roles + role.getName() + \",\";\n            }\n        );\n        roles = roles.substring(0, roles.length - 1);\n        fiware_entry[\"orion-roles\"] = roles;\n        roles = '';\n    }\n\n    fiware_scope.add(JSON.stringify(fiware_entry));\n    fiware_entry = {};\n}\n\nforEach.call(\n    user.getGroups().toArray(),\n    function (group) {\n\n        fiware_service = group.getFirstAttribute('fiware-service');\n        fiware_servicepath = group.getFirstAttribute('fiware-servicepath');\n        if (fiware_service !== null && fiware_servicepath !== null) {\n            fiware_entry = {\n                \"fiware-service\": fiware_service,\n                \"fiware-servicepath\": fiware_servicepath\n            };\n\n            var roleModels = group.getClientRoleMappings(orion_client);\n            if (roleModels.size() > 0) {\n                forEach.call(\n                    group.getClientRoleMappings(orion_client).toArray(),\n                    function (role) {\n                        roles = roles + role.getName() + \",\";\n                    }\n                );\n                roles = roles.substring(0, roles.length - 1);\n                fiware_entry[\"orion-roles\"] = roles;\n                roles = '';\n            }\n\n            fiware_scope.add(JSON.stringify(fiware_entry));\n            fiware_entry = {};\n        } else if (group.getParentId() !== null) {\n            fiware_service = group.getParent().getFirstAttribute('fiware-service');\n            fiware_servicepath = group.getParent().getFirstAttribute('fiware-servicepath');\n\n            if (fiware_service !== null && fiware_servicepath !== null) {\n                fiware_entry = {\n                    \"fiware-service\": fiware_service,\n                    \"fiware-servicepath\": fiware_servicepath\n                };\n                var subroleModels = group.getClientRoleMappings(orion_client);\n                if (subroleModels.size() > 0) {\n                    forEach.call(\n                        group.getClientRoleMappings(orion_client).toArray(),\n                        function (role) {\n                            roles = roles + role.getName() + \",\";\n                        }\n                    );\n                    roles = roles.substring(0, roles.length - 1);\n                    fiware_entry[\"orion-roles\"] = roles;\n                    roles = '';\n                }\n\n                fiware_scope.add(JSON.stringify(fiware_entry));\n                fiware_entry = '';\n            }\n        }\n    }\n);\n\nexports = fiware_scope;"
-              }
-            }
-          ]
-        },
         {
           "name": "offline_access",
           "description": "OpenID Connect built-in scope: offline_access",

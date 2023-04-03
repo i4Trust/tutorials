@@ -1,6 +1,6 @@
 route:
   enabled: true
-  host: kc-one.tim.apps.fiware.dev
+  host: kc-consumer.domain.org
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: edge
@@ -8,15 +8,6 @@ route:
     issuer:
       kind: ClusterIssuer
       name: letsencrypt-aws-prod
-  
-realm:
-  orionPep:
-    baseUrl: https://orion-ld
-    adminUrl: https://orion-ld
-    redirectUris:
-      - https://orion-ld/
-    webOrigins:
-      - https://orion-ld/
 
 keycloak:
   service:
@@ -94,7 +85,7 @@ keycloak:
 
   initContainers:
     - name: add-vc-issuer
-      image: quay.io/fiware/keycloak-vc-issuer:0.3.1
+      image: quay.io/fiware/keycloak-vc-issuer:0.3.4
       imagePullPolicy: Always
       volumeMounts:
         - name: providers

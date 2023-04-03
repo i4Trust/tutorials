@@ -22,28 +22,6 @@ persistence:
     size: 1Gi
 
 templates:
-  BatteryPassAuthCredential.json: |
-    {
-      "@context": ["https://www.w3.org/2018/credentials/v1"],
-      "credentialSchema": {
-        "id": "https://raw.githubusercontent.com/FIWARE-Ops/batterypass-demonstrator/main/docs/schema.json",
-        "type": "FullJsonSchemaValidator2021"
-      },
-      "credentialSubject": {
-        "familyName": "Happy",
-        "firstName": "User",
-        "roles": [{
-          "names": ["P.Info.gold"],
-          "target": "did:elsi:target"
-        }]
-      },
-      "id": "urn:uuid:3add94f4-28ec-42a1-8704-4e4aa51006b5",
-      "issued": "2021-08-31T00:00:00Z",
-      "issuer": "did:ebsi:2A9BZ9SUe6BatacSpvs1V5CdjHvLpQ7bEsi2Jb6LdHKnQxaN",
-      "validFrom": "2021-08-31T00:00:00Z",
-      "issuanceDate": "2021-08-31T00:00:00Z",
-      "type": ["VerifiableCredential", "BatteryPassAuthCredential"]
-    }
   PacketDeliveryService.json: |
     {
       "@context": ["https://www.w3.org/2018/credentials/v1"],
@@ -52,12 +30,12 @@ templates:
         "type": "FullJsonSchemaValidator2021"
       },
       "credentialSubject": {
-        "familyName": "Ruiz",
-        "firstName": "Jesus",
+        "familyName": "User",
+        "firstName": "Some",
         "id": "did:ebsi:2AEMAqXWKYMu1JHPAgGcga4dxu7ThgfgN95VyJBJGZbSJUtp",
         "roles": [{
-          "names": ["P.Info.gold"],
-          "target": "did:elsi:packetdelivery"
+          "names": ["someRole"],
+          "target": "did:some:id"
         }]
       },
       "id": "urn:uuid:3add94f4-28ec-42a1-8704-4e4aa51006b4",
