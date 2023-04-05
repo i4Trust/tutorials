@@ -8,9 +8,9 @@ deployment:
   image:
     # -- image name
     # ref: https://hub.docker.com/r/i4trust/pdc-portal
-    repository: i4trust/pdc-portal
+    repository: quay.io/i4trust/pdc-portal
     # -- tag of the image to be used
-    tag: 2.1.0
+    tag: 2.5.0
 
 ## Set either an ingress or openshift route for making the portal externally available
 ##
@@ -31,6 +31,9 @@ debug:
 config:
   # Title of application
   title: "Packet Delivery Portal"
+  # Labels
+  getLabel: "Delivery Order"
+  inputLabel: "Packet Delivery ID"
   # Client configuration
   client:
     # Client ID
@@ -66,6 +69,12 @@ config:
   cb:
     # Endpoint of (PEP/PDP protected) NGSI-LD API
     endpoint: "https://kong.domain.org/packetdelivery/ngsi-ld/v1"
+
+  # Configuration for SIOP flow
+  siop:
+    # SIOP flow enabled
+    enabled: false
+    
   # Configuration of express web server
   express:
     # Port (Internal port of the express web server)
