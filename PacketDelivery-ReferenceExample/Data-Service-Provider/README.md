@@ -179,7 +179,7 @@ chain must be added in PEM format.
 helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
 
-helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.5.1
+helm install -f ./values/values-keyrock.yml --namespace provider keyrock fiware/keyrock --version 0.6.0
 
 ```
 
@@ -413,7 +413,7 @@ The portal application can then be deployed using:
 ```shell
 helm repo add i4trust https://i4trust.github.io/helm-charts
 helm repo update
-helm install -f ./values/values-pdc-portal.yml --namespace provider pdc-portal i4trust/pdc-portal --version 2.1.0
+helm install -f ./values/values-pdc-portal.yml --namespace provider pdc-portal i4trust/pdc-portal --version 2.1.1
 ```
 
 

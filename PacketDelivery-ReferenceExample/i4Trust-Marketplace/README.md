@@ -82,7 +82,7 @@ Modify the Keyrock [values file](./values/values-keyrock.yml) according to your 
 Make sure to setup an Ingress or OpenShift route in the values file for external 
 access of the UI (e.g. https://keyrock.domain.org).
 ```shell
-helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.5.1
+helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.6.0
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
