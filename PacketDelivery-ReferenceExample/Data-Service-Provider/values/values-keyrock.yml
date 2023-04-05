@@ -13,7 +13,7 @@ statefulset:
     repository: fiware/idm
     ## tag of the image to be used
     ## For i4Trust related implementation, release >= 8.3.0 is required
-    tag: 8.3.0
+    tag: 8.3.3
     ## specification of the image pull policy
     pullPolicy: IfNotPresent
     
