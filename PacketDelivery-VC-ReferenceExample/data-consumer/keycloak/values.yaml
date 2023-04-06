@@ -1,13 +1,5 @@
 route:
   enabled: true
-  host: kc-consumer.domain.org
-  tls:
-    insecureEdgeTerminationPolicy: Redirect
-    termination: edge
-  certificate:
-    issuer:
-      kind: ClusterIssuer
-      name: letsencrypt-aws-prod
 
 keycloak:
   service:
