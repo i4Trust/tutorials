@@ -17,7 +17,7 @@ Furthermore are needed, but not covered in this tutorial:
 
 ![Components](./img/components.png "Components")
 
-Note that there is not an example of a Shop System provided. In the use case example, it is assumed that there are already 
+Note that no Shop System is provided as part of the example. In this use case example, it is assumed that there are already 
 users registered at Happy Pets and which have placed orders. More precisely, this means that there are already 
 existing delivery order entities within the Context Broker of 
 the [Data Service Provider](../Data-Service-Provider).
@@ -49,7 +49,7 @@ With the predefined value files, users and DIDs for the necessary parties are im
 ## Validation of components
 ### WaltId
 
-WaltId is the component that is used for initializing verifiable credentials that match a given template using a defined key. The template is provided on startup and the key is registered by the Keycloak VC Issuer Plugin.
+WaltId is the component that is used for creating Verifiable Credentials that match a given template using a defined key. The template is provided on startup and the key is registered by the Keycloak VC Issuer Plugin.
 
 To validate that the template was successfully imported, following command can be used in the k8s cluster:
 
@@ -111,7 +111,7 @@ with an expected output of
 
 ### Keycloak
 
-Keycloak IDM is used for managing the users in the consumer space and offering verifiable credentials for accessing the data producer.
+Keycloak IDM is used for managing the users in the consumer space and offering verifiable credentials for accessing the data provider.
 
 A GUI for providing Verifiable Credentials to be imported into the wallet can be found under
 
