@@ -114,7 +114,7 @@ with an expected output of
 
 ### Keycloak
 
-Keycloak IDM is used for managing the users in the consumer space and offering verifiable credentials for accessing the data producer.
+Keycloak IDM is used for managing the users in the consumer space and offering verifiable credentials for accessing the data provider.
 
 A GUI for providing Verifiable Credentials to be imported into the wallet can be found under
 
