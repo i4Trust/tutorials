@@ -3,7 +3,7 @@ name: keycloak
 description: A Helm chart for Kubernetes to deploy WaltId
 type: application
 version: 1.0.0
-appVersion: "17.0.1"
+appVersion: "1.13.0"
 dependencies:
 - name: vcwaltid
   version: 0.0.13
