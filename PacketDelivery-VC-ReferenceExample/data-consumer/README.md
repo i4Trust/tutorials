@@ -52,7 +52,7 @@ With the predefined value files, users and DIDs for the necessary parties are im
 ## Validation of components
 ### WaltId
 
-WaltId is the component that is used for initializing verifiable credentials that match a given template using a defined key. The template is provided on startup and the key is registered by the Keycloak VC Issuer Plugin.
+WaltId is the component that is used for creating Verifiable Credentials that match a given template using a defined key. The template is provided on startup and the key is registered by the Keycloak VC Issuer Plugin.
 
 To validate that the template was successfully imported, following command can be used in the k8s cluster:
 
