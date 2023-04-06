@@ -15,7 +15,7 @@ Furthermore are needed
 
 ![Components](./img/components.png "Components")
 
-Note that there is not an example of a Shop System provided. In the use case example, it is assumed that there are already 
+Note that no Shop System is provided as part of the example. In this use case example, it is assumed that there are already 
 users registered at Happy Pets and which have placed orders. More precisely, this means that there are already 
 existing delivery order entities within the Context Broker of 
 the [Data Service Provider](../Data-Service-Provider).
