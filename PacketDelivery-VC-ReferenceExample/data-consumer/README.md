@@ -1,17 +1,19 @@
-# Data Service Consumer with verifiable credentials
+# Data Service Consumer with Verifiable Credentials
 
 This describes how to setup the environment of a data service consuming organisation within the i4Trust trusted data space with the example of the fictitious organisations
 
-* Packet Delivery Company being the service provider
+* Packet Delivery Company being the service provider (part of [Tutorial](../Data-Service-Provider))
 * Happy Pets Inc. being the consuming organisation
+
+using [Verifiable Credentials(VC)](https://www.w3.org/TR/vc-data-model/) for authentication and authorization.
 
 Needed for issuing credentials that can be used against the authentication of the service provider's environment are the following
 * [WaltId](https://github.com/walt-id/waltid-ssikit)
 * [Keycloak](https://www.keycloak.org/) with the [VC Issuer plugin](https://github.com/wistefan/keycloak-vc-issuer)
 
-Furthermore are needed
-* VC compatible Wallet for executing the OpenIDConnect flow
-* iSHARE Satellite as trust anchor for sharing trusted parties
+Furthermore are needed, but not covered in this tutorial:
+* VC compatible Wallet for executing the [OpenId Connect for Verifiable Credentials Issuing(OIDC4VCI)](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html) flow
+* [EBSI-compatible trusted-issuers-registry](https://api-pilot.ebsi.eu/docs/apis/trusted-issuers-registry/latest#/) as trust anchor for sharing trusted parties
 
 ![Components](./img/components.png "Components")
 
@@ -20,14 +22,9 @@ users registered at Happy Pets and which have placed orders. More precisely, thi
 existing delivery order entities within the Context Broker of 
 the [Data Service Provider](../Data-Service-Provider).
 
-Furthermore it is required that there is access to an iSHARE Satellite instance and an iSHARE-compliant Authorisation 
-Registry which stores the user's access policies.
-
-In the following it is assumed that the components will be externally available via the domain `domain.org`. 
-
 ## Installation
 
-It is recommended to at least change the "route.host" property of the keycloak chart to adjust to the own test environment.
+To configure the route for accessing the deployed components, adapt the values.yaml of the keycloak chart according to the [chart documentation](https://github.com/bitnami/charts/blob/main/bitnami/keycloak/values.yaml#L529)
 
 To install the components execute the following commands
 
@@ -118,56 +115,7 @@ Keycloak IDM is used for managing the users in the consumer space and offering v
 
 A GUI for providing Verifiable Credentials to be imported into the wallet can be found under
 
-https://kc-consumer.domain.org/realms/fiware-server/account/#/verifiable-credentials
+https://<YOUR_CONFIGURED_DOMAIN>/realms/fiware-server/account/#/verifiable-credentials
 
 and are provided via QR code like
 ![CredentialsQR](./img/credential_issuance.png "CredentialsQR")
-
-Alternatively its possible to request the signed Verifiable Credentials via the REST API:
-
-First an accesstoken has to be created
-
-```
-curl -d 'client_id=admin-cli' -d 'username=normal-user' -d 'password=normal-user' -d 'grant_type=password'     'https://kc-consumer.domain.org/realms/fiware-server/protocol/openid-connect/token'
-```
-
-and then the token can be used to access the verifiable credentials endpoint
-
-```
-curl -H "Authorization: Bearer <access_token>" https://kc-consumer.domain.org/realms/fiware-server/verifiable-credential/did:key:z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7g?type=PacketDeliveryService
-```
-
-which results in an output like
-```
-{
-  "type" : [ "VerifiableCredential", "PacketDeliveryService" ],
-  "@context" : [ "https://www.w3.org/2018/credentials/v1", "https://w3id.org/security/suites/jws-2020/v1" ],
-  "id" : "urn:uuid:0d2a6ef3-2fff-4e7c-96ac-f2edaa59ea05",
-  "issuer" : "did:key:z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7g",
-  "issuanceDate" : "2023-03-29T14:37:02Z",
-  "issued" : "2023-03-29T14:37:02Z",
-  "validFrom" : "2023-03-29T14:37:02Z",
-  "expirationDate" : "2023-04-01T02:37:01Z",
-  "credentialSchema" : {
-    "id" : "https://raw.githubusercontent.com/hesusruiz/dsbamvf/main/schemas/PacketDeliveryService/2022-10/schema.json",
-    "type" : "FullJsonSchemaValidator2021"
-  },
-  "credentialSubject" : {
-    "id" : "fb5b9a76-9dc5-402a-a630-95e8cf46018d",
-    "familyName" : null,
-    "firstName" : null,
-    "roles" : [ {
-      "names" : [ "STANDARD_CUSTOMER" ],
-      "target" : "did:key:z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7g"
-    } ],
-    "email" : "normal-user@fiware.org"
-  },
-  "proof" : {
-    "type" : "JsonWebSignature2020",
-    "creator" : "did:key:z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7g",
-    "created" : "2023-03-29T14:37:02Z",
-    "verificationMethod" : "did:key:z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7g#z6MkigCEnopwujz8Ten2dzq91nvMjqbKQYcifuZhqBsEkH7g",
-    "jws" : "eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJFZERTQSJ9..VTT91JNxIx5mLNpMxc-7g3cT3TveRmEZalYtHZncTTiW5PsJY79GWaXX78TtkopMw4gX927EuT1y_kdJ66_pDQ"
-  }
-}
-```
