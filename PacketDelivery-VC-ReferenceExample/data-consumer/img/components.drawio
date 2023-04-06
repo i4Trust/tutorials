@@ -1,0 +1,85 @@
+<mxfile host="65bd71144e">
+    <diagram name="Seite-1" id="vAJJtUylaKbQ4XpBEHUg">
+        <mxGraphModel dx="1130" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="10" value="Enduser" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="470" y="430" width="180" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-1" value="Data Service Consumer" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="140" y="260" width="300" height="250" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-12" value="" style="group" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="250" y="290" width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-6" value="" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;" parent="pzXUO2OiNwdmF_szAMkg-12" vertex="1">
+                    <mxGeometry width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-10" value="Keycloak" style="text;strokeColor=none;fillColor=none;html=1;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" parent="pzXUO2OiNwdmF_szAMkg-12" vertex="1">
+                    <mxGeometry x="4" y="7.777777777777778" width="56" height="15.555555555555555" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-11" value="&lt;p style=&quot;line-height: 70%;&quot;&gt;&lt;font style=&quot;font-size: 7px;&quot;&gt;Verifiable Credentials Issuer&lt;/font&gt;&lt;/p&gt;" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;spacing=2;" parent="pzXUO2OiNwdmF_szAMkg-12" vertex="1">
+                    <mxGeometry x="40" y="31.11111111111111" width="40" height="38.88888888888889" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-13" value="" style="group" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="350" y="340" width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-5" value="" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;" parent="pzXUO2OiNwdmF_szAMkg-13" vertex="1">
+                    <mxGeometry width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-7" value="Shop System" style="text;strokeColor=none;fillColor=none;html=1;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" parent="pzXUO2OiNwdmF_szAMkg-13" vertex="1">
+                    <mxGeometry y="10" width="80" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-9" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.website;fontSize=11;" parent="pzXUO2OiNwdmF_szAMkg-13" vertex="1">
+                    <mxGeometry x="20.5" y="30" width="39" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-15" value="" style="group" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="160" y="290" width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-2" value="" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;container=0;" parent="pzXUO2OiNwdmF_szAMkg-15" vertex="1">
+                    <mxGeometry width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-3" value="" style="shape=datastore;whiteSpace=wrap;html=1;container=0;" parent="pzXUO2OiNwdmF_szAMkg-15" vertex="1">
+                    <mxGeometry x="25" y="30" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-4" value="PostgreSQL" style="text;strokeColor=none;fillColor=none;html=1;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;container=0;" parent="pzXUO2OiNwdmF_szAMkg-15" vertex="1">
+                    <mxGeometry x="5" y="10" width="70" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-18" value="" style="group" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="160" y="410" width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-19" value="" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;container=0;" parent="pzXUO2OiNwdmF_szAMkg-18" vertex="1">
+                    <mxGeometry width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="pzXUO2OiNwdmF_szAMkg-21" value="WaltId" style="text;strokeColor=none;fillColor=none;html=1;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;container=0;" parent="pzXUO2OiNwdmF_szAMkg-18" vertex="1">
+                    <mxGeometry x="5" y="10" width="70" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Trust authority" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="460" y="260" width="180" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="" style="group;dashed=1;" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="510" y="320" width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;container=0;" vertex="1" parent="3">
+                    <mxGeometry width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="iShare &lt;br&gt;Satellite" style="text;strokeColor=none;fillColor=none;html=1;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;container=0;" vertex="1" parent="3">
+                    <mxGeometry x="5" y="10" width="70" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;dashed=1;" vertex="1" parent="1">
+                    <mxGeometry x="500" y="475" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="170" y="420" width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="WaltId" style="text;strokeColor=none;fillColor=none;html=1;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;container=0;" vertex="1" parent="11">
+                    <mxGeometry x="5" y="10" width="70" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="Wallet" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;container=0;" vertex="1" parent="1">
+                    <mxGeometry x="560" y="480" width="60" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
