@@ -13,7 +13,7 @@ Needed for issuing credentials that can be used against the authentication of th
 
 Furthermore are needed, but not covered in this tutorial:
 * VC compatible Wallet for executing the [OpenId Connect for Verifiable Credentials Issuing(OIDC4VCI)](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html) flow
-* [EBSI-compatible trusted-issuers-registry](https://api-pilot.ebsi.eu/docs/apis/trusted-issuers-registry/latest#/) as trust anchor for sharing trusted parties
+* issuer needs to be registered in a [EBSI-compatible trusted-issuers-registry](https://api-pilot.ebsi.eu/docs/apis/trusted-issuers-registry/latest#/) as a trust anchor(f.e. the iShare satellite)
 
 ![Components](./img/components.png "Components")
 
