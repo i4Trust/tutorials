@@ -31,7 +31,21 @@ auth:
   ## MongoDB root password
   ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#setting-the-root-password-on-first-run
   ##
-  rootPassword: <mongodb-root-password>
+  rootPassword: password
+
+serviceAccount:
+  create: true
+rbac:
+  create: true
+  rules:
+    - apiGroups:
+        - security.openshift.io
+      resourceNames:
+        - anyuid
+      resources:
+        - securitycontextconstraints
+      verbs:
+        - use
 
 ## initdb scripts
 ## Specify dictionary of scripts to be run at first boot

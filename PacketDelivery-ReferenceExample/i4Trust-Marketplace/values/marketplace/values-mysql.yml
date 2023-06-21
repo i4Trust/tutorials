@@ -13,7 +13,7 @@ imageTag: "5.7"
 ##
 ## Make sure to set this password in the component configurations
 ## using the MySQL database.
-mysqlRootPassword: <mysql-root-password>
+mysqlRootPassword: password
 
 ## Security context (might be necessary on OpenShift)
 #securityContext:

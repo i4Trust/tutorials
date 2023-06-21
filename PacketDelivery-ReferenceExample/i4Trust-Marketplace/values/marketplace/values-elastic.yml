@@ -13,8 +13,8 @@ minimumMasterNodes: 1
 clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
 # When running on OpenShift, a service account with root access is required
-#rbac:
-#  serviceAccountName: <account-name>
+rbac:
+  serviceAccountName: <account-name>
 
 # In local environments, specific setup may be required. For more info, see:
 # https://github.com/elastic/helm-charts/tree/master/elasticsearch#how-to-deploy-this-chart-on-a-specific-k8s-distribution
