@@ -4,7 +4,7 @@ keyrock:
   statefulset:
     image:
       repository: fiware/idm
-      tag: i4trust-rc7-header-size
+      tag: 8.3.3
       pullPolicy: Always
       
   ## Set either an ingress or openshift route for making Keyrock externally available
@@ -86,13 +86,13 @@ keyrock:
     # -- Enable usage of satellite
     enabled: true
     # -- Identifier (EORI) of satellite
-    identifier: "EU.EORI.NL000000000"
+    identifier: "EU.EORI.NLi4TRUSTSAT"
     # -- URL of satellite
-    url: "https://scheme.isharetest.net"
+    url: "https://mw.i4trustsat.ishareworks.nl"
     # -- Token endpoint of satellite
-    tokenEndpoint: "https://scheme.isharetest.net/connect/token"
+    tokenEndpoint: "https://mw.i4trustsat.ishareworks.nl/connect/token"
     # -- Parties endpoint of satellite
-    partiesEndpoint: "https://scheme.isharetest.net/parties"
+    partiesEndpoint: "https://mw.i4trustsat.ishareworks.nl/parties"
 
   ## -- Configuration of local key and certificate for validation and generation of tokens
   token:
