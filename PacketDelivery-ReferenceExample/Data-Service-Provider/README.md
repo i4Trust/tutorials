@@ -327,14 +327,19 @@ scheme.
 
 Modify the Activation Service [values file](./values/values-activation-service.yml) according to your needs and deploy 
 the Activation Service. Especially configure the Authorisation Registry used (e.g., either an external AR or the internal 
-one of Keyrock).
+one of Keyrock).  
+In order to protect the activation service, so that only policies can be created out of offerings by the provider, 
+the API key requirement should be enabled. A fixed API key can be provided. If the field is left empty, an API key 
+will be generated automatically. Furthermore the name of the request header field can be provided (default: `AS-API-KEY`). 
+The activation service API key then needs to be provided, when creating the 
+product specification in the marketplace.  
 Make sure to setup an Ingress in the values file for external 
 access (e.g. https://activation-service.domain.org). The issued private key and certificate 
 chain must be added in PEM format.
 ```shell
 helm repo add i4trust https://i4trust.github.io/helm-charts
 helm repo update
-helm install -f ./values/values-activation-service.yml --namespace provider activation-service i4trust/activation-service --version 1.3.2
+helm install -f ./values/values-activation-service.yml --namespace provider activation-service i4trust/activation-service --version 2.2.1
 ```
 
 In order to allow external parties to create policies on behalf of the Packet Delivery Company, a policy needs to be created 
