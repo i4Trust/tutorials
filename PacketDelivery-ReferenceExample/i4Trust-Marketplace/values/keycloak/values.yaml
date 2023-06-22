@@ -1,0 +1,118 @@
+route:
+  enabled: true
+  host: marketplace-kc.beka-t-m.apps.fiware.fiware.dev
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  certificate:
+    issuer:
+      kind: ClusterIssuer
+      name: letsencrypt-aws-prod
+
+keycloak:
+  service:
+    type: ClusterIP
+  logging:
+    level: INFO
+  replicaCount: 1
+  auth:
+    adminUser: fiwareAdmin
+    adminPassword: fiwareAdmin
+  serviceAccount:
+    create: true
+  rbac:
+    create: true
+    rules:
+      - apiGroups:
+        - security.openshift.io
+        resourceNames:
+        - anyuid
+        resources:
+        - securitycontextconstraints
+        verbs:
+        - use
+
+  
+  keycloakConfigCli:
+    enabled: true
+    # current image does not contain 20.0.3., thus we need this fix
+    command: 
+      - java
+      - -jar
+      - /opt/bitnami/keycloak-config-cli/keycloak-config-cli-20.0.1.jar
+
+    extraEnvVars:
+      - name: IMPORT_FILES_LOCATIONS
+        value: "/config/*"
+    containerSecurityContext:
+      enabled: false
+    podSecurityContext:
+      enabled: false
+    existingConfigmap: keycloak-realm
+  
+  extraEnvVars:
+    - name: KEYCLOAK_PROXY_ADDRESS_FORWARDING
+      value: "true"
+    - name: KEYCLOAK_LOG_LEVEL
+      value: INFO
+    - name: VCISSUER_ISSUER_DID
+      value: "did:web:marketplace.beka-t-m.fiware.dev:did"
+    - name: VCISSUER_WALTID_ADDRESS
+      value: "http://waltid-vcwaltid"
+
+
+  extraVolumeMounts:
+    - name: profiles
+      mountPath: /opt/bitnami/keycloak/conf/profile.properties
+      subPath: profile.properties
+    - name: providers
+      mountPath: /opt/bitnami/keycloak/providers/
+    - name: issuer-key
+      mountPath: /opt/keys
+
+  extraVolumes:
+    - name: profiles
+      configMap:
+        name: keycloak-profile
+    - name: providers
+      emptyDir: {}
+    - name: issuer-key
+      configMap:
+        name: keycloak-key
+    - name: did-config
+      configMap:
+        name: keycloak-did-config
+    - name: did-secret
+      secret:
+        secretName: waltid-vcwaltid-tls-sec
+
+
+  initContainers:
+    - name: add-vc-issuer
+      image: quay.io/fiware/keycloak-vc-issuer:0.4.0
+      imagePullPolicy: Always
+      volumeMounts:
+        - name: providers
+          mountPath: /target
+    - name: load-did
+      image: quay.io/opencloudio/curl:4.2.0-build.8
+      imagePullPolicy: Always
+      command: 
+        - /bin/sh
+        - /opt/did/script/import.sh
+      env:
+        - name: WALTID_CORE_ADDRESS
+          value: "waltid-vcwaltid:7000"
+      volumeMounts:
+        - name: did-config
+          mountPath: /opt/did/script
+        - name: did-secret
+          mountPath: /opt/did/secret
+  
+  postgresql:
+    enabled: true
+    serviceAccount:
+      name: keycloak
+
+waltid:
+  host: marketplace.beka-t-m.apps.fiware.fiware.dev
