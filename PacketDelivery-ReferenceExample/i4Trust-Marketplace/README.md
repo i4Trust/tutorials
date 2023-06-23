@@ -3,9 +3,10 @@
 The following describes how to setup a full instance of the FIWARE Business API Ecosystem (BAE) in the 
 context of an i4Trust Data Space. This includes the 
 BAE itself, as well as the required databases and an Identity Provider (Keyrock) for administrative 
-access to the BAE.
+access to the BAE. If you would like to add login with [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) to
+the Marketplace, there is optional section for that.
 
-This repository provides examples of the [Helm values files](./values) which show the minimum configuration 
+This repository provides examples of the [Helm values files](./values), which shows the minimum configuration 
 parameters to be set. Adapt these for your setup before proceeding with the instructions.
 
 The helm chart of the BAE with all possible configuration values can be found here:
@@ -26,9 +27,10 @@ helm repo add fiware https://fiware.github.io/helm-charts/
 helm repo update
 ```
 
-We will assume that all components will be deployed within the namespace `marketplace`.
+We will assume that all components will be deployed within the namespace `demo-marketplace`. So, if you have another
+name for the namespace, make sure to replace it everywhere.
 ```shell
-kubectl create ns marketplace
+kubectl create ns demo-marketplace
 ```
 
 Due to the iSHARE specification, requests can contain very large headers with the signed JWTs. 
@@ -57,16 +59,22 @@ The following databases are required:
 First modify the corresponding [values files](./values) according to your needs and then deploy the required databases 
 MongoDB, MySQL and elasticsearch using `helm`. 
 ```shell
-# Deploy elasticsearch
-helm install -f ./values/values-elastic.yml --namespace marketplace elasticsearch elastic/elasticsearch --version 7.5.1
+# Deploy MySQL for Credentials Config Service and Trusted Issuers List
+helm dependency build mysql/
+helm install -f ./mysql/values.yaml --namespace demo-marketplace mysql ./mysql
 
-# Deploy MySQL:
-helm install -f ./values/values-mysql.yml --namespace marketplace mysql t3n/mysql --version 1.0.0
+# Deploy elasticsearch
+helm dependency build elastic/
+helm install -f ./elastic/values.yaml --namespace demo-marketplace elasticsearch ./elastic
+
+# Deploy MySQL for Marketplace:
+helm dependency build mysql-bae/
+helm install -f ./mysql-bae/values.yaml --namespace demo-marketplace mysql-bae ./mysql-bae
 
 # Deploy MongoDB
-helm install -f ./values/values-mongodb.yml --namespace marketplace mongodb bitnami/mongodb --version 12.1.31
+helm dependency build mongodb/
+helm install -f ./mongodb/values.yaml --namespace demo-marketplace mongodb ./mongodb
 ```
-
 
 
 
@@ -82,7 +90,8 @@ Modify the Keyrock [values file](./values/values-keyrock.yml) according to your 
 Make sure to setup an Ingress or OpenShift route in the values file for external 
 access of the UI (e.g. https://keyrock.domain.org).
 ```shell
-helm install -f ./values/values-keyrock.yml --namespace marketplace keyrock fiware/keyrock --version 0.6.0
+helm dependency build keyrock/
+helm install -f ./keyrock/values.yaml --namespace demo-marketplace keyrock ./keyrock
 ```
 
 In a browser open the Keyrock UI (e.g. https://keyrock.domain.org) and login with the admin credentials provided in 
@@ -108,10 +117,92 @@ basically only need the `admin` role. Service providers and consumers will login
 
 
 
+## Setting up environment for login with verifiable credentials
+
+
+### WaltId
+
+Adjust values file for [walt-id](https://github.com/i4Trust/helm-charts/blob/main/charts/vcwaltid/values.yaml) 
+according to your needs and install it on your cluster:
+```shell
+helm dependency build walt-id/
+helm install --namespace demo-marketplace waltid ./walt-id/ -f ./walt-id/values.yaml
+```
+
+
+### Keycloak
+
+Adjust values file for [keycloak](https://github.com/bitnami/charts/blob/main/bitnami/keycloak/values.yaml) according
+to your needs and install them on your cluster:
+```shell
+helm dependency build keycloak/
+helm install --namespace demo-marketplace keycloak ./keycloak/ -f ./keycloak/values.yaml
+```
+
+
+### Trusted Issuers List
+
+Adjust values file for [trusted issuers list](https://github.com/FIWARE/helm-charts/blob/main/charts/trusted-issuers-list/values.yaml)
+according to your needs and install them on your cluster:
+```shell
+helm dependency build trusted-issuers-list/
+helm install --namespace demo-marketplace til ./trusted-issuers-list/ -f ./trusted-issuers-list/values.yaml
+```
+
+
+### Orion-LD
+
+Adjust values file for [orion-ld](https://github.com/FIWARE/helm-charts/blob/main/charts/orion/values.yaml)
+according to your needs and install them on your cluster:
+```shell
+helm dependency build orion-ld/
+helm install --namespace demo-marketplace orion-ld ./orion-ld/ -f ./orion-ld/values.yaml
+```
+
+
+### Trusted Issuers Registry
+
+Adjust values file for [trusted issuers registry](https://github.com/FIWARE/helm-charts/blob/main/charts/trusted-issuers-registry/values.yaml)
+according to your needs and install them on your cluster:
+```shell
+helm dependency build trusted-issuers-registry/
+helm install --namespace demo-marketplace til ./trusted-issuers-registry/ -f ./trusted-issuers-registry/values.yaml
+```
+
+
+### Credentials Config Service
+
+[Verifier](https://github.com/FIWARE/VCVerifier) is responsible to communicate with wallets and verify the credentials
+they provide. To get this done, it needs information about:
+
+* the credentials to be requested from a wallet
+* the credentials and claims an issuer is allowed to issue
+
+To do so, it requires a service that provides such information, e.g. the [Credentials Config Service]
+(https://github.com/fiware/credentials-config-service)
+
+Adjust values file for [credentials-config-service](https://github.com/FIWARE/helm-charts/blob/main/charts/credentials-config-service/values.yaml)
+according to your needs and install them on your cluster:
+```shell
+helm dependency build credentials-config-service/
+helm install --namespace demo-marketplace ccs ./credentials-config-service/ -f ./credentials-config-service/values.yaml
+```
+
+
+### Verifier
+
+Adjust values file for [verifier](https://github.com/i4Trust/helm-charts/blob/main/charts/vcverifier/values.yaml)
+according to your needs and install them on your cluster:
+```shell
+helm dependency build verifier/
+helm install --namespace demo-marketplace verifier ./verifier/ -f ./verifier/values.yaml
+```
+
+
 ## Business API Ecosystem (Marketplace)
 
 Finally, install the Business API Ecosystem. Make sure to setup an Ingress or OpenShift route in the 
-[values file](./values/values-marketplace.yml) for external 
+[values file](values/marketplace/values-marketplace.yml) for external 
 access of the Marketplace UI / Logic Proxy (e.g. https://marketplace.domain.org). Furthermore adapt the configuration options for 
 the databases, elasticsearch and Keyrock instance which have been setup before. This includes setting the 
 OAuth2 credentials noted down before (parameters `oauth.clientId` and `oauth.clientSecret`).
@@ -124,7 +215,8 @@ login dialog of the marketplace UI.
 The private key and certificate chain issued for the marketplace must be added in PEM format. 
 ```shell
 # Deploy BAE
-helm install -f ./values/values-marketplace.yml --namespace marketplace bae fiware/business-api-ecosystem --version 0.5.0
+helm dependency build bae/
+helm install -f ./bae/values.yaml --namespace demo-marketplace bae ./bae
 ```
 
 The deployment of all components will take some time. When the logic proxy component has been deployed and changed to the running state, 
