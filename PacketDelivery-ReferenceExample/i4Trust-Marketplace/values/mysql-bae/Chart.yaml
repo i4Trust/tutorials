@@ -1,0 +1,13 @@
+apiVersion: v2
+name: mysql-bae
+description: Chart holder for argo-cd
+
+type: application
+version: 1.0.0
+appVersion: "5.7"
+
+dependencies:
+- name: mysql
+  version: 1.0.0
+  repository: https://storage.googleapis.com/t3n-helm-charts
+  
