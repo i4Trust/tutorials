@@ -1,0 +1,12 @@
+apiVersion: v2
+name: keyrock
+description: Keyrock Chart
+
+type: application
+version: 0.6.0
+appVersion: "8.1.0"
+
+dependencies:
+  - name: keyrock
+    version: 0.6.0
+    repository: https://fiware.github.io/helm-charts
