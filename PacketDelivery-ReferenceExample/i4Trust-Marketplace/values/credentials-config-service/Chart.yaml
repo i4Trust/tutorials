@@ -1,0 +1,12 @@
+apiVersion: v2
+name: marketplace-ccs
+description: CCS Chart
+
+type: application
+version: 0.0.1
+appVersion: "0.0.1"
+
+dependencies:
+  - name: credentials-config-service
+    version: 0.0.1
+    repository: https://fiware.github.io/helm-charts
