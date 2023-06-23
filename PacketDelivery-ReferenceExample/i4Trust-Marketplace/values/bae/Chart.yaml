@@ -1,0 +1,12 @@
+apiVersion: v2
+name: bae
+description: BAE Chart
+
+type: application
+version: 0.6.11
+appVersion: "8.1.0"
+
+dependencies:
+  - name: business-api-ecosystem
+    version: 0.6.4
+    repository: https://fiware.github.io/helm-charts
