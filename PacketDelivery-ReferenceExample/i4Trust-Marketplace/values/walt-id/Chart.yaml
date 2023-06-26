@@ -1,0 +1,12 @@
+apiVersion: v2
+name: vcwaltid
+description: Chart holder for argo-cd
+
+type: application
+version: 0.0.16
+appVersion: "0.0.1"
+
+dependencies:
+  - name: vcwaltid
+    version: 0.0.17
+    repository: https://i4Trust.github.io/helm-charts

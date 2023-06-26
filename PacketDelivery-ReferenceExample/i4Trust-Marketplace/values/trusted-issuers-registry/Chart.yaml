@@ -1,0 +1,12 @@
+apiVersion: v2
+name: trusted-issuers-registry-wrapper
+description: TIR Helm
+
+type: application
+version: 0.0.1
+appVersion: "0.0.1"
+
+dependencies:
+  - name: trusted-issuers-registry
+    version: 0.0.3
+    repository: https://fiware.github.io/helm-charts

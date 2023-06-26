@@ -1,0 +1,27 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: keyrock-app-create-cm
+  annotations:
+    "helm.sh/hook": post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+    "helm.sh/hook-weight": "1"
+data:
+  create.sh: |-
+
+    mysql -h {{ .Values.keyrock.db.host }} -u {{ .Values.keyrock.db.user }} -p$DB_PASSWORD {{ .Values.keyrock.initScript.dbName }} <<EOF
+
+    INSERT IGNORE INTO oauth_client (id,name,description,secret,url,redirect_uri,image,grant_type,response_type,token_types) VALUES ({{ .Values.marketplace.id | quote }},{{ .Values.marketplace.name | quote }},{{ .Values.marketplace.description | quote }}, "$APP_SECRET",{{ .Values.marketplace.url | quote }},{{ .Values.marketplace.redirectUrl | quote }},default,{{ .Values.marketplace.grantType | quote }},{{ .Values.marketplace.responseType | quote }},{{ .Values.marketplace.tokenTypes | quote }});
+
+    INSERT IGNORE INTO role (id, name,oauth_client_id) VALUES ("marketplace-admin","admin",{{ .Values.marketplace.id | quote }});
+    INSERT IGNORE INTO role (id, name,oauth_client_id) VALUES ("marketplace-customer","customer",{{ .Values.marketplace.id | quote }});
+    INSERT IGNORE INTO role (id, name,oauth_client_id) VALUES ("marketplace-orgAdmin","orgAdmin",{{ .Values.marketplace.id | quote }});
+    INSERT IGNORE INTO role (id, name,oauth_client_id) VALUES ("marketplace-seller","seller",{{ .Values.marketplace.id | quote }});
+
+    INSERT IGNORE INTO role_assignment (id,oauth_client_id,role_id,user_id) VALUES (1,{{ .Values.marketplace.id | quote }},"provider","admin");
+    INSERT IGNORE INTO role_assignment (id,oauth_client_id,role_id,user_id) VALUES (2,{{ .Values.marketplace.id | quote }},"purchaser","admin");
+    INSERT IGNORE INTO role_assignment (id,oauth_client_id,role_id,user_id) VALUES (3,{{ .Values.marketplace.id | quote }},"marketplace-admin","admin");
+    INSERT IGNORE INTO role_assignment (id,oauth_client_id,role_id,user_id) VALUES (4,{{ .Values.marketplace.id | quote }},"marketplace-seller","admin");
+
+    COMMIT;
+    EOF

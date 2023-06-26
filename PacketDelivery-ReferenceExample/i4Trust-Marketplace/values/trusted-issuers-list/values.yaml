@@ -1,0 +1,35 @@
+trusted-issuers-list:
+  route: 
+    til: 
+      enabled: true 
+      host: til-marketplace.domain.org
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      certificate:
+        issuer:
+          kind: ClusterIssuer
+          name: letsencrypt-aws-prod
+    tir: 
+      enabled: true 
+      host: tir-marketplace.domain.org
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      certificate:
+        issuer:
+          kind: ClusterIssuer
+          name: letsencrypt-aws-prod
+  
+  deployment:
+    image:  
+      tag: 0.0.3
+  database:
+    persistence: true
+    host: mysql-marketplace
+    username: root
+    name: til
+    existingSecret:
+      enabled: true
+      name: mysql-secret
+      key: dbPassword
