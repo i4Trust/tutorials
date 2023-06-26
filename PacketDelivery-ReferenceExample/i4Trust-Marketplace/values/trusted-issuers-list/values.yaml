@@ -2,7 +2,7 @@ trusted-issuers-list:
   route: 
     til: 
       enabled: true 
-      host: til-marketplace.beka-t-m.apps.fiware.fiware.dev
+      host: til-marketplace.domain.org
       tls:
         insecureEdgeTerminationPolicy: Redirect
         termination: edge
@@ -12,7 +12,7 @@ trusted-issuers-list:
           name: letsencrypt-aws-prod
     tir: 
       enabled: true 
-      host: tir-marketplace.beka-t-m.apps.fiware.fiware.dev
+      host: tir-marketplace.domain.org
       tls:
         insecureEdgeTerminationPolicy: Redirect
         termination: edge

@@ -12,7 +12,7 @@ business-api-ecosystem:
   ##
   oauth:
     # URL of the FIWARE IDM used for user authentication
-    server: https://idp-marketplace.beka-t-m.apps.fiware.fiware.dev
+    server: https://idp-marketplace.domain.org
     # OAuth2 Client ID of the BAE applicaiton
     clientId: marketplace-id
     # -- Callback URL path of frontend logic proxy for receiving the access tokens
@@ -26,20 +26,20 @@ business-api-ecosystem:
     enabled: true
     clientId: marketplace-client
     verifier:
-      host: https://verifier-marketplace.beka-t-m.apps.fiware.fiware.dev
+      host: https://verifier-marketplace.domain.org
     # Configuration for the Credential Config Service initiation
     ccs:
-      endpoint: "http://ccs-credentials-config-service.beka-t-m.svc.cluster.local:8080"
+      endpoint: "http://ccs-credentials-config-service.demo.svc.cluster.local:8080"
       credentials:
         - type: "VerifiableCredential"
           trustedParticipantsLists: [
-            "https://tir.beka-t-m.apps.fiware.fiware.dev"
+            "https://tir.domain.org"
           ]
           trustedIssuersLists: [
           ]
         - type: "MarketplaceUserCredential"
           trustedParticipantsLists: [
-            "https://tir.beka-t-m.apps.fiware.fiware.dev"
+            "https://tir.domain.org"
           ]
           trustedIssuersLists: [
           ]
@@ -47,7 +47,7 @@ business-api-ecosystem:
   ## External URL used to access the BAE frontend (logic proxy)
   ## Should match the host of the Ingress or Route of the Logic Proxy
   ##
-  externalUrl: https://marketplace.beka-t-m.apps.fiware.fiware.dev
+  externalUrl: https://marketplace.domain.org
 
   ## Configuration for biz-ecosystem-apis component
   ##
@@ -246,11 +246,11 @@ business-api-ecosystem:
       image:
         ## -- BAE Logic Proxy image name
         ## ref: https://hub.docker.com/r/fiware/biz-ecosystem-logic-proxy
-        repository: quay.io/beknazar/baelp-demo4
+        repository: fiware/biz-ecosystem-logic-proxy
         ## -- tag of the image to be used
-        tag: 3baa4e44db9971b62c65721680a87d264952b35b
+        tag: v8.1.0-dev
         ## -- specification of the image pull policy
-        pullPolicy: Always
+        pullPolicy: IfNotPresent
         #pullPolicy: IfNotPresent
     
     ## openshift specific route definition. Will not work on plain k8s
@@ -259,7 +259,7 @@ business-api-ecosystem:
       enabled: true
       # -- Routes that should be created
       routes:
-        - host: marketplace.beka-t-m.apps.fiware.fiware.dev
+        - host: marketplace.domain.org
           tls:
             termination: edge
             insecureEdgeTerminationPolicy: Redirect

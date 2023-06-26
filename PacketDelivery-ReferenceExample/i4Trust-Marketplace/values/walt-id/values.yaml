@@ -1,8 +1,8 @@
-did: did:web:marketplace.beka-t-m.fiware.dev:did
+did: did:web:marketplace.demo.fiware.dev:did
 
 route:
   enabled: true
-  host: marketplace.beka-t-m.apps.fiware.fiware.dev
+  host: marketplace.domain.org
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: edge

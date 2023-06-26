@@ -6,7 +6,7 @@ trusted-issuers-registry:
       pullPolicy: Always
   route:
     enabled: true
-    host: tir.beka-t-m.apps.fiware.fiware.dev
+    host: tir.domain.org
     tls:
       insecureEdgeTerminationPolicy: Redirect
       termination: edge

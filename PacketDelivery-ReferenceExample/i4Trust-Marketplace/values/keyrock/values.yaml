@@ -24,12 +24,12 @@ keyrock:
 
   existingSecret: keyrock-secret
 
-  host: https://idp-marketplace.beka-t-m.apps.fiware.fiware.dev
+  host: https://idp-marketplace.domain.org
   
   route:
     enabled: true
     routes:
-      - host: idp-marketplace.beka-t-m.apps.fiware.fiware.dev
+      - host: idp-marketplace.domain.org
         tls:
           termination: edge
           insecureEdgeTerminationPolicy: Redirect
@@ -49,7 +49,7 @@ keyrock:
     # -- Enable usage of authorisation registry
     enabled: true
     # -- Identifier (EORI) of AR
-    identifier: "did:web:marketplace.beka-t-m.fiware.dev:did"
+    identifier: "did:web:marketplace.demo.fiware.dev:did"
     # -- URL of AR
     url: "internal"
 
@@ -60,11 +60,11 @@ keyrock:
     # -- Identifier (EORI) of satellite
     identifier: "EU.EORI.FIWARESATELLITE"
     # -- URL of satellite
-    url: "https://tir.beka-t-m.apps.fiware.fiware.dev"
+    url: "https://tir.domain.org"
     # -- Token endpoint of satellite
-    tokenEndpoint: "https://tir.beka-t-m.apps.fiware.fiware.dev/token"
+    tokenEndpoint: "https://tir.domain.org/token"
     # -- Parties endpoint of satellite
-    partiesEndpoint: "https://tir.beka-t-m.apps.fiware.fiware.dev/parties"
+    partiesEndpoint: "https://tir.domain.org/parties"
 
   ## -- Configuration of local key and certificate for validation and generation of tokens
   token:
@@ -109,8 +109,8 @@ marketplace:
   secret: f7e11746-b84f-4748-86e5-107146e888h7
   name: Marketplace
   description: Keyrock client for the marketplace.
-  url: https://marketplace.beka-t-m.apps.fiware.fiware.dev
-  redirectUrl: https://marketplace.beka-t-m.apps.fiware.fiware.dev/auth/fiware/callback
+  url: https://marketplace.domain.org
+  redirectUrl: https://marketplace.domain.org/auth/fiware/callback
   grantType: authorization_code,refresh_token
   responseType: code
   tokenTypes: bearer

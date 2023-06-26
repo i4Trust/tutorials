@@ -1,6 +1,6 @@
 route:
   enabled: true
-  host: marketplace-kc.beka-t-m.apps.fiware.fiware.dev
+  host: marketplace-kc.domain.org
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: edge
@@ -56,7 +56,7 @@ keycloak:
     - name: KEYCLOAK_LOG_LEVEL
       value: INFO
     - name: VCISSUER_ISSUER_DID
-      value: "did:web:marketplace.beka-t-m.fiware.dev:did"
+      value: "did:web:marketplace.demo.fiware.dev:did"
     - name: VCISSUER_WALTID_ADDRESS
       value: "http://waltid-vcwaltid"
 
@@ -115,4 +115,4 @@ keycloak:
       name: keycloak
 
 waltid:
-  host: marketplace.beka-t-m.apps.fiware.fiware.dev
+  host: marketplace.domain.org

@@ -86,7 +86,7 @@ on the standard OAuth2 protocol, whereas the Identity Providers deployed at the 
 service consumers follow the OpenID Connect protocol based on iSHARE specifications. Therefore this Keyrock instance 
 does not require any iSHARE-specific configuration.
 
-Modify the Keyrock [values file](./values/values-keyrock.yml) according to your needs and deploy the Keyrock Identity Provider. 
+Modify the Keyrock [values file](./values/keyrock/values.yaml) according to your needs and deploy the Keyrock Identity Provider. 
 Make sure to setup an Ingress or OpenShift route in the values file for external 
 access of the UI (e.g. https://keyrock.domain.org).
 ```shell
@@ -122,8 +122,9 @@ basically only need the `admin` role. Service providers and consumers will login
 
 ### WaltId
 
-Adjust values file for [walt-id](https://github.com/i4Trust/helm-charts/blob/main/charts/vcwaltid/values.yaml) 
-according to your needs and install it on your cluster:
+Adjust values file for [waltid](./values/walt-id/values.yaml) 
+according to your needs and install it on your cluster. Default values could be checked at 
+[chart repo](https://github.com/i4Trust/helm-charts/blob/main/charts/vcwaltid/values.yaml)
 ```shell
 helm dependency build walt-id/
 helm install --namespace demo-marketplace waltid ./walt-id/ -f ./walt-id/values.yaml
@@ -132,8 +133,9 @@ helm install --namespace demo-marketplace waltid ./walt-id/ -f ./walt-id/values.
 
 ### Keycloak
 
-Adjust values file for [keycloak](https://github.com/bitnami/charts/blob/main/bitnami/keycloak/values.yaml) according
-to your needs and install them on your cluster:
+Adjust values file for [keycloak](./values/keycloak/values.yaml) according
+to your needs. Check the [chart repo](https://github.com/bitnami/charts/blob/main/bitnami/keycloak/values.yaml)
+for default values.
 ```shell
 helm dependency build keycloak/
 helm install --namespace demo-marketplace keycloak ./keycloak/ -f ./keycloak/values.yaml
@@ -142,8 +144,9 @@ helm install --namespace demo-marketplace keycloak ./keycloak/ -f ./keycloak/val
 
 ### Trusted Issuers List
 
-Adjust values file for [trusted issuers list](https://github.com/FIWARE/helm-charts/blob/main/charts/trusted-issuers-list/values.yaml)
-according to your needs and install them on your cluster:
+Modify values file for [trusted issuers list](./values/trusted-issuers-list/values.yaml) and install it on your cluster.
+Check [chart repo](https://github.com/FIWARE/helm-charts/blob/main/charts/trusted-issuers-list/values.yaml) for more
+details.
 ```shell
 helm dependency build trusted-issuers-list/
 helm install --namespace demo-marketplace til ./trusted-issuers-list/ -f ./trusted-issuers-list/values.yaml
@@ -152,8 +155,8 @@ helm install --namespace demo-marketplace til ./trusted-issuers-list/ -f ./trust
 
 ### Orion-LD
 
-Adjust values file for [orion-ld](https://github.com/FIWARE/helm-charts/blob/main/charts/orion/values.yaml)
-according to your needs and install them on your cluster:
+Orion-LD also needs to be installed, since TIR component depends on it. Check [chart repo](https://github.com/FIWARE/helm-charts/blob/main/charts/orion/values.yaml)
+to see the default values to install it.
 ```shell
 helm dependency build orion-ld/
 helm install --namespace demo-marketplace orion-ld ./orion-ld/ -f ./orion-ld/values.yaml
@@ -162,8 +165,9 @@ helm install --namespace demo-marketplace orion-ld ./orion-ld/ -f ./orion-ld/val
 
 ### Trusted Issuers Registry
 
-Adjust values file for [trusted issuers registry](https://github.com/FIWARE/helm-charts/blob/main/charts/trusted-issuers-registry/values.yaml)
-according to your needs and install them on your cluster:
+Adjust values file for [trusted issuers registry](./values/trusted-issuers-registry/values.yaml) according to your needs
+and install it on your cluster. Check [chart repo](https://github.com/FIWARE/helm-charts/blob/main/charts/trusted-issuers-registry/values.yaml)
+for more details.
 ```shell
 helm dependency build trusted-issuers-registry/
 helm install --namespace demo-marketplace til ./trusted-issuers-registry/ -f ./trusted-issuers-registry/values.yaml
@@ -181,8 +185,8 @@ they provide. To get this done, it needs information about:
 To do so, it requires a service that provides such information, e.g. the [Credentials Config Service]
 (https://github.com/fiware/credentials-config-service)
 
-Adjust values file for [credentials-config-service](https://github.com/FIWARE/helm-charts/blob/main/charts/credentials-config-service/values.yaml)
-according to your needs and install them on your cluster:
+Modify values file for [credentials-config-service](./values/credentials-config-service/values.yaml)
+and install it on your cluster. To see the default values, see [chart repo](https://github.com/FIWARE/helm-charts/blob/main/charts/credentials-config-service/values.yaml).
 ```shell
 helm dependency build credentials-config-service/
 helm install --namespace demo-marketplace ccs ./credentials-config-service/ -f ./credentials-config-service/values.yaml
@@ -191,8 +195,8 @@ helm install --namespace demo-marketplace ccs ./credentials-config-service/ -f .
 
 ### Verifier
 
-Adjust values file for [verifier](https://github.com/i4Trust/helm-charts/blob/main/charts/vcverifier/values.yaml)
-according to your needs and install them on your cluster:
+Adjust values file for [verifier](./values/verifier/values.yaml) according to your needs and install it on your cluster.
+Check the [chart repo](https://github.com/i4Trust/helm-charts/blob/main/charts/vcverifier/values.yaml) for more details.
 ```shell
 helm dependency build verifier/
 helm install --namespace demo-marketplace verifier ./verifier/ -f ./verifier/values.yaml
@@ -202,7 +206,7 @@ helm install --namespace demo-marketplace verifier ./verifier/ -f ./verifier/val
 ## Business API Ecosystem (Marketplace)
 
 Finally, install the Business API Ecosystem. Make sure to setup an Ingress or OpenShift route in the 
-[values file](values/marketplace/values-marketplace.yml) for external 
+[values file](values/bae/values.yaml) for external 
 access of the Marketplace UI / Logic Proxy (e.g. https://marketplace.domain.org). Furthermore adapt the configuration options for 
 the databases, elasticsearch and Keyrock instance which have been setup before. This includes setting the 
 OAuth2 credentials noted down before (parameters `oauth.clientId` and `oauth.clientSecret`).

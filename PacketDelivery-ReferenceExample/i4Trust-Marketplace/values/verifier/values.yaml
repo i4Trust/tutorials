@@ -11,14 +11,14 @@ vcverifier:
     ssikit:
       auditorUrl: http://waltid-vcwaltid:7003
     verifier:
-      tirAddress: https://tir.beka-t-m.apps.fiware.fiware.dev/v3/issuers
-      did: did:web:marketplace.beka-t-m.fiware.dev:did
+      tirAddress: https://tir.domain.org/v3/issuers
+      did: did:web:marketplace.demo.fiware.dev:did
     configRepo:
       configEndpoint: http://ccs-credentials-config-service:8080/
 
   route:
     enabled: true
-    host: verifier-marketplace.beka-t-m.apps.fiware.fiware.dev
+    host: verifier-marketplace.domain.org
     tls:
       insecureEdgeTerminationPolicy: Redirect
       termination: edge

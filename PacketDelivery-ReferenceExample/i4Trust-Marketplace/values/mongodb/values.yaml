@@ -16,5 +16,5 @@ mongodb:
     enabled: true
     size: 8Gi
 
-  initdbScriptsConfigMap: mongodb-beka-t-m-configmap
+  initdbScriptsConfigMap: mongodb-demo-configmap
   extraEnvVarsSecret: mongodb-bae-envs-secret
