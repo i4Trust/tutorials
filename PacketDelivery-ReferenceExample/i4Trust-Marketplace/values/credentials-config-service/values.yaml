@@ -1,0 +1,14 @@
+credentials-config-service:
+  deployment:
+    image: 
+      repository: quay.io/fiware/credentials-config-service
+      tag: 0.0.1  
+  database:
+    persistence: true
+    host: mysql-marketplace
+    username: root
+    name: ccs
+    existingSecret:
+      enabled: true
+      name: mysql-secret
+      key: dbPassword

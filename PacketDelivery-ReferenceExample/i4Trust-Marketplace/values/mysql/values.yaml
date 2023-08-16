@@ -1,0 +1,19 @@
+mysql:
+  fullnameOverride: mysql-marketplace
+  auth:
+    existingSecret: mysql-secret
+  rbac: 
+    create: true
+    rules:
+      - apiGroups:
+        - security.openshift.io
+        resourceNames:
+        - anyuid
+        resources:
+        - securitycontextconstraints
+        verbs:
+        - use    
+  initdbScripts:
+    create.sql: |
+      CREATE DATABASE til;
+      CREATE DATABASE ccs;

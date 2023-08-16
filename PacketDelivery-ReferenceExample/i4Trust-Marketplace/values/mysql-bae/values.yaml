@@ -1,0 +1,20 @@
+mysql:
+  # Values for t3n/mysql Helm Chart
+  #
+  # Chart values file:
+  # ref: https://github.com/t3n/helm-charts/blob/master/mysql/values.yaml
+  
+  image: "quay.io/i4trust/mysql"
+  imageTag: "5.7"
+  busybox:
+    image: "quay.io/i4trust/busybox"
+
+  existingSecret: mysql-secret
+
+  ## Persist data to a persistent volume
+  persistence:
+    enabled: true
+
+  ## Security context
+  securityContext:
+    enabled: false

@@ -1,0 +1,29 @@
+{{- if .Values.route.enabled -}}
+{{- $fullName := include "waltid.fullname" . -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "waltid.fullname" . }}
+  labels:
+    {{ include "waltid.labels" . | nindent 4 }}
+  annotations:
+    haproxy.router.openshift.io/rewrite-target: /v1/did/{{ .Values.did }}
+    cert-utils-operator.redhat-cop.io/certs-from-secret: {{ include "waltid.fullname" . }}-tls-sec
+    {{- with .Values.route.annotations }}
+      {{- toYaml . | nindent 4 }}
+      {{- end }}
+spec:
+  host: {{ .Values.route.host}}
+  path: /did/did.json
+  port: 
+    targetPort: 7000 
+  to:
+    kind: Service
+    name: {{ $fullName }}
+  {{- if .Values.route.tls }}
+  tls:
+  {{- with .Values.route.tls }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,12 @@
+apiVersion: v2
+name: vcverifier
+description: Verifier Chart
+
+type: application
+version: 0.0.8
+appVersion: "0.0.1"
+
+dependencies:
+  - name: vcverifier
+    version: 1.0.9
+    repository: https://i4Trust.github.io/helm-charts

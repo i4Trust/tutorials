@@ -1,0 +1,116 @@
+keyrock:
+  fullnameOverride: keyrock-marketplace
+  statefulset:
+    image:
+      repository: quay.io/wi_stefan/keyrock
+      tag: sn-fix
+      pullPolicy: Always
+
+  db:
+    user: root
+    host: mysql-bae
+
+  admin:
+    user: admin
+    email: admin@fiware.org
+
+  ## Init script for Keyrock DB
+  initScript:
+    ## -- Enable init script
+    initEnabled: true
+    ## -- Database name for init script
+    dbName: bae_idm
+    
+
+  existingSecret: keyrock-secret
+
+  host: https://idp-marketplace.domain.org
+  
+  route:
+    enabled: true
+    routes:
+      - host: idp-marketplace.domain.org
+        tls:
+          termination: edge
+          insecureEdgeTerminationPolicy: Redirect
+        # should a certificate for the address automatically be generated
+        certificate:
+          issuer: 
+            kind: ClusterIssuer
+            name: letsencrypt-aws-prod
+
+  ## Theme configuration for Keyrock
+  theme:
+    ## -- Enable theme
+    enabled: false
+
+  ## Configuration of Authorisation Registry (AR)
+  authorisationRegistry:
+    # -- Enable usage of authorisation registry
+    enabled: true
+    # -- Identifier (EORI) of AR
+    identifier: "did:web:marketplace.demo.fiware.dev:did"
+    # -- URL of AR
+    url: "internal"
+
+  ## Configuration of iSHARE Satellite
+  satellite:
+    # -- Enable usage of satellite
+    enabled: true
+    # -- Identifier (EORI) of satellite
+    identifier: "EU.EORI.FIWARESATELLITE"
+    # -- URL of satellite
+    url: "https://tir.domain.org"
+    # -- Token endpoint of satellite
+    tokenEndpoint: "https://tir.domain.org/token"
+    # -- Parties endpoint of satellite
+    partiesEndpoint: "https://tir.domain.org/parties"
+
+  ## -- Configuration of local key and certificate for validation and generation of tokens
+  token:
+    # -- Enable storage of local key and certificate
+    enabled: false
+
+  
+  additionalEnvVars:
+    - name: IDM_TITLE
+      value: "Marketplace IDP"
+    - name: IDM_DEBUG
+      value: "true"
+    - name: DEBUG
+      value: "*"
+    - name: IDM_DB_NAME
+      value: bae_idm
+    - name: IDM_DB_SEED
+      value: "true"
+    - name: IDM_SERVER_MAX_HEADER_SIZE
+      value: "32768"
+    - name: IDM_EMAIL_HOST
+      value: "mailgun-fiware-io.infra.svc.cluster.local"
+    - name: IDM_EMAIL_PORT
+      value: "25"
+    - name: IDM_EMAIL_ADDRESS
+      value: "bp-one@fiware.io"
+    - name: IDM_PR_CLIENT_ID
+      value: "did:web:packetdelivery.dsba.fiware.dev:did"
+    - name: IDM_PR_CLIENT_KEY
+      valueFrom:
+          secretKeyRef:
+            name: waltid-vcwaltid-tls-sec
+            key: tls.key
+    - name: IDM_PR_CLIENT_CRT
+      valueFrom:
+          secretKeyRef:
+            name: waltid-vcwaltid-tls-sec
+            key: tls.crt
+
+marketplace:
+  id: marketplace-id
+  secret: f7e11746-b84f-4748-86e5-107146e888h7
+  name: Marketplace
+  description: Keyrock client for the marketplace.
+  url: https://marketplace.domain.org
+  redirectUrl: https://marketplace.domain.org/auth/fiware/callback
+  grantType: authorization_code,refresh_token
+  responseType: code
+  tokenTypes: bearer

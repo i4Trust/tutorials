@@ -1,0 +1,12 @@
+apiVersion: v2
+name: marketplace-til
+description: TIL Chart
+
+type: application
+version: 0.0.1
+appVersion: "0.0.1"
+
+dependencies:
+  - name: trusted-issuers-list
+    version: 0.0.6
+    repository: https://fiware.github.io/helm-charts
